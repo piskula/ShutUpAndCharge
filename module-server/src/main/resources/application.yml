@@ -10,3 +10,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+# to allow swagger-ui to perform requests against HTTPS
+server:
+  forward-headers-strategy: framework

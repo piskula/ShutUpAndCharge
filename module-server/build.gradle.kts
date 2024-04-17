@@ -4,6 +4,11 @@ plugins {
 
 val uiProject = project(":module-ui")
 
+springBoot {
+  // enable versioning and build info to be injected
+  buildInfo()
+}
+
 dependencies {
     implementation(project(":module-api"))
     implementation(uiProject) /* because of putting static sources into jar, can be removed */

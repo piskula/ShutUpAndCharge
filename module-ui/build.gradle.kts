@@ -27,7 +27,7 @@ swaggerSources {
     setInputFile(file("${apiProject.layout.buildDirectory.asFile.get()}/swagger/${apiProject.name}.json"))
     code(closureOf<GenerateSwaggerCode> {
       language = "typescript-angular"
-      outputDir = file("${layout.buildDirectory.asFile.get()}/generated-sources/project-name")
+      outputDir = file("${layout.buildDirectory.asFile.get()}/generated-services/${apiProject.name}")
       templateDir = file("customSwaggerTemplate")
     })
   }
