@@ -1,0 +1,13 @@
+version: '3.3'
+
+services:
+
+  trucker-database:
+    image: mysql:8.1.0
+    container_name: trucker-database
+    ports:
+      - '3309:3306'
+    environment:
+      MYSQL_DATABASE: 'data'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'

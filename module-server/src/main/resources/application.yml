@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: TruckerFM dev
+  datasource:
+    url: "${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3309/data}"
+    username: root
+    password: "${SPRING_DATASOURCE_PASSWORD:password}"
+  flyway:
+    out-of-order: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
