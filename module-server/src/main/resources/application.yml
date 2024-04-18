@@ -10,6 +10,24 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: login-app
+            authorization-grant-type: authorization_code # needs manual session invalidation on logout, check refresh_token
+            scope: openid
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/SpringBootKeycloak
+            user-name-attribute: preferred_username
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/SpringBootKeycloak
+
 # to allow swagger-ui to perform requests against HTTPS
 server:
   forward-headers-strategy: framework
+  port: 8081

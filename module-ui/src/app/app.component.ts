@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { BuildInfoService } from '@trucker/api';
+import { tap } from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -8,6 +10,19 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'TruckerFM';
+  version = '';
+
+  constructor(
+    private buildInfoService: BuildInfoService,
+  ) {
+  }
+
+  ngOnInit(): void {
+    this.buildInfoService.get().pipe(
+      tap(version => this.version = version.version || ''),
+    ).subscribe();
+  }
+
 }

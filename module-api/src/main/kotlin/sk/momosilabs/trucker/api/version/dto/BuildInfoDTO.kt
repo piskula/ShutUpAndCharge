@@ -1,4 +1,4 @@
-package sk.momosilabs.trucker.api.model.buildInfo
+package sk.momosilabs.trucker.api.version.dto
 
 import java.time.ZonedDateTime
 

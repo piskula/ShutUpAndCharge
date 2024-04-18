@@ -1,4 +1,4 @@
-package sk.momosilabs.trucker.api.model.common
+package sk.momosilabs.trucker.api.common.dto
 
 data class PageDTO<T>(
     val totalElements: Long,

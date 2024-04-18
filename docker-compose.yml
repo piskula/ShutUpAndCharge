@@ -11,3 +11,13 @@ services:
       MYSQL_DATABASE: 'data'
       MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'password'
+
+  keycloak:
+    image: keycloak/keycloak:23.0.7
+    container_name: keycloak
+    ports:
+      - '8080:8080'
+    environment:
+      KEYCLOAK_ADMIN: 'admin'
+      KEYCLOAK_ADMIN_PASSWORD: 'password'
+    command: start-dev

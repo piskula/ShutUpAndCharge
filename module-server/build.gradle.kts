@@ -19,6 +19,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("mysql:mysql-connector-java:8.0.33")
 
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    // validate JWT tokens from clients
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+
     // make swagger documentation available
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 
@@ -27,7 +32,7 @@ dependencies {
 //    testImplementation("io.mockk:mockk:1.13.4")
 }
 
-val frontendDestination = "src/main/resources/static"
+val frontendDestination = "src/main/resources/public"
 // extend cleanup also to angular build directory
 tasks.clean {
     doFirst { delete(frontendDestination) }
