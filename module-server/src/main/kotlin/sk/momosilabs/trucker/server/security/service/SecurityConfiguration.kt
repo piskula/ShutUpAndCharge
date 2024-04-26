@@ -3,7 +3,6 @@ package sk.momosilabs.trucker.server.security.service
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -17,6 +16,11 @@ import org.springframework.security.oauth2.core.user.OAuth2UserAuthority
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy
+import org.springframework.security.web.header.writers.HstsHeaderWriter
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter
+import org.springframework.security.web.header.writers.XContentTypeOptionsHeaderWriter
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter
 import org.springframework.security.web.session.HttpSessionEventPublisher
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
@@ -59,21 +63,33 @@ open class SecurityConfiguration(
 
     @Bean
     open fun filterChain(http: HttpSecurity): SecurityFilterChain {
-        http.authorizeHttpRequests { auth ->
-            auth
-                .requestMatchers(AntPathRequestMatcher("/api/version")).permitAll()
-                .requestMatchers(*SWAGGER_RESOURCES).permitAll()
-                .requestMatchers(AntPathRequestMatcher("/api*", HttpMethod.OPTIONS.name())).permitAll()
-                .requestMatchers(AntPathRequestMatcher("/api*")).hasRole("user")
-                .requestMatchers(*STATIC_RESOURCES).permitAll()
-                .requestMatchers(AntPathRequestMatcher("/")).permitAll()
-                .anyRequest().authenticated()
+        http
+            .csrf { it.disable() }
+//            .csrf { it.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) }
+        http.authorizeHttpRequests { auth -> auth
+//            .requestMatchers(*SWAGGER_RESOURCES).permitAll()
+//            .requestMatchers(*STATIC_RESOURCES).permitAll()
+//            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+//            .requestMatchers(AntPathRequestMatcher("/api*", HttpMethod.OPTIONS.name())).permitAll()
+//            .requestMatchers(AntPathRequestMatcher("/api*")).hasRole("user")
+            .requestMatchers(AntPathRequestMatcher("/api/**")).hasRole("user")
+//            .requestMatchers(AntPathRequestMatcher("/")).permitAll()
+//            .anyRequest().authenticated()
+            .anyRequest().permitAll()
         }
         http.oauth2ResourceServer { oauth2 ->
             oauth2.jwt(Customizer.withDefaults())
         }
         http.oauth2Login(Customizer.withDefaults())
             .logout { logout -> logout.addLogoutHandler(keycloakLogoutHandler).logoutSuccessUrl("/") }
+
+        http.headers {
+            it.addHeaderWriter(XContentTypeOptionsHeaderWriter())
+            it.addHeaderWriter(XFrameOptionsHeaderWriter())
+            it.addHeaderWriter(ReferrerPolicyHeaderWriter())
+            it.addHeaderWriter(XXssProtectionHeaderWriter())
+            it.addHeaderWriter(HstsHeaderWriter())
+        }
         return http.build()
     }
 

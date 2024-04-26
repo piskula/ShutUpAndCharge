@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { BuildInfoService } from '@trucker/api';
-import { tap } from "rxjs";
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-root',

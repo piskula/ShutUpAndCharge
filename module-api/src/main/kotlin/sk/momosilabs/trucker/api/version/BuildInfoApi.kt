@@ -9,7 +9,7 @@ import sk.momosilabs.trucker.api.version.dto.BuildInfoDTO
 interface BuildInfoApi {
 
     companion object {
-        const val ENDPOINT_VERSION = "/api/version"
+        const val ENDPOINT_VERSION = "/info/version"
     }
 
     @ApiOperation("Check version")

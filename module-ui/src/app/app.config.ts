@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { ApiModule, BASE_PATH } from '@trucker/api';
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -11,8 +11,8 @@ export const appConfig: ApplicationConfig = {
 
     // make generated services working
     importProvidersFrom(
-      ApiModule, HttpClientModule
+      ApiModule, HttpClientModule, HttpClientXsrfModule
     ),
-    { provide: BASE_PATH, useValue: 'http://localhost:4200' },
+    { provide: BASE_PATH, useValue: '.' },
   ],
 };

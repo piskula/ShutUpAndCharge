@@ -1,5 +1,22 @@
 {
-  "/api/*": {
+  "/api": {
+    "target": "http://localhost:8081",
+    "secure": false
+  },
+  "/info/version": {
+    "target": "http://localhost:8081",
+    "secure": false
+  },
+  "/currentUser": {
+    "target": "http://localhost:8081",
+    "secure": false
+  },
+  "/oauth2/authorization/keycloak": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "headers": { "host": "localhost:8081" }
+  },
+  "/logout": {
     "target": "http://localhost:8081",
     "secure": false
   }
