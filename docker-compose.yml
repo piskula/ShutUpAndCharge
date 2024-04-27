@@ -3,14 +3,15 @@ version: '3.3'
 services:
 
   trucker-database:
-    image: mysql:8.1.0
+    image: mariadb:10.6.12
     container_name: trucker-database
     ports:
       - '3309:3306'
     environment:
       MYSQL_DATABASE: 'data'
-      MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'password'
+      MARIADB_AUTO_UPGRADE: 1
+    command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
 
   keycloak:
     image: keycloak/keycloak:23.0.7

@@ -1,5 +1,6 @@
 plugins {
     id("org.springframework.boot") version "3.1.4"
+    kotlin("plugin.jpa") version "1.9.23"
 }
 
 val uiProject = project(":module-ui")
@@ -17,7 +18,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    runtimeOnly("mysql:mysql-connector-java:8.0.33")
+    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:3.3.3")
+    implementation("org.flywaydb:flyway-mysql:9.22.2")
 
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-security")

@@ -2,9 +2,10 @@ spring:
   application:
     name: TruckerFM dev
   datasource:
-    url: "${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3309/data}"
+    url: "${SPRING_DATASOURCE_URL:jdbc:mariadb://localhost:3309/data}"
     username: root
     password: "${SPRING_DATASOURCE_PASSWORD:password}"
+    driver-class-name: org.mariadb.jdbc.Driver
   flyway:
     out-of-order: true
   jpa:
@@ -19,7 +20,6 @@ spring:
             client-id: login-app
             authorization-grant-type: authorization_code # needs manual session invalidation on logout, check refresh_token
             scope: openid
-#            redirect-uri: "http://localhost:8081/app"
         provider:
           keycloak:
             issuer-uri: http://localhost:8080/realms/SpringBootKeycloak
