@@ -50,9 +50,9 @@ open class OnAuthenticationConfig(
         if (source is OAuth2LoginAuthenticationToken) {
             val principal = source.principal
             if (principal is TruckerPrincipal) {
-                val existingUser = accountRepository.findById(principal.idKeycloak)
-                if (existingUser.isEmpty) {
-                    accountRepository.save(AccountEntity(principal.idKeycloak, principal.firstName, principal.lastName))
+                val existingUser = accountRepository.findByIdKeycloak(principal.idKeycloak)
+                if (existingUser == null) {
+                    accountRepository.save(principal.toAccountEntity())
                 }
             }
         }
@@ -64,15 +64,23 @@ open class OnAuthenticationConfig(
             override fun loadUser(userRequest: OidcUserRequest?): OidcUser {
                 val userFromKeycloak = super.loadUser(userRequest) as DefaultOidcUser
                 val claims = userFromKeycloak.tokenClaims()
-                val userStored = accountRepository.findById(claims.identifierSub).getOrNull()
+                val userStored = accountRepository.findByIdKeycloak(claims.identifierSub)
                 return TruckerPrincipal(
                     defaultUser = userFromKeycloak,
                     idKeycloak = claims.identifierSub,
                     firstName = userStored?.firstName ?: claims.firstName,
                     lastName = userStored?.lastName ?: claims.lastName,
+                    role = userStored?.role,
                 )
             }
         })
     }
+
+    private fun TruckerPrincipal.toAccountEntity() = AccountEntity(
+        idKeycloak = idKeycloak,
+        firstName = firstName,
+        lastName = lastName,
+        role = null,
+    )
 
 }

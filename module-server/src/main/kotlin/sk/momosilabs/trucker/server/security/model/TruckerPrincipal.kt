@@ -5,6 +5,7 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
+import sk.momosilabs.trucker.server.account.entity.AccountRole
 
 data class TruckerPrincipal(
     val defaultUser: DefaultOidcUser,
@@ -12,6 +13,7 @@ data class TruckerPrincipal(
     val idKeycloak: String,
     val firstName: String,
     val lastName: String,
+    val role: AccountRole?,
 ) : OidcUser {
     override fun getName(): String = defaultUser.name
     override fun getAttributes(): MutableMap<String, Any> = defaultUser.attributes

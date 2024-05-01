@@ -5,4 +5,8 @@ import org.springframework.stereotype.Repository
 import sk.momosilabs.trucker.server.account.entity.AccountEntity
 
 @Repository
-interface AccountRepository: JpaRepository<AccountEntity, String>
+interface AccountRepository: JpaRepository<AccountEntity, Long> {
+
+    fun findByIdKeycloak(idKeycloak: String): AccountEntity?
+
+}

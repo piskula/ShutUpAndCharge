@@ -19,7 +19,7 @@ export class InsideSecuredComponent implements OnInit {
     combineLatest([
       this.currentUserService.getCurrentUser(),
     ]).pipe(
-      tap(([user]) => this.user = user.email || 'email????'),
+      tap(([user]) => this.user = `${user.firstName} ${user.lastName} (${user.role})`),
     ).subscribe();
   }
 

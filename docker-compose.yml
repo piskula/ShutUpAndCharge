@@ -22,3 +22,4 @@ services:
       KEYCLOAK_ADMIN: 'admin'
       KEYCLOAK_ADMIN_PASSWORD: 'password'
     command: start-dev
+#    command: ['start-dev', '--hostname-url=http://34.125.10.251:8080']
