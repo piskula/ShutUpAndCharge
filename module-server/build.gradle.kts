@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot") version "3.1.4"
+    id("org.springframework.boot") version "3.3.5"
     kotlin("plugin.jpa") version "1.9.23"
 }
 
@@ -18,7 +18,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    runtimeOnly("org.mariadb.jdbc:mariadb-java-client:3.3.3")
+    runtimeOnly("org.postgresql:postgresql:42.7.4")
     implementation("org.flywaydb:flyway-mysql:9.22.2")
 
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")

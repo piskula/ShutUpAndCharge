@@ -13,6 +13,7 @@ import { tap } from 'rxjs';
 export class AppComponent implements OnInit {
   title = 'TruckerFM';
   version = '';
+  url = '';
 
   constructor(
     private buildInfoService: BuildInfoService,
@@ -21,7 +22,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildInfoService.get().pipe(
-      tap(version => this.version = version.version || ''),
+      tap(version => {
+        this.version = version.version || '';
+        this.url = version.url || '';
+      }),
     ).subscribe();
   }
 

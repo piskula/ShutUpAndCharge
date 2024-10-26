@@ -14,7 +14,6 @@ open class WebConfiguration : WebMvcConfigurer {
 
     override fun addViewControllers(registry: ViewControllerRegistry) {
         registry.addViewController("/404").setViewName("forward:/index.html")
-        registry.addViewController("/api/tryLogin").setViewName("forward:/index.html")
     }
 
     @Bean

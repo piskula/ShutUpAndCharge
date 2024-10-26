@@ -1,25 +1,13 @@
-version: '3.3'
+version: '3.7'
 
 services:
 
-  trucker-database:
-    image: mariadb:10.6.12
-    container_name: trucker-database
+  charging-database:
+    image: postgres:latest
+    container_name: charging-database
     ports:
-      - '3309:3306'
+      - '5432:5432'
     environment:
-      MYSQL_DATABASE: 'data'
-      MYSQL_ROOT_PASSWORD: 'password'
-      MARIADB_AUTO_UPGRADE: 1
-    command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
-
-  keycloak:
-    image: keycloak/keycloak:23.0.7
-    container_name: keycloak
-    ports:
-      - '8080:8080'
-    environment:
-      KEYCLOAK_ADMIN: 'admin'
-      KEYCLOAK_ADMIN_PASSWORD: 'password'
-    command: start-dev
-#    command: ['start-dev', '--hostname-url=http://34.125.10.251:8080']
+      POSTGRES_DB: charging
+      POSTGRES_USER: charging-user
+      POSTGRES_PASSWORD: charging-password

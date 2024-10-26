@@ -2,6 +2,7 @@ package sk.momosilabs.trucker.api.version
 
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.web.bind.annotation.GetMapping
 import sk.momosilabs.trucker.api.version.dto.BuildInfoDTO
 
@@ -14,6 +15,6 @@ interface BuildInfoApi {
 
     @ApiOperation("Check version")
     @GetMapping(ENDPOINT_VERSION)
-    fun get(): BuildInfoDTO
+    fun get(request: HttpServletRequest): BuildInfoDTO
 
 }
