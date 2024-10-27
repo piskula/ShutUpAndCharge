@@ -1,4 +1,4 @@
-rootProject.name = "TruckerFM"
+rootProject.name = "ShutUpAndCharge"
 
 include("module-api")
 include("module-server")

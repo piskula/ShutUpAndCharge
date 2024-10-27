@@ -16,7 +16,7 @@ swagger {
 
         springmvc = true
         outputFormats = listOf("json", "yaml")
-        locations = mutableListOf("sk.momosilabs.trucker.api")
+        locations = mutableListOf("sk.momosilabs.suac.api")
         swaggerDirectory = "$buildDir/swagger"
         swaggerFileName = project.name
         info = infoExtension
