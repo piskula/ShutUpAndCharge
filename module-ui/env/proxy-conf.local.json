@@ -1,23 +1,26 @@
 {
   "/api": {
-    "target": "http://localhost:8081",
+    "target": "http://localhost:8080",
     "secure": false
   },
   "/info/version": {
-    "target": "http://localhost:8081",
+    "target": "http://localhost:8080",
     "secure": false
   },
   "/currentUser": {
-    "target": "http://localhost:8081",
+    "target": "http://localhost:8080",
+    "secure": false
+  },
+  "/login": {
+    "target": "http://localhost:8080",
+    "secure": false
+  },
+  "/logout": {
+    "target": "http://localhost:8080",
     "secure": false
   },
   "/oauth2/authorization/keycloak": {
-    "target": "http://localhost:8081",
-    "secure": false,
-    "headers": { "host": "localhost:8081" }
-  },
-  "/logout": {
-    "target": "http://localhost:8081",
+    "target": "http://localhost:8080",
     "secure": false
   }
 }

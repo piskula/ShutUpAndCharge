@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { BuildInfoService } from '@trucker/api';
+import { BuildInfoService } from '@suac/api';
 import { tap } from 'rxjs';
 
 @Component({
@@ -8,7 +8,7 @@ import { tap } from 'rxjs';
   standalone: true,
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
   title = 'TruckerFM';

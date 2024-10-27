@@ -1,6 +1,6 @@
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { inject, Injectable } from '@angular/core';
-import { CurrentUserService } from '@trucker/api';
+import { CurrentUserService } from '@suac/api';
 import { catchError, map, Observable, of } from 'rxjs';
 
 

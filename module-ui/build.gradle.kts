@@ -2,13 +2,14 @@ import com.github.gradle.node.npm.task.NpmTask
 import org.hidetake.gradle.swagger.generator.GenerateSwaggerCode
 
 plugins {
-  id("com.github.node-gradle.node") version "7.0.2"
+  id("com.github.node-gradle.node") version "7.1.0"
   id("org.hidetake.swagger.generator") version "2.19.2"
 }
 
 // to make build on non-dev machines easier, use bundled Node
 node {
     download.set(true)
+    version = "18.20.4"
 }
 
 val buildFrontendBundle = configurations.create("build-frontend-bundle")

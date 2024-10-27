@@ -19,7 +19,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("org.postgresql:postgresql:42.7.4")
-    implementation("org.flywaydb:flyway-mysql:9.22.2")
+    implementation("org.flywaydb:flyway-database-postgresql:10.20.1")
 
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -41,7 +41,7 @@ tasks.clean {
 }
 
 val copyFrontend = tasks.create("copyFrontend", Copy::class) {
-  from("${uiProject.layout.buildDirectory.asFile.get()}/generated-resources/static/browser")
+  from("${uiProject.layout.buildDirectory.asFile.get()}/../dist/shut-up-and-charge/browser")
   into(frontendDestination)
 }
 

@@ -16,7 +16,7 @@ class CurrentUserController(
 
     override fun getCurrentUser(): ResponseEntity<CurrentUserDTO> {
         val auth = SecurityContextHolder.getContext().authentication
-        if (auth is AnonymousAuthenticationToken)
+        if (auth == null || auth is AnonymousAuthenticationToken)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 
         return ResponseEntity.ok().body(

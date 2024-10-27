@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CurrentUserService } from '@trucker/api';
+import { CurrentUserService } from '@suac/api';
 import { combineLatest, tap } from 'rxjs';
 
 @Component({

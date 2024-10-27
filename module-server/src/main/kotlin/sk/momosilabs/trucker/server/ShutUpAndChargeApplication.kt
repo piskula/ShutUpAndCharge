@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-open class TruckerFmApplication
+open class ShutUpAndChargeApplication
 
 fun main(args: Array<String>) {
-    runApplication<TruckerFmApplication>(*args)
+    runApplication<ShutUpAndChargeApplication>(*args)
 }
