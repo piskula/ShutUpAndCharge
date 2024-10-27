@@ -1,0 +1,62 @@
+@use '@angular/material' as mat;
+@import '../../../styling/suac-theme';
+@import '../../../styling/header-and-footer-sizes';
+
+.footer {
+  height: $height-footer-desktop;
+  background-color: mat.get-theme-color($theme, surface-container-highest);
+  color: mat.get-theme-color($theme, on-surface);
+  font-size: .9em;
+  white-space: unset;
+}
+@media screen and (max-width: $mobile-width-threshold) {
+  .footer {
+    height: $height-footer-mobile;
+  }
+}
+
+.icon-text {
+  display: flex;
+  align-items: center;
+}
+
+
+
+.row {
+  width: 100%;
+  text-align: center;
+
+  :nth-child(2) {
+    text-align: center;
+    .icon-text {
+      margin: 0 auto;
+      display: inline-flex;
+    }
+  }
+  :nth-child(3) {
+    text-align: right;
+    .icon-text {
+      float: right;
+    }
+  }
+}
+
+.columns {
+  width: 33.3%;
+  min-width: 12rem;
+  vertical-align: top; // Fix for different height elements
+  display: inline-block;
+}
+@media screen and (max-width: $mobile-width-threshold) {
+  .columns {
+    width: 100%;
+  }
+  .row > * {
+    text-align: center !important;
+    .icon-text {
+      margin: 0 auto !important;
+      display: inline-flex !important;
+      float: unset !important;
+    }
+  }
+}

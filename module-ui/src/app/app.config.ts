@@ -3,16 +3,15 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { ApiModule, BASE_PATH } from '@suac/api';
-import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
 
     // make generated services working
-    importProvidersFrom(
-      ApiModule, HttpClientModule, HttpClientXsrfModule
-    ),
+    provideHttpClient(),
+    importProvidersFrom(ApiModule),
     { provide: BASE_PATH, useValue: '.' },
   ],
 };

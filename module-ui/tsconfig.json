@@ -25,7 +25,7 @@
     ],
     "paths": {
       "@suac/api": [
-        "./build/generated-services/module-api/index.ts"
+        "./build/module-api/index.ts"
       ]
     }
   },

@@ -1,0 +1,16 @@
+@use '@angular/material' as mat;
+
+$theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+    //primary: mat.$chartreuse-palette,
+  ),
+  //typography: (
+  //  brand-family: 'Ubuntu',
+  //  bold-weight: 900
+  //),
+  density: (
+    scale: -1
+  ),
+));

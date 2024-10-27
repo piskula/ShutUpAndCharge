@@ -1,0 +1,23 @@
+<mat-toolbar class="header">
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Shut Up and Charge</span>
+  <span style="flex: 1 1 auto"></span>
+  <a mat-stroked-button href="/logout"><mat-icon>logout</mat-icon>Logout</a>
+</mat-toolbar>
+
+
+<main>
+  <div id="main-content">
+    <h1>Welcome {{ user() }}</h1>
+    <p>You can do something now, or you can do other something:</p>
+
+    <button mat-flat-button (click)="getSth()">test GET</button>
+    <button mat-stroked-button (click)="postSth()">test POST</button>
+
+    <p>If you are done, please logout</p>
+  </div>
+
+  <app-footer></app-footer>
+</main>

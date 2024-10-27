@@ -1,29 +1,25 @@
 import { Routes } from '@angular/router';
-import { WelcomeComponent } from './welcome/welcome.component';
 import { isLoggedIn, isNotLoggedIn } from './security/authentication.guard';
-import { InsideSecuredComponent } from './app2/app-inside-secured.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+
+export const ROUTE_PREFIX_AUTH = 'auth';
+export const ROUTE_PREFIX_NO_AUTH = 'noAuth';
 
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'app/welcome',
+    redirectTo: ROUTE_PREFIX_AUTH,
   },
   {
-    path: 'app',
-    pathMatch: 'full',
-    redirectTo: 'app/welcome',
-  },
-  {
-    path: 'app/welcome',
-    component: WelcomeComponent,
+    path: ROUTE_PREFIX_NO_AUTH,
     canActivate: [isNotLoggedIn],
+    loadChildren: async() => import('./non-authenticated/non-authenticated.module').then(m => m.NonAuthenticatedModule),
   },
   {
-    path: 'app/inside',
-    component: InsideSecuredComponent,
+    path: ROUTE_PREFIX_AUTH,
     canActivate: [isLoggedIn],
+    loadChildren: async() => import('./authenticated/authenticated.module').then(m => m.AuthenticatedModule),
   },
   {
     path: '**',
