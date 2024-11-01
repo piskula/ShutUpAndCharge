@@ -15,12 +15,7 @@
 <main>
 
   <div id="main-content">
-    <h1>Kutlíkova
-      <button class="status-button" [class.is-free]="isFree" mat-stroked-button>
-        <mat-icon>{{ isFree ? 'check_circle' : 'cancel' }}</mat-icon>
-        {{ isFree ? 'Free' : 'Occupied' }}
-      </button>
-    </h1>
+    <app-charging-status></app-charging-status>
 
     <p>You are not logged in. To continue, please, login</p>
     <a mat-flat-button href="/oauth2/authorization/keycloak"><mat-icon>login</mat-icon>Login</a>

@@ -1,0 +1,34 @@
+<h2>Your last charging:</h2>
+<mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)"
+           [matSortActive]="sort$.value.sortActive" [matSortDirection]="sort$.value.sortDirection">
+
+  <ng-container matColumnDef="time">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Time</mat-header-cell>
+    <mat-cell *matCellDef="let group">
+      <span matTooltip="{{ group.time | date: 'shortTime' }}" matTooltipPosition="right">{{ group.time | date }}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="chargingStationId">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>
+      Station Id
+    </mat-header-cell>
+    <mat-cell *matCellDef="let group">
+      <mat-icon class="mr-1">power</mat-icon>
+      {{ group.chargingStationId }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="kwh">
+    <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">
+      kWh
+    </mat-header-cell>
+    <mat-cell *matCellDef="let group" class="table-column-right">
+      {{ group.kwh }}&nbsp;kWh
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+</mat-table>

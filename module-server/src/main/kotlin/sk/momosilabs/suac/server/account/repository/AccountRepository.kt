@@ -5,8 +5,8 @@ import org.springframework.stereotype.Repository
 import sk.momosilabs.suac.server.account.entity.AccountEntity
 
 @Repository
-interface AccountRepository: JpaRepository<sk.momosilabs.suac.server.account.entity.AccountEntity, Long> {
+interface AccountRepository: JpaRepository<AccountEntity, Long> {
 
-    fun findByIdKeycloak(idKeycloak: String): sk.momosilabs.suac.server.account.entity.AccountEntity?
+    fun findByIdKeycloak(idKeycloak: String): AccountEntity?
 
 }

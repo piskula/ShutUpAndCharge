@@ -4,6 +4,10 @@
   </button>
   <span>Shut Up and Charge</span>
   <span style="flex: 1 1 auto"></span>
+  <mat-chip-set class="mr-2">
+    <mat-chip>{{ user() }}</mat-chip>
+    <mat-chip *ngFor="let role of roles()">{{ role }}</mat-chip>
+  </mat-chip-set>
   <a mat-stroked-button href="/logout"><mat-icon>logout</mat-icon>Logout</a>
 </mat-toolbar>
 
@@ -11,12 +15,9 @@
 <main>
   <div id="main-content">
     <h1>Welcome {{ user() }}</h1>
-    <p>You can do something now, or you can do other something:</p>
+    <app-charging-status></app-charging-status>
 
-    <button mat-flat-button (click)="getSth()">test GET</button>
-    <button mat-stroked-button (click)="postSth()">test POST</button>
-
-    <p>If you are done, please logout</p>
+    <app-dashboard-charging-list></app-dashboard-charging-list>
   </div>
 
   <app-footer></app-footer>

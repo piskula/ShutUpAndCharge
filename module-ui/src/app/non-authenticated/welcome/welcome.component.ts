@@ -5,6 +5,7 @@ import { MatAnchor, MatButton, MatIconButton } from "@angular/material/button";
 import { MatIcon } from "@angular/material/icon";
 import { MatBadge } from "@angular/material/badge";
 import { FooterComponent } from "../../common/footer/footer.component";
+import { ChargingStatusComponent } from '../../common/charging-status/charging-status.component';
 
 @Component({
   selector: 'app-welcome',
@@ -18,6 +19,7 @@ import { FooterComponent } from "../../common/footer/footer.component";
     MatIconButton,
     MatAnchor,
     FooterComponent,
+    ChargingStatusComponent,
   ],
   standalone: true,
 })

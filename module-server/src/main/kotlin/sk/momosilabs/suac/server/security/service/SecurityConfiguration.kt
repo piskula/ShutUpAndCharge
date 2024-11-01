@@ -44,8 +44,7 @@ open class SecurityConfiguration(
 //            .csrf { it.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) }
             .authorizeHttpRequests { auth -> auth
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                .requestMatchers("/api/currentUser/**").permitAll()
-                .requestMatchers(AntPathRequestMatcher("/api/**")).hasRole("USER")
+                .requestMatchers(AntPathRequestMatcher("/api/**")).hasRole("MOMO_USER")
                 .anyRequest().permitAll()
             }
             .oauth2Login(Customizer.withDefaults())

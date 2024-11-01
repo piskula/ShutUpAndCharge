@@ -1,0 +1,13 @@
+<h2>Kutlíkova
+  <button class="status-button" [class.is-free]="isFree" mat-stroked-button>
+    <mat-icon>{{ isFree ? 'check_circle' : 'cancel' }}</mat-icon>
+    {{ isFree ? 'Free' : 'Occupied' }}
+  </button>
+</h2>
+<span>
+  <span *ngIf="isFree" class="mr-2">To start charging, please connect the cable first and then click on refresh button.</span>
+  <span *ngIf="!isFree" class="mr-2">Station is occupied currently.</span>
+  <button mat-mini-fab (click)="refreshStatus()">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</span>

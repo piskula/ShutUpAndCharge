@@ -29,3 +29,5 @@
      - shared PostgresDB (used for keycloak and charging app itself)
      - keycloak
      - nginx (routing traffic from default HTTP/S port to different components)
+6. Install Java
+   - `sudo apt install default-jre`

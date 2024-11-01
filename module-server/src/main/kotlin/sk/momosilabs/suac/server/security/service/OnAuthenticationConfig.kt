@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.stereotype.Service
 import sk.momosilabs.suac.server.account.entity.AccountEntity
 import sk.momosilabs.suac.server.account.repository.AccountRepository
+import sk.momosilabs.suac.server.charging.temporary.FakeChargingTemporaryService
 import sk.momosilabs.suac.server.security.model.TruckerPrincipal
 import sk.momosilabs.suac.server.security.model.UserTokenClaims
 import java.net.URL
@@ -20,6 +21,7 @@ import java.net.URL
 @Service
 open class OnAuthenticationConfig(
     private val accountRepository: AccountRepository,
+    private val fakeChargingTemporaryService: FakeChargingTemporaryService,
 ) {
 
     companion object {
@@ -31,6 +33,8 @@ open class OnAuthenticationConfig(
             val iss = idToken.claims["iss"] as URL
             val firstName = idToken.claims["given_name"] as String
             val lastName = idToken.claims["family_name"] as String
+            val roles = ((idToken.claims["realm_access"] as Map<*, *>? ?: emptyMap<Any, Any>())["roles"] as List<*>?)
+                ?.filterIsInstance<String>()?.toSet() ?: emptySet()
 
             return UserTokenClaims(
                 email = email,
@@ -38,6 +42,7 @@ open class OnAuthenticationConfig(
                 provider = iss.toString(),
                 firstName = firstName,
                 lastName = lastName,
+                roles = roles,
             )
         }
     }
@@ -51,8 +56,11 @@ open class OnAuthenticationConfig(
             if (principal is TruckerPrincipal) {
                 val existingUser = accountRepository.findByIdKeycloak(principal.idKeycloak)
                 if (existingUser == null) {
-                    accountRepository.save(principal.toAccountEntity())
+                    principal.id = accountRepository.save(principal.toAccountEntity()).id
+                } else{
+                    existingUser.updateWith(principal.defaultUser.tokenClaims())
                 }
+                fakeChargingTemporaryService.mockChargingForUser(principal.id)
             }
         }
     }
@@ -65,11 +73,12 @@ open class OnAuthenticationConfig(
                 val claims = userFromKeycloak.tokenClaims()
                 val userStored = accountRepository.findByIdKeycloak(claims.identifierSub)
                 return TruckerPrincipal(
+                    id = userStored?.id ?: -1L,
                     defaultUser = userFromKeycloak,
                     idKeycloak = claims.identifierSub,
                     firstName = userStored?.firstName ?: claims.firstName,
                     lastName = userStored?.lastName ?: claims.lastName,
-                    role = userStored?.role,
+                    oidcAuthorities = claims.roles,
                 )
             }
         })
@@ -79,7 +88,11 @@ open class OnAuthenticationConfig(
         idKeycloak = idKeycloak,
         firstName = firstName,
         lastName = lastName,
-        role = null,
     )
+
+    private fun AccountEntity.updateWith(claims: UserTokenClaims) {
+        firstName = claims.firstName
+        lastName = claims.lastName
+    }
 
 }

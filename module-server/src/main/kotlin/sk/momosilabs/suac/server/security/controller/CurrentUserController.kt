@@ -24,12 +24,4 @@ class CurrentUserController(
         )
     }
 
-    override fun postSecured(thisIsBody: String): ResponseEntity<String> {
-        return ResponseEntity.ok("This was posted: $thisIsBody")
-    }
-
-    override fun getSecured(): ResponseEntity<String> {
-        return ResponseEntity.ok("Why am I here?")
-    }
-
 }

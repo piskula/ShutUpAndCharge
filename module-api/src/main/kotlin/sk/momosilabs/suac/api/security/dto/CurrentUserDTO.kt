@@ -6,5 +6,5 @@ data class CurrentUserDTO(
     val idKeycloak: String,
     val firstName: String,
     val lastName: String,
-    val role: CurrentUserRoleDTO?,
+    val roles: Set<CurrentUserRoleDTO>,
 )

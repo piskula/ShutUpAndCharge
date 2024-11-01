@@ -6,4 +6,5 @@ data class UserTokenClaims(
     val provider: String,
     val firstName: String,
     val lastName: String,
+    val roles: Set<String>,
 )

@@ -1,10 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
-import { CurrentUserService } from '@suac/api';
-import { combineLatest, tap } from 'rxjs';
+import { CurrentUserService, CurrentUserDTO } from '@suac/api';
+import { tap } from 'rxjs';
 import { MatIcon } from "@angular/material/icon";
 import { MatAnchor, MatButton, MatIconButton } from "@angular/material/button";
 import { MatToolbar } from "@angular/material/toolbar";
 import { FooterComponent } from "../../common/footer/footer.component";
+import { DashboardChargingListComponent } from './dashboard-charging-list/dashboard-charging-list.component';
+import { MatChip, MatChipSet } from '@angular/material/chips';
+import { NgForOf } from '@angular/common';
+import { ChargingStatusComponent } from '../../common/charging-status/charging-status.component';
 
 @Component({
   selector: 'app-home',
@@ -16,13 +20,19 @@ import { FooterComponent } from "../../common/footer/footer.component";
     MatToolbar,
     MatAnchor,
     MatButton,
-    FooterComponent
+    FooterComponent,
+    DashboardChargingListComponent,
+    MatChipSet,
+    MatChip,
+    NgForOf,
+    ChargingStatusComponent,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
   public user = signal('');
+  public roles = signal<string[]>([]);
 
   constructor(
     private currentUserService: CurrentUserService,
@@ -30,19 +40,13 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    combineLatest([
-      this.currentUserService.getCurrentUser(),
-    ]).pipe(
-      tap(([user]) => this.user.set(`${user.firstName} ${user.lastName}`)),
+    this.currentUserService.getCurrentUser().pipe(
+      tap((user: CurrentUserDTO) => {
+        this.user.set(`${user.firstName} ${user.lastName}`);
+        const rolesEnum: Array<CurrentUserDTO.RolesEnum> = user.roles!!;
+        this.roles.set(rolesEnum.map((r: CurrentUserDTO.RolesEnum) => r.toString()));
+      }),
     ).subscribe();
-  }
-
-  getSth(): void {
-    this.currentUserService.getSecured().subscribe();
-  }
-
-  postSth(): void {
-    this.currentUserService.postSecured('<<<I am posting this>>>').subscribe();
   }
 
 }

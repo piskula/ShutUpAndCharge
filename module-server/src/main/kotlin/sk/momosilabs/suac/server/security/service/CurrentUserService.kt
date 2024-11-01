@@ -12,6 +12,6 @@ open class CurrentUserService {
         (SecurityContextHolder.getContext().authentication as OAuth2AuthenticationToken)
             .principal as TruckerPrincipal
 
-    fun userId(): String = getCurrentUser().idKeycloak
+    fun userId(): Long = getCurrentUser().id
 
 }
