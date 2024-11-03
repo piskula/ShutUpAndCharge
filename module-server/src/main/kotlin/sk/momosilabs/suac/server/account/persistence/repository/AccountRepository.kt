@@ -1,4 +1,4 @@
-package sk.momosilabs.suac.server.account.repository
+package sk.momosilabs.suac.server.account.persistence.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository

@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import sk.momosilabs.suac.server.account.repository.AccountRepository
+import sk.momosilabs.suac.server.account.persistence.repository.AccountRepository
 import sk.momosilabs.suac.server.charging.model.ChargingListItem
 import sk.momosilabs.suac.server.charging.persistence.repository.ChargingFinishedRepository
 

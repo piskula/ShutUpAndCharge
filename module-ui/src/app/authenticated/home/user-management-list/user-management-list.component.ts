@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ChargingService, ChargingListDTO, PageDTOChargingListDTO } from '@suac/api';
+import { AccountDTO, AccountService, PageDTOAccountDTO } from '@suac/api';
 import { BehaviorSubject, map, switchMap, tap } from 'rxjs';
 import {
   MatCell, MatCellDef,
@@ -13,12 +13,12 @@ import {
 import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-dashboard-charging-list',
-  templateUrl: './dashboard-charging-list.component.html',
-  styleUrl: 'dashboard-charging-list.component.scss',
+  selector: 'app-user-management-list',
+  templateUrl: './user-management-list.component.html',
+  styleUrl: 'user-management-list.component.scss',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -37,32 +37,31 @@ import { DatePipe, DecimalPipe } from '@angular/common';
     MatHeaderCellDef,
     MatCellDef,
     DatePipe,
-    DecimalPipe,
   ],
 })
-export class DashboardChargingListComponent implements OnInit {
+export class UserManagementListComponent implements OnInit {
 
-  public displayedColumns = ['time', 'chargingStationId', 'kwh', 'price'];
-  public dataSource = new MatTableDataSource<ChargingListDTO>([]);
+  public displayedColumns = ['id', 'idKeycloak', 'firstName', 'lastName', 'verifiedForCharging'];
+  public dataSource = new MatTableDataSource<AccountDTO>([]);
 
   public sort$ = new BehaviorSubject<{
     sortActive: string;
     sortDirection: "asc" | "desc" | "";
   }>({
-    sortActive: "time",
+    sortActive: "id",
     sortDirection: "desc",
   });
 
   constructor(
-    private chargingService: ChargingService,
+    private accountService: AccountService,
   ) {
   }
 
   ngOnInit(): void {
     this.sort$.pipe(
-      switchMap(sort => this.chargingService.getChargingList(0, 5, `${sort.sortActive},${sort.sortDirection}`)),
-      map((page: PageDTOChargingListDTO) => page.content || []),
-      tap((list: ChargingListDTO[]) => this.dataSource.data = list),
+      switchMap(sort => this.accountService.getUserList(0, 20, `${sort.sortActive},${sort.sortDirection}`)),
+      map((page: PageDTOAccountDTO) => page.content || []),
+      tap((list: AccountDTO[]) => this.dataSource.data = list),
     ).subscribe();
   }
 

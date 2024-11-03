@@ -9,5 +9,6 @@ data class ChargingListItem(
     val guid: UUID,
     val time: Instant,
     val kwh: BigDecimal,
+    val price: BigDecimal,
     val chargingStationId: String,
 )

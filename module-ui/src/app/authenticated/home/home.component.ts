@@ -7,8 +7,9 @@ import { MatToolbar } from "@angular/material/toolbar";
 import { FooterComponent } from "../../common/footer/footer.component";
 import { DashboardChargingListComponent } from './dashboard-charging-list/dashboard-charging-list.component';
 import { MatChip, MatChipSet } from '@angular/material/chips';
-import { NgForOf } from '@angular/common';
+import { NgForOf, NgIf } from '@angular/common';
 import { ChargingStatusComponent } from '../../common/charging-status/charging-status.component';
+import { UserManagementListComponent } from './user-management-list/user-management-list.component';
 
 @Component({
   selector: 'app-home',
@@ -26,6 +27,8 @@ import { ChargingStatusComponent } from '../../common/charging-status/charging-s
     MatChip,
     NgForOf,
     ChargingStatusComponent,
+    UserManagementListComponent,
+    NgIf,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,

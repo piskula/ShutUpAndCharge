@@ -8,5 +8,6 @@ fun ChargingListItem.toDto() = ChargingListDTO(
     guid = guid,
     time = time.atOffset(ZoneOffset.UTC),
     kwh = kwh,
+    price = price,
     chargingStationId = chargingStationId,
 )

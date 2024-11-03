@@ -1,0 +1,33 @@
+<h2>As you are admin, here is list of users within system:</h2>
+<mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)"
+           [matSortActive]="sort$.value.sortActive" [matSortDirection]="sort$.value.sortDirection">
+
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+    <mat-cell *matCellDef="let user">{{ user.id }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="idKeycloak">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Keycloak ID</mat-header-cell>
+    <mat-cell *matCellDef="let user">{{ user.idKeycloak }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="firstName">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>First Name</mat-header-cell>
+    <mat-cell *matCellDef="let user">{{ user.firstName }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="lastName">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</mat-header-cell>
+    <mat-cell *matCellDef="let user">{{ user.lastName }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="verifiedForCharging">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Verified for Charging</mat-header-cell>
+    <mat-cell *matCellDef="let user">{{ user.verifiedForCharging }}</mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+</mat-table>

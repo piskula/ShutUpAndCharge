@@ -1,0 +1,14 @@
+@use '@angular/material' as mat;
+@import '../../../../styling/suac-theme';
+
+.table-column-right {
+  text-align: right !important;
+  justify-content: flex-end;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: mat.get-theme-color($theme, surface-dim);
+}
+.mat-mdc-row .mat-mdc-cell {
+  cursor: pointer;
+}
