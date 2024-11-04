@@ -1,25 +1,13 @@
-<mat-toolbar class="header">
-  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-    <mat-icon>menu</mat-icon>
-  </button>
-  <span>Shut Up and Charge</span>
-  <span style="flex: 1 1 auto"></span>
-  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-    <mat-icon>favorite</mat-icon>
-  </button>
-  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-    <mat-icon>share</mat-icon>
-  </button>
-</mat-toolbar>
+<app-header class="header"></app-header>
 
 <main>
-
   <div id="main-content">
+
     <app-charging-status></app-charging-status>
 
     <p>You are not logged in. To continue, please, login</p>
     <a mat-flat-button href="/oauth2/authorization/keycloak"><mat-icon>login</mat-icon>Login</a>
-  </div>
 
+  </div>
   <app-footer></app-footer>
 </main>

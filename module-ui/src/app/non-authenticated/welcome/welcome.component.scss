@@ -1,11 +1,8 @@
 @use '@angular/material' as mat;
-@import '../../../styling/suac-theme';
 @import '../../../styling/header-and-footer-sizes';
 
 .header {
   height: $height-header;
-  background-color: mat.get-theme-color($theme, primary-container);
-  color: mat.get-theme-color($theme, on-primary-container);
 }
 
 main {
@@ -13,24 +10,20 @@ main {
   overflow-y: auto;
 }
 #main-content {
-  min-height: calc(100vh - $height-header - $height-footer-desktop);
-  padding: 1rem 2rem;
+  min-height: calc(100vh - $height-header - $height-footer-mobile);
+  padding: 1rem 1rem;
   box-sizing: border-box;
+
+  max-width: $main-content-max-width;
+  margin: auto;
 }
-@media screen and (max-width: $mobile-width-threshold) {
+@media screen and (min-width: $mobile-width-footer-threshold) {
   #main-content {
-    min-height: calc(100vh - $height-header - $height-footer-mobile);
+    min-height: calc(100vh - $height-header - $height-footer-desktop);
   }
 }
-
-
-.status-button {
-  margin-left: .5rem;
-  color: #c00100 !important;
-  &:hover {
-    cursor: default !important;
+@media screen and (min-width: $mobile-width-header-threshold) {
+  #main-content {
+    padding: 1rem 2rem;
   }
-}
-.is-free {
-  color: #038b00 !important;
 }

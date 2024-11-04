@@ -1,4 +1,9 @@
 $height-header: var(--mat-toolbar-standard-height);
+//$height-header: 5rem;
 $height-footer-desktop: 3rem;
 $height-footer-mobile: 8rem;
-$mobile-width-threshold: 610px;
+
+$mobile-width-footer-threshold: 610px;
+$mobile-width-header-threshold: 820px;
+
+$main-content-max-width: 1200px;

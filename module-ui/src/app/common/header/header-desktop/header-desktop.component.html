@@ -1,0 +1,20 @@
+<mat-toolbar class="desktop-bar">
+  <mat-icon class="main-logo-icon mr-1">ev_station</mat-icon>
+  <span class="mr-2">Shut Up and Charge</span>
+  <button mat-button class="navigation-button" *ngIf="headerData()?.roles?.includes('User')">
+    <mat-icon class="mr-1 material-icons-outlined">electrical_services</mat-icon>
+    Charge
+  </button>
+  <button mat-button class="navigation-button" *ngIf="headerData()?.roles?.includes('Admin')">
+    <mat-icon class="mr-1 material-icons-outlined">groups</mat-icon>
+    User manager
+  </button>
+
+  <ng-container *ngIf="headerData() as headerData">
+    <span style="flex: 1 1 auto"></span>
+    <mat-chip-set class="mr-2" [matTooltip]="headerData.roles.join(', ')">
+      <mat-chip>{{ headerData.user }}</mat-chip>
+    </mat-chip-set>
+    <a mat-stroked-button href="/logout"><mat-icon>logout</mat-icon>Logout</a>
+  </ng-container>
+</mat-toolbar>

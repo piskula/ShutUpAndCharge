@@ -41,7 +41,7 @@ import { DatePipe } from '@angular/common';
 })
 export class UserManagementListComponent implements OnInit {
 
-  public displayedColumns = ['id', 'idKeycloak', 'firstName', 'lastName', 'verifiedForCharging'];
+  public displayedColumns = ['id', 'idKeycloak', 'firstName', 'verifiedForCharging'];
   public dataSource = new MatTableDataSource<AccountDTO>([]);
 
   public sort$ = new BehaviorSubject<{

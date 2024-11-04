@@ -1,0 +1,36 @@
+@use '@angular/material' as mat;
+@import '../../../../styling/suac-theme';
+
+mat-toolbar {
+  background-color: transparent;
+  color: inherit;
+  height: 100%;
+  max-width: 1200px;
+  margin-right: auto;
+  margin-left: auto;
+
+  .main-logo-icon {
+    font-size: 1.75em;
+    height: 1em;
+    width: 1em;
+  }
+}
+
+.navigation-button {
+  border-radius: 0;
+  height: 100%;
+
+  &.selected {
+    color: mat.get-theme-color($theme, primary);
+    border-bottom: solid mat.get-theme-color($theme, primary);
+    mat-icon {
+      color: mat.get-theme-color($theme, primary);
+    }
+  }
+
+  mat-icon {
+    font-size: 2em;
+    width: 1em;
+    height: 1em;
+  }
+}

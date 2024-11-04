@@ -1,11 +1,8 @@
 @use '@angular/material' as mat;
-@import '../../../styling/suac-theme';
 @import '../../../styling/header-and-footer-sizes';
 
 .header {
   height: $height-header;
-  background-color: mat.get-theme-color($theme, primary-container);
-  color: mat.get-theme-color($theme, on-primary-container);
 }
 
 main {
@@ -16,8 +13,11 @@ main {
   min-height: calc(100vh - $height-header - $height-footer-desktop);
   padding: 1rem 2rem;
   box-sizing: border-box;
+
+  max-width: $main-content-max-width;
+  margin: auto;
 }
-@media screen and (max-width: $mobile-width-threshold) {
+@media screen and (max-width: $mobile-width-footer-threshold) {
   #main-content {
     min-height: calc(100vh - $height-header - $height-footer-mobile);
   }

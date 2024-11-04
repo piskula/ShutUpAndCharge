@@ -9,7 +9,7 @@
   font-size: .9em;
   white-space: unset;
 }
-@media screen and (max-width: $mobile-width-threshold) {
+@media screen and (max-width: $mobile-width-footer-threshold) {
   .footer {
     height: $height-footer-mobile;
   }
@@ -24,17 +24,23 @@
 
 .row {
   width: 100%;
+  min-height: $height-footer-desktop;
   text-align: center;
+
+  max-width: $main-content-max-width;
+  margin: auto;
 
   :nth-child(2) {
     text-align: center;
+    justify-content: center;
     .icon-text {
-      margin: 0 auto;
-      display: inline-flex;
+      justify-content: center;
+      display: flex;
     }
   }
   :nth-child(3) {
     text-align: right;
+    justify-content: flex-end;
     .icon-text {
       float: right;
     }
@@ -45,11 +51,15 @@
   width: 33.3%;
   min-width: 12rem;
   vertical-align: top; // Fix for different height elements
-  display: inline-block;
+  display: inline-flex;
+  line-height: 1.25rem;
+  height: $height-footer-desktop;
 }
-@media screen and (max-width: $mobile-width-threshold) {
+@media screen and (max-width: $mobile-width-footer-threshold) {
   .columns {
     width: 100%;
+    height: unset;
+    display: inline-block;
   }
   .row > * {
     text-align: center !important;
@@ -59,4 +69,10 @@
       float: unset !important;
     }
   }
+}
+
+mat-icon {
+  font-size: 1.4em;
+  height: 1em;
+  width: 1em;
 }

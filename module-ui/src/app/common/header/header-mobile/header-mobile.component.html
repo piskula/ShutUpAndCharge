@@ -1,0 +1,23 @@
+<mat-toolbar class="mobile-bar">
+  <button mat-icon-button aria-label="Example icon-button with menu icon">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <mat-icon class="main-logo-icon mr-1">ev_station</mat-icon>
+  <span class="mr-2">Shut Up and Charge</span>
+
+  <ng-container *ngIf="headerData() as headerData">
+    <span style="flex: 1 1 auto"></span>
+<!--    <mat-chip-set class="mr-2" [matTooltip]="headerData.roles.join(', ')">-->
+<!--      <mat-chip>{{ headerData.user }}</mat-chip>-->
+<!--    </mat-chip-set>-->
+    <a mat-stroked-button href="/logout" class="logout-icon-link"><mat-icon>logout</mat-icon></a>
+  </ng-container>
+
+<!--  <span style="flex: 1 1 auto"></span>-->
+<!--  <button mat-icon-button aria-label="Example icon-button with heart icon">-->
+<!--    <mat-icon>favorite</mat-icon>-->
+<!--  </button>-->
+<!--  <a mat-fab href="/logout">-->
+<!--    <mat-icon>logout</mat-icon>-->
+<!--  </a>-->
+</mat-toolbar>

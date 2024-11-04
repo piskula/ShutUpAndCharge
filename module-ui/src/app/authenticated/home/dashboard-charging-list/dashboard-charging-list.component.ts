@@ -42,7 +42,7 @@ import { DatePipe, DecimalPipe } from '@angular/common';
 })
 export class DashboardChargingListComponent implements OnInit {
 
-  public displayedColumns = ['time', 'chargingStationId', 'kwh', 'price'];
+  public displayedColumns = ['time', 'stationId', 'kwh', 'price'];
   public dataSource = new MatTableDataSource<ChargingListDTO>([]);
 
   public sort$ = new BehaviorSubject<{

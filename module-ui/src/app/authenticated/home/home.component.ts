@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { CurrentUserService, CurrentUserDTO } from '@suac/api';
-import { tap } from 'rxjs';
+import { take, tap } from 'rxjs';
 import { MatIcon } from "@angular/material/icon";
 import { MatAnchor, MatButton, MatIconButton } from "@angular/material/button";
 import { MatToolbar } from "@angular/material/toolbar";
@@ -10,6 +10,8 @@ import { MatChip, MatChipSet } from '@angular/material/chips';
 import { NgForOf, NgIf } from '@angular/common';
 import { ChargingStatusComponent } from '../../common/charging-status/charging-status.component';
 import { UserManagementListComponent } from './user-management-list/user-management-list.component';
+import { HeaderComponent } from '../../common/header/header.component';
+import { HeaderData } from '../../common/header/model/header-data';
 
 @Component({
   selector: 'app-home',
@@ -29,13 +31,13 @@ import { UserManagementListComponent } from './user-management-list/user-managem
     ChargingStatusComponent,
     UserManagementListComponent,
     NgIf,
+    HeaderComponent,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
-  public user = signal('');
-  public roles = signal<string[]>([]);
+  public headerData = signal<HeaderData>({ user: '', roles: []});
 
   constructor(
     private currentUserService: CurrentUserService,
@@ -44,10 +46,13 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUserService.getCurrentUser().pipe(
+      take(1),
       tap((user: CurrentUserDTO) => {
-        this.user.set(`${user.firstName} ${user.lastName}`);
         const rolesEnum: Array<CurrentUserDTO.RolesEnum> = user.roles!!;
-        this.roles.set(rolesEnum.map((r: CurrentUserDTO.RolesEnum) => r.toString()));
+        this.headerData.set({
+          user: `${user.firstName} ${user.lastName}`,
+          roles: rolesEnum.map((r: CurrentUserDTO.RolesEnum) => r.toString()),
+        });
       }),
     ).subscribe();
   }

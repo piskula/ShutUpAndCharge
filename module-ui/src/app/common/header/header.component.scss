@@ -1,0 +1,28 @@
+@use '@angular/material' as mat;
+@import '../../../styling/suac-theme';
+@import '../../../styling/header-and-footer-sizes';
+
+:host {
+  height: 100%;
+  display: block;
+  background-color: mat.get-theme-color($theme, primary-container);
+  color: mat.get-theme-color($theme, primary);
+}
+
+.mobile-bar {
+  display: block;
+  height: 100%;
+}
+.desktop-bar {
+  display: none;
+}
+
+@media (min-width: $mobile-width-header-threshold) {
+  .mobile-bar {
+    display: none;
+  }
+  .desktop-bar {
+    display: block;
+    height: 100%;
+  }
+}
