@@ -5,7 +5,7 @@
 :host {
   height: 100%;
   display: block;
-  background-color: mat.get-theme-color($theme, primary-container);
+  background-color: mat.get-theme-color($theme, secondary-container);
   color: mat.get-theme-color($theme, primary);
 }
 

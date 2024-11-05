@@ -11,7 +11,7 @@ main {
 }
 #main-content {
   min-height: calc(100vh - $height-header - $height-footer-mobile);
-  padding: 1rem 1rem;
+  padding: 0 1rem 1.5rem;
   box-sizing: border-box;
 
   max-width: $main-content-max-width;

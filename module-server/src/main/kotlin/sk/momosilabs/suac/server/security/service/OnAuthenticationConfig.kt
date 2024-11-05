@@ -17,6 +17,7 @@ import sk.momosilabs.suac.server.charging.temporary.FakeChargingTemporaryService
 import sk.momosilabs.suac.server.security.model.TruckerPrincipal
 import sk.momosilabs.suac.server.security.model.UserTokenClaims
 import java.net.URL
+import kotlin.random.Random
 
 @Service
 open class OnAuthenticationConfig(
@@ -88,11 +89,15 @@ open class OnAuthenticationConfig(
         idKeycloak = idKeycloak,
         firstName = firstName,
         lastName = lastName,
+        verifiedForCharging = Random.nextBoolean(),
     )
 
     private fun AccountEntity.updateWith(claims: UserTokenClaims) {
         firstName = claims.firstName
         lastName = claims.lastName
+        if (claims.roles.contains("MOMO_ADMIN")) {
+            verifiedForCharging = true
+        }
     }
 
 }

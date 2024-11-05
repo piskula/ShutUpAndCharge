@@ -18,5 +18,15 @@ html, body {
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font: mat.get-theme-typography($theme, body-large, font);
+}
+
+h1 {
+  font: mat.get-theme-typography($theme, headline-large, font);
+}
+h2 {
+  font: mat.get-theme-typography($theme, headline-medium, font);
+}
+h3 {
+  font: mat.get-theme-typography($theme, headline-small, font);
 }

@@ -12,3 +12,9 @@
 .mat-mdc-row .mat-mdc-cell {
   cursor: pointer;
 }
+.color-verified {
+  color: mat.get-theme-color($theme, tertiary);
+}
+.color-not-verified {
+  color: mat.get-theme-color($theme, error);
+}

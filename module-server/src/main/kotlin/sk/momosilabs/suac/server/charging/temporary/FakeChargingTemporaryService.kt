@@ -32,7 +32,9 @@ open class FakeChargingTemporaryService(
                         .minusHours(Random().nextLong(24))
                         .toInstant(ZoneOffset.UTC),
                     kwh = kwh,
-                    price = kwh.multiply(BigDecimal.valueOf(29L, 2)).round(MathContext(2, RoundingMode.HALF_UP)),
+                    price = kwh.multiply(BigDecimal.valueOf(29L, 2))
+                        .round(MathContext(2, RoundingMode.HALF_UP))
+                        .negate(),
                     chargingStationId = "ETCC:Kutlik:${Random().nextInt(2)+1}",
                 ),
                 userId = userId,

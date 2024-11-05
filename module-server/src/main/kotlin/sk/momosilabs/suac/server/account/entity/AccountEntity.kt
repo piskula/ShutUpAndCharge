@@ -24,4 +24,7 @@ class AccountEntity(
     @field:NotNull
     var lastName: String,
 
+    @field:NotNull
+    var verifiedForCharging: Boolean,
+
 )

@@ -4,7 +4,12 @@
 
   <ng-container matColumnDef="id">
     <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
-    <mat-cell *matCellDef="let user">{{ user.id }}</mat-cell>
+    <mat-cell *matCellDef="let user">
+      {{ user.id }}
+      <button mat-icon-button class="ml-2" [cdkCopyToClipboard]="user.idKeycloak">
+        <mat-icon>content_copy</mat-icon>
+      </button>
+    </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="idKeycloak">
@@ -18,8 +23,11 @@
   </ng-container>
 
   <ng-container matColumnDef="verifiedForCharging">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Verified for Charging</mat-header-cell>
-    <mat-cell *matCellDef="let user">{{ user.verifiedForCharging }}</mat-cell>
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Can Charge</mat-header-cell>
+    <mat-cell *matCellDef="let user">
+      <mat-icon *ngIf="user.verifiedForCharging" class="color-verified">verified</mat-icon>
+      <mat-icon *ngIf="!user.verifiedForCharging" class="color-not-verified">close</mat-icon>
+    </mat-cell>
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

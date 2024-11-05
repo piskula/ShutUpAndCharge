@@ -5,11 +5,16 @@ $theme: mat.define-theme((
     theme-type: light,
     primary: mat.$azure-palette,
     //primary: mat.$chartreuse-palette,
+    //primary: mat.$orange-palette,
+    //primary: mat.$rose-palette,
   ),
-  //typography: (
-  //  brand-family: 'Ubuntu',
-  //  bold-weight: 900
-  //),
+  typography: (
+    plain-family: 'Open Sans',
+    brand-family: 'Ubuntu',
+    bold-weight: 900,
+    medium-weight: 500,
+    regular-weight: 400,
+  ),
   density: (
     scale: -1
   ),

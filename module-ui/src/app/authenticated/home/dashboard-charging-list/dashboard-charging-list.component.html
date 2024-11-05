@@ -1,4 +1,4 @@
-<h2>Your last charging:</h2>
+<h2>Your last transactions:</h2>
 <mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)"
            [matSortActive]="sort$.value.sortActive" [matSortDirection]="sort$.value.sortDirection">
 
@@ -29,7 +29,7 @@
   </ng-container>
 
   <ng-container matColumnDef="price">
-    <mat-header-cell *matHeaderCellDef class="table-column-right">
+    <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">
       Price
     </mat-header-cell>
     <mat-cell *matCellDef="let group" class="table-column-right">
@@ -37,7 +37,7 @@
     </mat-cell>
   </ng-container>
 
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  <mat-header-row *matHeaderRowDef="displayedColumns()"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns()"></mat-row>
 
 </mat-table>

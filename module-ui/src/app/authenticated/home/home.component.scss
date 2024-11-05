@@ -10,15 +10,20 @@ main {
   overflow-y: auto;
 }
 #main-content {
-  min-height: calc(100vh - $height-header - $height-footer-desktop);
-  padding: 1rem 2rem;
+  min-height: calc(100vh - $height-header - $height-footer-mobile);
+  padding: 0 1rem 1.5rem;
   box-sizing: border-box;
 
   max-width: $main-content-max-width;
   margin: auto;
 }
-@media screen and (max-width: $mobile-width-footer-threshold) {
+@media screen and (min-width: $mobile-width-footer-threshold) {
   #main-content {
-    min-height: calc(100vh - $height-header - $height-footer-mobile);
+    min-height: calc(100vh - $height-header - $height-footer-desktop);
+  }
+}
+@media screen and (min-width: $mobile-width-header-threshold) {
+  #main-content {
+    padding: 1rem 2rem;
   }
 }

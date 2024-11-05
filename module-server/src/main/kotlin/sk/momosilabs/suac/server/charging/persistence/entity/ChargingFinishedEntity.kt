@@ -34,4 +34,7 @@ class ChargingFinishedEntity(
     @field:NotNull
     val stationId: String,
 
+    @field:NotNull
+    val price: BigDecimal,
+
 )
