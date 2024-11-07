@@ -1,6 +1,11 @@
 @use '@angular/material' as mat;
 @import '../../../../styling/suac-theme';
 
+:host {
+  display: block;
+  overflow-y: hidden;
+}
+
 .table-column-right {
   text-align: right !important;
   justify-content: flex-end;

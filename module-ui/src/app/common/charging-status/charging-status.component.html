@@ -4,13 +4,11 @@
     {{ isFree ? 'Free' : 'Occupied' }}
   </button>
 </h2>
-<!--<span>-->
-  <div *ngIf="isFree" class="mr-2">
-    To start charging, please connect the cable first and then click on refresh button.
-    <span>Only previously-verified users can initiate charging process.</span>
-  </div>
-  <div *ngIf="!isFree" class="mr-2">Station is occupied currently.</div>
-  <button mat-mini-fab (click)="refreshStatus()">
-    <mat-icon>refresh</mat-icon>
-  </button>
-<!--</span>-->
+<div *ngIf="isFree" class="mr-2">
+  To start charging, please connect the cable first and then click on refresh button.
+  <span>Only previously-verified users can initiate charging process.</span>
+</div>
+<div *ngIf="!isFree" class="mr-2">Station is occupied currently.</div>
+<button mat-mini-fab (click)="refreshStatus()" class="ml-2 mb-3">
+  <mat-icon>refresh</mat-icon>
+</button>

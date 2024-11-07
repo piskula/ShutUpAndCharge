@@ -5,7 +5,6 @@ import sk.momosilabs.suac.server.charging.model.ChargingListItem
 import sk.momosilabs.suac.server.charging.persistence.ChargingPersistence
 import sk.momosilabs.suac.server.charging.persistence.repository.ChargingFinishedRepository
 import java.math.BigDecimal
-import java.math.MathContext
 import java.math.RoundingMode
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -22,6 +21,9 @@ open class FakeChargingTemporaryService(
         val count = chargingRepository.countByAccountId(userId)
         if (count < 10) {
             val kwh = BigDecimal.valueOf(Random().nextLong(50000) + 10000L, 3)
+            val price = kwh.multiply(BigDecimal.valueOf(29L, 2))
+                .setScale(2, RoundingMode.HALF_UP)
+                .negate()
             chargingPersistence.saveFinishedCharging(
                 charging = ChargingListItem(
                     id = 0L,
@@ -32,9 +34,7 @@ open class FakeChargingTemporaryService(
                         .minusHours(Random().nextLong(24))
                         .toInstant(ZoneOffset.UTC),
                     kwh = kwh,
-                    price = kwh.multiply(BigDecimal.valueOf(29L, 2))
-                        .round(MathContext(2, RoundingMode.HALF_UP))
-                        .negate(),
+                    price = price,
                     chargingStationId = "ETCC:Kutlik:${Random().nextInt(2)+1}",
                 ),
                 userId = userId,

@@ -6,7 +6,7 @@
     <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
     <mat-cell *matCellDef="let user">
       {{ user.id }}
-      <button mat-icon-button class="ml-2" [cdkCopyToClipboard]="user.idKeycloak">
+      <button mat-icon-button class="ml-2" [cdkCopyToClipboard]="user.idKeycloak" matTooltip="Copy Keycloak ID">
         <mat-icon>content_copy</mat-icon>
       </button>
     </mat-cell>
