@@ -1,7 +1,8 @@
 @use '@angular/material' as mat;
-@import "styling/suac-theme";
-@import "styling/global-overrides";
-@import "styling/position-helpers";
+@import 'styling/suac-theme';
+@import 'styling/global/coloring';
+@import 'styling/global/global-overrides';
+@import 'styling/global/position-helpers';
 
 @include mat.core();
 

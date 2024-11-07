@@ -1,0 +1,13 @@
+@use '@angular/material' as mat;
+@import '../suac-theme';
+
+.text-darker {
+  color: mat.get-theme-color($theme, on-surface-variant);
+}
+.text-light {
+  color: mat.get-theme-color($theme, outline);
+}
+.text-very-light,
+.text-pale {
+  color: mat.get-theme-color($theme, outline-variant);
+}

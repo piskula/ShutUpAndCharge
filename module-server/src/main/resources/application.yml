@@ -28,7 +28,7 @@ spring:
             authorization-grant-type: authorization_code # needs manual session invalidation on logout, check refresh_token
         provider:
           keycloak:
-            issuer-uri: "https://keycloak.momosi.org/realms/momosi"
+            issuer-uri: "https://sso.momosi.org/realms/momosi"
 
 # to allow swagger-ui to perform requests against HTTPS
 server:

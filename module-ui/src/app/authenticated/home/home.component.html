@@ -2,11 +2,7 @@
 
 <main>
   <div id="main-content">
-    <h1>Welcome {{ headerData().user }}</h1>
-    <app-charging-status></app-charging-status>
-
-    <app-dashboard-charging-list></app-dashboard-charging-list>
-    <app-user-management-list *ngIf="headerData().roles.includes('Admin')"></app-user-management-list>
+    <router-outlet></router-outlet>
   </div>
 
   <app-footer></app-footer>

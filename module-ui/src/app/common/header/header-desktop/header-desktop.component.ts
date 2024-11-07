@@ -8,6 +8,7 @@ import { MatChip, MatChipSet } from '@angular/material/chips';
 import { HeaderData } from '../model/header-data';
 import { take, tap } from 'rxjs';
 import { MatTooltip } from '@angular/material/tooltip';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-header-desktop',
@@ -24,6 +25,8 @@ import { MatTooltip } from '@angular/material/tooltip';
     NgIf,
     MatButton,
     MatTooltip,
+    RouterLinkActive,
+    RouterLink,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,

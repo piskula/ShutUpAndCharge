@@ -3,11 +3,15 @@ import { CurrentUserService, CurrentUserDTO } from '@suac/api';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatIcon } from '@angular/material/icon';
 import { NgForOf, NgIf } from '@angular/common';
-import { MatAnchor, MatFabAnchor, MatIconButton } from '@angular/material/button';
+import { MatAnchor, MatButton, MatFabAnchor, MatIconButton } from '@angular/material/button';
 import { MatChip, MatChipSet } from '@angular/material/chips';
 import { HeaderData } from '../model/header-data';
 import { take, tap } from 'rxjs';
 import { MatTooltip } from '@angular/material/tooltip';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { MatDivider } from '@angular/material/divider';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-header-mobile',
@@ -24,6 +28,13 @@ import { MatTooltip } from '@angular/material/tooltip';
     MatFabAnchor,
     NgIf,
     MatTooltip,
+    MatMenu,
+    MatMenuTrigger,
+    MatButton,
+    CdkOverlayOrigin,
+    MatDivider,
+    RouterLinkActive,
+    RouterLink,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -89,7 +89,7 @@ open class OnAuthenticationConfig(
         idKeycloak = idKeycloak,
         firstName = firstName,
         lastName = lastName,
-        verifiedForCharging = Random.nextBoolean(),
+        verifiedForCharging = momoRoles().contains("MOMO_ADMIN"),
     )
 
     private fun AccountEntity.updateWith(claims: UserTokenClaims) {
