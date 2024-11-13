@@ -8,4 +8,6 @@ interface AccountPersistence {
 
     fun findAll(pageable: Pageable): Page<Account>
 
+    fun setVerifiedForCharging(accountId: Long, verified: Boolean): Boolean
+
 }

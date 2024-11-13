@@ -13,7 +13,7 @@ import {
 import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe, NgIf } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -40,6 +40,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     MatCellDef,
     DatePipe,
     DecimalPipe,
+    NgIf,
   ],
 })
 export class DashboardChargingListComponent implements OnInit {

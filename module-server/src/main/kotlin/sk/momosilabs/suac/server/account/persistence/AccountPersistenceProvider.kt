@@ -6,8 +6,6 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import sk.momosilabs.suac.server.account.model.Account
 import sk.momosilabs.suac.server.account.persistence.repository.AccountRepository
-import sk.momosilabs.suac.server.charging.model.ChargingListItem
-import sk.momosilabs.suac.server.charging.persistence.repository.ChargingFinishedRepository
 
 @Repository
 open class AccountPersistenceProvider(
@@ -17,5 +15,15 @@ open class AccountPersistenceProvider(
     @Transactional(readOnly = true)
     override fun findAll(pageable: Pageable): Page<Account> =
         accountRepository.findAll(pageable).map { it.toModel() }
+
+    @Transactional
+    override fun setVerifiedForCharging(accountId: Long, verified: Boolean): Boolean {
+        val account = accountRepository.findById(accountId).get()
+
+        if (account.verifiedForCharging != verified)
+            account.verifiedForCharging = verified
+
+        return account.verifiedForCharging
+    }
 
 }

@@ -1,6 +1,9 @@
 # Shut Up And Charge
 
 This is a web application, which purpose is to manage access to publicly accessible EV Charger.
+Current deployment available at:
+
+https://charge.momosi.org/
 
 ## Composition
 This Application consists of:

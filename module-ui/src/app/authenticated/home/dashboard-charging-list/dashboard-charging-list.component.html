@@ -14,8 +14,12 @@
       Station Id
     </mat-header-cell>
     <mat-cell *matCellDef="let group">
-      <mat-icon class="mr-1">power</mat-icon>
-      {{ group.chargingStationId }}
+      <ng-container *ngIf="group.price > 0">
+        <mat-icon class="mr-1">savings</mat-icon>Credit
+      </ng-container>
+      <ng-container *ngIf="group.price <= 0">
+        <mat-icon class="mr-1">power</mat-icon>{{ group.chargingStationId }}
+      </ng-container>
     </mat-cell>
   </ng-container>
 
@@ -24,7 +28,9 @@
       kWh
     </mat-header-cell>
     <mat-cell *matCellDef="let group" class="table-column-right">
-      {{ group.kwh | number: '1.3-3' }}&nbsp;kWh
+      <ng-container *ngIf="group.price <= 0">
+        {{ group.kwh | number: '1.3-3' }}&nbsp;kWh
+      </ng-container>
     </mat-cell>
   </ng-container>
 
@@ -32,8 +38,9 @@
     <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">
       Price
     </mat-header-cell>
-    <mat-cell *matCellDef="let group" class="table-column-right">
-      {{ group.price | number: '1.2-2' }}&nbsp;€
+    <mat-cell *matCellDef="let group" class="table-column-right" style="font-weight: 600"
+              [class.color-error]="group.price < 0" [class.color-accent]="group.price > 0">
+      <span *ngIf="group.price > 0">+</span>{{ group.price | number: '1.2-2' }}&nbsp;€
     </mat-cell>
   </ng-container>
 

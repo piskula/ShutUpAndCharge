@@ -11,3 +11,10 @@
 .text-pale {
   color: mat.get-theme-color($theme, outline-variant);
 }
+
+.color-accent {
+  color: mat.get-theme-color($theme, tertiary);
+}
+.color-error {
+  color: mat.get-theme-color($theme, error);
+}

@@ -23,7 +23,6 @@ open class FakeChargingTemporaryService(
             val kwh = BigDecimal.valueOf(Random().nextLong(50000) + 10000L, 3)
             val price = kwh.multiply(BigDecimal.valueOf(29L, 2))
                 .setScale(2, RoundingMode.HALF_UP)
-                .negate()
             chargingPersistence.saveFinishedCharging(
                 charging = ChargingListItem(
                     id = 0L,
@@ -34,7 +33,7 @@ open class FakeChargingTemporaryService(
                         .minusHours(Random().nextLong(24))
                         .toInstant(ZoneOffset.UTC),
                     kwh = kwh,
-                    price = price,
+                    price = price.negate(),
                     chargingStationId = "ETCC:Kutlik:${Random().nextInt(2)+1}",
                 ),
                 userId = userId,

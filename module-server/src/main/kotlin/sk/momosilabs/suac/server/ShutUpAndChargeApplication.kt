@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 open class ShutUpAndChargeApplication
 
 fun main(args: Array<String>) {
-    runApplication<sk.momosilabs.suac.server.ShutUpAndChargeApplication>(*args)
+    runApplication<ShutUpAndChargeApplication>(*args)
 }

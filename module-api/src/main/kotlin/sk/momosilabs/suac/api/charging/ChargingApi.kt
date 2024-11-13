@@ -6,14 +6,18 @@ import io.swagger.annotations.ApiImplicitParams
 import io.swagger.annotations.ApiOperation
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import sk.momosilabs.suac.api.common.dto.PageDTO
 import sk.momosilabs.suac.api.common.dto.PageableDTO
+import java.math.BigDecimal
 
 @Api("Charging")
 interface ChargingApi {
 
     companion object {
-        const val ENDPOINT_CHARGING = "/api/charging"
+        private const val ENDPOINT_CHARGING = "/api/charging"
     }
 
     @ApiOperation("Check version")
@@ -25,5 +29,8 @@ interface ChargingApi {
     )
     @GetMapping(ENDPOINT_CHARGING, produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getChargingList(pageable: PageableDTO): PageDTO<ChargingListDTO>
+
+    @PostMapping("${ENDPOINT_CHARGING}/topUp/{accountId}", produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun updateVerifiedFlag(@PathVariable accountId: Long, @RequestBody amount: BigDecimal): BigDecimal
 
 }

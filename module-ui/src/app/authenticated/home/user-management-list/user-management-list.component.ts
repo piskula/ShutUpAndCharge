@@ -16,6 +16,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { DatePipe, NgIf } from '@angular/common';
 import { MatIconButton } from '@angular/material/button';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'app-user-management-list',
@@ -42,11 +43,14 @@ import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
     MatIconButton,
     CdkCopyToClipboard,
     NgIf,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
   ],
 })
 export class UserManagementListComponent implements OnInit {
 
-  public displayedColumns = ['id', /*'idKeycloak',*/ 'firstName', 'verifiedForCharging'];
+  public displayedColumns = ['id', /*'idKeycloak',*/ 'firstName', 'verifiedForCharging', 'action'];
   public dataSource = new MatTableDataSource<AccountDTO>([]);
 
   public sort$ = new BehaviorSubject<{
