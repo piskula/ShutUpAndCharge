@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Add credit for {{data.accountName}}</h2>
+<mat-dialog-content>
+  <button mat-stroked-button *ngFor="let suggestion of suggestedPrices"
+          class="mb-2 mr-2" style="padding: 0" (click)="amount.set(suggestion)">{{ suggestion }}&nbsp;€</button>
+  <p>Please, put an amount:</p>
+  <mat-form-field>
+    <mat-label>Credit in euro</mat-label>
+    <input #priceInput matInput [(ngModel)]="amount" cdkFocusInitial type="number" step=".01" (focus)="priceInput.select()" max="199.99"/>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button [mat-dialog-close]="amount()" [disabled]="amount() <= 0">Yes, add credit {{ amount() | number: '1.2-2'}}&nbsp;€</button>
+</mat-dialog-actions>

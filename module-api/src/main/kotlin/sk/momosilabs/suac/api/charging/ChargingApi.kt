@@ -30,7 +30,9 @@ interface ChargingApi {
     @GetMapping(ENDPOINT_CHARGING, produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getChargingList(pageable: PageableDTO): PageDTO<ChargingListDTO>
 
-    @PostMapping("${ENDPOINT_CHARGING}/topUp/{accountId}", produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun updateVerifiedFlag(@PathVariable accountId: Long, @RequestBody amount: BigDecimal): BigDecimal
+    @PostMapping("${ENDPOINT_CHARGING}/topUp/{accountId}",
+        produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun topUpAccount(@PathVariable accountId: Long, @RequestBody amount: BigDecimal): BigDecimal
 
 }

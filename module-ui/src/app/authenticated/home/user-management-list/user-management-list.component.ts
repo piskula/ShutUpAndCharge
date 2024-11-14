@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { AccountDTO, AccountService, PageDTOAccountDTO } from '@suac/api';
-import { BehaviorSubject, map, switchMap, tap } from 'rxjs';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal } from '@angular/core';
+import { AccountDTO, AccountService, PageDTOAccountDTO, ChargingService } from '@suac/api';
+import { BehaviorSubject, finalize, map, switchMap, take, tap } from 'rxjs';
 import {
   MatCell, MatCellDef,
   MatColumnDef,
@@ -18,6 +18,10 @@ import { MatIconButton } from '@angular/material/button';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { SnackbarService } from '../../../common/snackbar.service';
+import { PriceDialogComponent, PriceDialogData } from './price-dialog/price-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-user-management-list',
@@ -47,9 +51,12 @@ import { SnackbarService } from '../../../common/snackbar.service';
     MatMenu,
     MatMenuItem,
     MatMenuTrigger,
+    MatProgressSpinner,
   ],
 })
 export class UserManagementListComponent implements OnInit {
+
+  public isLoadingAccountId = signal<number | null>(null)
 
   public displayedColumns = ['id', /*'idKeycloak',*/ 'firstName', 'verifiedForCharging', 'action'];
   public dataSource = new MatTableDataSource<AccountDTO>([]);
@@ -64,7 +71,10 @@ export class UserManagementListComponent implements OnInit {
 
   constructor(
     private readonly accountService: AccountService,
+    private readonly chargingService: ChargingService,
     private readonly snackBarService: SnackbarService,
+    private readonly dialog: MatDialog,
+    private readonly destroyRef: DestroyRef,
   ) {
   }
 
@@ -81,15 +91,27 @@ export class UserManagementListComponent implements OnInit {
   }
 
   setVerifiedForCharging(accountId: number) {
-    this.snackBarService.showInfoSnackBar('set verified ' + accountId);
+    this.snackBarService.showInfoSnackBar('TODO set verified ' + accountId);
   }
 
   unsetVerifiedForCharging(accountId: number) {
-    this.snackBarService.showInfoSnackBar('unset verified ' + accountId);
+    this.snackBarService.showInfoSnackBar('TODO unset verified ' + accountId);
   }
 
   topUp(account: AccountDTO) {
-    this.snackBarService.showErrorSnackBar('top up ' + account.id);
+    const dialogRef = this.dialog.open(PriceDialogComponent, {
+      data: { accountName: `${account.firstName} ${account.lastName}`, price: 0 } as PriceDialogData,
+    });
+    dialogRef.afterClosed().pipe(
+      take(1),
+      tap(() => this.isLoadingAccountId.set(account.id!!)),
+      switchMap((amount: number) => this.chargingService.topUpAccount(account.id!!, amount)),
+      tap((amount: number) => {
+        this.snackBarService.showInfoSnackBar(`Account of user ${account.firstName} ${account.lastName} has been given credit ${amount.toFixed(2)} euro`);
+      }),
+      finalize(() => this.isLoadingAccountId.set(null)),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe();
   }
 
 }

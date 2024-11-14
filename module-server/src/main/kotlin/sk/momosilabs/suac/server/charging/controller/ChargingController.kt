@@ -23,7 +23,7 @@ class ChargingController(
         getMyChargingList.get(pageable.toModel())
             .toDto(ChargingListItem::toDto)
 
-    override fun updateVerifiedFlag(accountId: Long, amount: BigDecimal): BigDecimal =
+    override fun topUpAccount(accountId: Long, amount: BigDecimal): BigDecimal =
         topUpAccount.topUp(accountId, amount)
 
 }
