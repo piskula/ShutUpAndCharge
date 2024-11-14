@@ -39,10 +39,10 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item>
+        <button mat-menu-item (click)="topUp(user)">
           <mat-icon>euro</mat-icon>Add credit
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="user.verifiedForCharging ? unsetVerifiedForCharging(user.id) : setVerifiedForCharging(user.id) ">
           <mat-icon>{{ user.verifiedForCharging ? 'do_not_disturb_on' : 'verified' }}</mat-icon>
           {{ user.verifiedForCharging ? 'Disable charging' : 'Verify for charging' }}
         </button>

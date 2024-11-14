@@ -1,9 +1,9 @@
 <mat-toolbar class="mobile-bar">
-  <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="headerData()">
+  <button mat-icon-button [matMenuTriggerFor]="menu" *ngIf="currentUser()">
     <mat-icon>menu</mat-icon>
   </button>
   <mat-menu #menu="matMenu" backdropClass="menu-backdrop" class="menu-panel">
-    <ng-container *ngIf="headerData() as headerData">
+    <ng-container *ngIf="currentUser() as headerData">
       <div>
         <button mat-button class="navigation-button" *ngIf="headerData.roles.includes('User')"
                 routerLinkActive="selected" [routerLink]="['dashboard']">
@@ -18,14 +18,14 @@
       </div>
       <mat-divider></mat-divider>
       <mat-chip-set class="mr-2" [matTooltip]="headerData.roles.join(', ')">
-        <mat-chip>{{ headerData.user }}</mat-chip>
+        <mat-chip>{{ headerData.name }}</mat-chip>
       </mat-chip-set>
     </ng-container>
   </mat-menu>
   <mat-icon class="main-logo-icon mr-1">ev_station</mat-icon>
   <span class="mr-2">Shut Up and Charge</span>
 
-  <ng-container *ngIf="headerData()">
+  <ng-container *ngIf="currentUser()">
     <span style="flex: 1 1 auto"></span>
     <a mat-stroked-button href="/logout" class="logout-icon-link"><mat-icon>logout</mat-icon></a>
   </ng-container>

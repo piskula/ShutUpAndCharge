@@ -17,6 +17,7 @@ import { DatePipe, NgIf } from '@angular/common';
 import { MatIconButton } from '@angular/material/button';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { SnackbarService } from '../../../common/snackbar.service';
 
 @Component({
   selector: 'app-user-management-list',
@@ -62,7 +63,8 @@ export class UserManagementListComponent implements OnInit {
   });
 
   constructor(
-    private accountService: AccountService,
+    private readonly accountService: AccountService,
+    private readonly snackBarService: SnackbarService,
   ) {
   }
 
@@ -76,6 +78,18 @@ export class UserManagementListComponent implements OnInit {
 
   onSortChange(sort: Sort) {
     this.sort$.next({ sortActive: sort.active, sortDirection: sort.direction });
+  }
+
+  setVerifiedForCharging(accountId: number) {
+    this.snackBarService.showInfoSnackBar('set verified ' + accountId);
+  }
+
+  unsetVerifiedForCharging(accountId: number) {
+    this.snackBarService.showInfoSnackBar('unset verified ' + accountId);
+  }
+
+  topUp(account: AccountDTO) {
+    this.snackBarService.showErrorSnackBar('top up ' + account.id);
   }
 
 }

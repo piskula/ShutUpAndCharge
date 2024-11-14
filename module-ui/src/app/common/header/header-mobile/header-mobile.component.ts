@@ -1,17 +1,17 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
-import { CurrentUserService, CurrentUserDTO } from '@suac/api';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatIcon } from '@angular/material/icon';
 import { NgForOf, NgIf } from '@angular/common';
 import { MatAnchor, MatButton, MatFabAnchor, MatIconButton } from '@angular/material/button';
 import { MatChip, MatChipSet } from '@angular/material/chips';
-import { HeaderData } from '../model/header-data';
-import { take, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { MatDivider } from '@angular/material/divider';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthenticationService, CurrentUser } from '../../../security/authentication.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-header-mobile',
@@ -41,23 +41,18 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class HeaderMobileComponent implements OnInit {
 
-  public headerData = signal<HeaderData | null>(null);
+  public currentUser = signal<CurrentUser | null>(null);
 
   constructor(
-    private currentUserService: CurrentUserService,
+    private readonly authenticationService: AuthenticationService,
+    private readonly destroyRef: DestroyRef,
   ) {
   }
 
   ngOnInit(): void {
-    this.currentUserService.getCurrentUser().pipe(
-      take(1),
-      tap((user: CurrentUserDTO) => {
-        const rolesEnum: Array<CurrentUserDTO.RolesEnum> = user.roles!!;
-        this.headerData.set({
-          user: `${user.firstName} ${user.lastName}`,
-          roles: rolesEnum.map((r: CurrentUserDTO.RolesEnum) => r.toString()),
-        });
-      }),
+    this.authenticationService.currentUser().pipe(
+      tap(currentUser => this.currentUser.set(currentUser)),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   }
 

@@ -1,15 +1,20 @@
+@import '../../../styling/custom-colors';
+
 :host {
   display: block;
   overflow-y: hidden;
 }
 
 .status-button {
+  background-color: $error-container !important;
+  color: $error-container-text !important;
   margin-left: .5rem;
-  color: #c00100 !important;
+  border: 0;
   &:hover {
     cursor: default !important;
   }
 }
 .is-free {
-  color: #038b00 !important;
+  background-color: $success-container !important;
+  color: $success-container-text !important;
 }

@@ -1,5 +1,6 @@
 @use '@angular/material' as mat;
 @import '../suac-theme';
+@import '../custom-colors';
 
 .text-darker {
   color: mat.get-theme-color($theme, on-surface-variant);
@@ -17,4 +18,20 @@
 }
 .color-error {
   color: mat.get-theme-color($theme, error);
+}
+
+.snackbar-error {
+  .mat-mdc-snackbar-surface {
+    background-color: $error-container !important;
+    color: $error-container-text !important;
+    button {
+      color: $error-container-text !important;
+    }
+  }
+}
+.snackbar-success {
+  .mat-mdc-snackbar-surface {
+    background-color: $success-container !important;
+    color: $success-container-text !important;
+  }
 }

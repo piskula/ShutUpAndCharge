@@ -1,5 +1,5 @@
 <h2>Kutlíkova
-  <button class="status-button" [class.is-free]="isFree" mat-stroked-button>
+  <button class="status-button mat-elevation-z5" disabled [class.is-free]="isFree" mat-stroked-button>
     <mat-icon>{{ isFree ? 'check_circle' : 'cancel' }}</mat-icon>
     {{ isFree ? 'Free' : 'Occupied' }}
   </button>

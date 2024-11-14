@@ -5,7 +5,7 @@ import sk.momosilabs.suac.api.security.dto.CurrentUserRoleDTO.Companion.fromKeyc
 import sk.momosilabs.suac.server.security.model.TruckerPrincipal
 
 fun TruckerPrincipal.toDto() = CurrentUserDTO(
-    id = 0L,
+    id = id,
     provider = "?",
     idKeycloak = idKeycloak,
     firstName = firstName,
