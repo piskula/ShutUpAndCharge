@@ -40,10 +40,10 @@
         <mat-spinner *ngIf="isLoadingAccountId() === user.id" diameter="24"></mat-spinner>
       </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="topUp(user)">
+        <button mat-menu-item (click)="topUp(user.id, user.firstName + ' ' + user.lastName)">
           <mat-icon>euro</mat-icon>Add credit
         </button>
-        <button mat-menu-item (click)="user.verifiedForCharging ? unsetVerifiedForCharging(user.id) : setVerifiedForCharging(user.id) ">
+        <button mat-menu-item (click)="setVerifiedFlag(user.id, user.firstName + ' ' + user.lastName, !user.verifiedForCharging)">
           <mat-icon>{{ user.verifiedForCharging ? 'do_not_disturb_on' : 'verified' }}</mat-icon>
           {{ user.verifiedForCharging ? 'Disable charging' : 'Verify for charging' }}
         </button>

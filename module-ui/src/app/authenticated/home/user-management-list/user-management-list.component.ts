@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { AccountDTO, AccountService, PageDTOAccountDTO, ChargingService } from '@suac/api';
-import { BehaviorSubject, finalize, map, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, finalize, map, switchMap, take, tap } from 'rxjs';
 import {
   MatCell, MatCellDef,
   MatColumnDef,
@@ -22,6 +22,7 @@ import { PriceDialogComponent, PriceDialogData } from './price-dialog/price-dial
 import { MatDialog } from '@angular/material/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ConfirmDialogComponent, ConfirmDialogData } from './confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-user-management-list',
@@ -61,6 +62,7 @@ export class UserManagementListComponent implements OnInit {
   public displayedColumns = ['id', /*'idKeycloak',*/ 'firstName', 'verifiedForCharging', 'action'];
   public dataSource = new MatTableDataSource<AccountDTO>([]);
 
+  public refresh$ = new BehaviorSubject(true);
   public sort$ = new BehaviorSubject<{
     sortActive: string;
     sortDirection: "asc" | "desc" | "";
@@ -79,8 +81,11 @@ export class UserManagementListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.sort$.pipe(
-      switchMap(sort => this.accountService.getUserList(0, 20, `${sort.sortActive},${sort.sortDirection}`)),
+    combineLatest([
+      this.sort$,
+      this.refresh$,
+    ]).pipe(
+      switchMap(([sort]) => this.accountService.getUserList(0, 20, `${sort.sortActive},${sort.sortDirection}`)),
       map((page: PageDTOAccountDTO) => page.content || []),
       tap((list: AccountDTO[]) => this.dataSource.data = list),
     ).subscribe();
@@ -90,24 +95,42 @@ export class UserManagementListComponent implements OnInit {
     this.sort$.next({ sortActive: sort.active, sortDirection: sort.direction });
   }
 
-  setVerifiedForCharging(accountId: number) {
-    this.snackBarService.showInfoSnackBar('TODO set verified ' + accountId);
+  setVerifiedFlag(
+    accountId: number,
+    name: String,
+    flag: boolean,
+  ) {
+    const subtitle = flag
+      ? `Are you sure, that user ${name} is allowed to charge?`
+      : `Are you sure, that user ${name} is not allowed to charge anymore?`;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { title: 'Allowance to charge', subtitle: subtitle } as ConfirmDialogData });
+    dialogRef.afterClosed().pipe(
+      take(1),
+      filter((yes): yes is boolean => !!yes),
+      tap(() => this.isLoadingAccountId.set(accountId)),
+      switchMap(() => this.accountService.updateVerifiedFlag(accountId, flag)),
+      tap((isAllowed: boolean) => {
+        const msg = isAllowed ? 'is allowed' : 'is not allowed';
+        this.snackBarService.showInfoSnackBar(`Account of user ${name} ${msg} to charge from now on.`);
+        this.refresh$.next(true);
+      }),
+      finalize(() => this.isLoadingAccountId.set(null)),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe();
   }
 
-  unsetVerifiedForCharging(accountId: number) {
-    this.snackBarService.showInfoSnackBar('TODO unset verified ' + accountId);
-  }
-
-  topUp(account: AccountDTO) {
+  topUp(accountId: number, name: string) {
     const dialogRef = this.dialog.open(PriceDialogComponent, {
-      data: { accountName: `${account.firstName} ${account.lastName}`, price: 0 } as PriceDialogData,
+      data: { accountName: name, price: 0 } as PriceDialogData,
     });
     dialogRef.afterClosed().pipe(
       take(1),
-      tap(() => this.isLoadingAccountId.set(account.id!!)),
-      switchMap((amount: number) => this.chargingService.topUpAccount(account.id!!, amount)),
+      filter((amount): amount is number => !!amount),
+      tap(() => this.isLoadingAccountId.set(accountId)),
+      switchMap((amount: number) => this.chargingService.topUpAccount(accountId!!, amount)),
       tap((amount: number) => {
-        this.snackBarService.showInfoSnackBar(`Account of user ${account.firstName} ${account.lastName} has been given credit ${amount.toFixed(2)} euro`);
+        this.snackBarService.showInfoSnackBar(`Account of user ${name} has been given credit ${amount.toFixed(2)} euro`);
       }),
       finalize(() => this.isLoadingAccountId.set(null)),
       takeUntilDestroyed(this.destroyRef),
