@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { BuildInfoService } from '@suac/api';
 import { tap } from 'rxjs';
+import { MatIconRegistry } from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
@@ -17,10 +18,12 @@ export class AppComponent implements OnInit {
 
   constructor(
     private buildInfoService: BuildInfoService,
+    private readonly matIconRegistry: MatIconRegistry,
   ) {
   }
 
   ngOnInit(): void {
+    this.matIconRegistry.setDefaultFontSetClass('material-symbols-outlined');
     this.buildInfoService.get().pipe(
       tap(version => {
         this.version = version.version || '';

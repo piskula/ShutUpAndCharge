@@ -13,6 +13,7 @@ mat-toolbar {
 
   .main-logo-icon {
     font-size: 1.75em;
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 200, 'opsz' 48;
     height: 1em;
     width: 1em;
   }
@@ -23,10 +24,10 @@ mat-toolbar {
   height: 100%;
 
   &.selected {
-    color: mat.get-theme-color($theme, primary);
+    color: mat.get-theme-color($theme, primary) !important;
     border-bottom: solid mat.get-theme-color($theme, primary);
     mat-icon {
-      color: mat.get-theme-color($theme, primary);
+      font-variation-settings: 'FILL' 1;
     }
   }
 

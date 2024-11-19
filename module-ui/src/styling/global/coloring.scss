@@ -3,7 +3,7 @@
 @import '../custom-colors';
 
 .text-darker {
-  color: mat.get-theme-color($theme, on-surface-variant);
+  color: mat.get-theme-color($theme, on-surface-variant) !important; // important to override top menu bar default color
 }
 .text-light {
   color: mat.get-theme-color($theme, outline);
@@ -34,4 +34,8 @@
     background-color: $success-container !important;
     color: $success-container-text !important;
   }
+}
+
+.fill-icon {
+  font-variation-settings: 'FILL' 1;
 }

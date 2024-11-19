@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit } from '@angular/core';
 import { ChargingService, ChargingListDTO, PageDTOChargingListDTO } from '@suac/api';
 import { BehaviorSubject, map, switchMap, tap } from 'rxjs';
 import {
@@ -14,8 +14,8 @@ import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { DatePipe, DecimalPipe, NgIf } from '@angular/common';
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ResponsiveService } from '../../../common/responsive.service';
 
 @Component({
   selector: 'app-dashboard-charging-list',
@@ -44,9 +44,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   ],
 })
 export class DashboardChargingListComponent implements OnInit {
-  public columnsAll = ['time', 'stationId', 'kwh', 'price'];
-  public columnsSmall = ['time', 'kwh', 'price'];
-  public displayedColumns = signal(this.columnsAll);
+  private readonly columnsAll = ['time', 'stationId', 'kwh', 'price'];
+  private readonly columnsSmall = ['time', 'kwh', 'price'];
+
+  private readonly responsiveService = inject(ResponsiveService);
+
+  public displayedColumns =
+    computed(() => this.responsiveService.isMobile() ? this.columnsSmall : this.columnsAll);
   public dataSource = new MatTableDataSource<ChargingListDTO>([]);
 
   public sort$ = new BehaviorSubject<{
@@ -59,14 +63,8 @@ export class DashboardChargingListComponent implements OnInit {
 
   constructor(
     private chargingService: ChargingService,
-    private breakpointObserver: BreakpointObserver,
     private destroyRef: DestroyRef,
   ) {
-    this.breakpointObserver.observe('(min-width: 585px)')
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(state => {
-        this.displayedColumns.set(state.matches ? this.columnsAll : this.columnsSmall);
-      })
   }
 
   ngOnInit(): void {

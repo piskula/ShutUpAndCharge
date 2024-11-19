@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { AccountDTO, AccountService, PageDTOAccountDTO, ChargingService } from '@suac/api';
 import { BehaviorSubject, combineLatest, filter, finalize, map, switchMap, take, tap } from 'rxjs';
 import {
@@ -23,6 +23,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { ConfirmDialogComponent, ConfirmDialogData } from './confirm-dialog/confirm-dialog.component';
+import { ResponsiveDirective } from '../../../common/responsive.directive';
+import { ResponsiveService } from '../../../common/responsive.service';
 
 @Component({
   selector: 'app-user-management-list',
@@ -53,14 +55,20 @@ import { ConfirmDialogComponent, ConfirmDialogData } from './confirm-dialog/conf
     MatMenuItem,
     MatMenuTrigger,
     MatProgressSpinner,
+    ResponsiveDirective,
   ],
 })
 export class UserManagementListComponent implements OnInit {
+  private allColumns = ['id', 'idKeycloak', 'firstName', 'verifiedForCharging', 'action'];
+  private smallColumns = ['id', 'firstName', 'verifiedForCharging', 'action'];
+
+  private readonly responsiveService = inject(ResponsiveService);
+
+  public displayedColumns =
+    computed(() => this.responsiveService.isMobile() ? this.smallColumns : this.allColumns);
+  public dataSource = new MatTableDataSource<AccountDTO>([]);
 
   public isLoadingAccountId = signal<number | null>(null)
-
-  public displayedColumns = ['id', /*'idKeycloak',*/ 'firstName', 'verifiedForCharging', 'action'];
-  public dataSource = new MatTableDataSource<AccountDTO>([]);
 
   public refresh$ = new BehaviorSubject(true);
   public sort$ = new BehaviorSubject<{

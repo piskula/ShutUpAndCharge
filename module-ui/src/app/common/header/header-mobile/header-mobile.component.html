@@ -5,14 +5,14 @@
   <mat-menu #menu="matMenu" backdropClass="menu-backdrop" class="menu-panel">
     <ng-container *ngIf="currentUser() as headerData">
       <div>
-        <button mat-button class="navigation-button" *ngIf="headerData.roles.includes('User')"
+        <button mat-button class="navigation-button text-darker" *ngIf="headerData.roles.includes('User')"
                 routerLinkActive="selected" [routerLink]="['dashboard']">
-          <mat-icon class="text-light mr-1">electrical_services</mat-icon>
+          <mat-icon class="mr-2">power</mat-icon>
           Charge
         </button>
-        <button mat-button class="navigation-button" *ngIf="headerData.roles.includes('Admin')"
+        <button mat-button class="navigation-button text-darker" *ngIf="headerData.roles.includes('Admin')"
                 routerLinkActive="selected" [routerLink]="['userManagement']">
-          <mat-icon class="text-light mr-1">groups</mat-icon>
+          <mat-icon class="mr-2">groups</mat-icon>
           User manager
         </button>
       </div>
