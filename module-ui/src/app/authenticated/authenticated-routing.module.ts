@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { HomeChargeComponent } from './home/home-charge/home-charge.component';
-import { HomeUserManagementComponent } from './home/home-user-management/home-user-management.component';
+import { HomeChargeComponent } from './home-charge/home-charge.component';
+import { HomeUserManagementComponent } from './home-user-management/home-user-management.component';
+import { HomeTransactionComponent } from './home-transaction/home-transaction.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
       {
         path: 'dashboard',
         component: HomeChargeComponent,
+      },
+      {
+        path: 'transaction',
+        component: HomeTransactionComponent,
       },
       {
         path: 'userManagement',

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { UserManagementListComponent } from '../user-management-list/user-management-list.component';
+import { UserManagementListComponent } from '../components/user-management-list/user-management-list.component';
 
 @Component({
   selector: 'app-home-user-management',
