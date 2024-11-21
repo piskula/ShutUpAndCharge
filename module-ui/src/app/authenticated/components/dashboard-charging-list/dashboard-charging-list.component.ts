@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { ChargingService, ChargingListDTO, PageDTOChargingListDTO } from '@suac/api';
-import { firstValueFrom } from 'rxjs';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChargingService, ChargingListDTO } from '@suac/api';
+import { map, Observable } from 'rxjs';
 import {
   MatCell, MatCellDef,
   MatColumnDef,
@@ -15,7 +15,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { DatePipe, DecimalPipe, NgIf } from '@angular/common';
 import { ResponsiveService } from '../../../common/responsive.service';
-import { Pageable, PaginatedTableComponent } from '../../../common/paginated-table/paginated-table.component';
+import { Page, PaginatedTableComponent } from '../../../common/paginated-table/paginated-table.component';
 
 @Component({
   selector: 'app-dashboard-charging-list',
@@ -53,19 +53,15 @@ export class DashboardChargingListComponent {
   public displayedColumns =
     computed(() => this.responsiveService.isMobile() ? this.columnsSmall : this.columnsAll);
   public dataSource = new MatTableDataSource<ChargingListDTO>([]);
-  public total = signal(0);
 
   constructor(
     private chargingService: ChargingService,
   ) {
   }
 
-  async refreshData(pageable: Pageable): Promise<void> {
-    return await firstValueFrom(this.chargingService.getChargingList(pageable.page, pageable.size, pageable.sort))
-      .then((page: PageDTOChargingListDTO) => {
-        this.dataSource.data = page.content as ChargingListDTO[];
-        this.total.set(page.totalElements ?? 0);
-      });
+  public fetchFn = (page: number, size: number, sort: string): Observable<Page<ChargingListDTO>> => {
+    return this.chargingService.getChargingList(page, size, sort)
+      .pipe(map(page => page as Page<ChargingListDTO>));
   }
 
 }

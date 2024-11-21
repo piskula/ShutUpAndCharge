@@ -1,13 +1,10 @@
 <h2>Your last transactions:</h2>
-<app-paginated-table
-  #pagination
-  (onPageChange)="refreshData($event)"
-  [total]="total()">
+<app-paginated-table #pagination [fetchFn]="fetchFn" (dataSource)="dataSource.data = $event">
   <mat-table
     [dataSource]="dataSource" matSort
     (matSortChange)="pagination.sortChanged($event)"
-    [matSortActive]="pagination.sort().sortActive"
-    [matSortDirection]="pagination.sort().sortDirection">
+    [matSortActive]="pagination.sortActive()"
+    [matSortDirection]="pagination.sortDirection()">
 
     <ng-container matColumnDef="time">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Time</mat-header-cell>

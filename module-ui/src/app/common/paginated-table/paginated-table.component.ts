@@ -1,30 +1,21 @@
-import {
-  Component,
-  computed,
-  DestroyRef,
-  EventEmitter,
-  input,
-  Input,
-  OnInit,
-  output,
-  Output,
-  signal,
-} from '@angular/core';
+import { Component, computed, DestroyRef, input, OnInit, output, signal } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { combineLatest, debounceTime, map, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, Observable, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Sort } from '@angular/material/sort';
 
-export interface Pageable {
-  page: number,
-  size: number,
-  sort: string,
+export interface Page<T> {
+  content: Array<T>;
+  number: number;
+  numberOfElements: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
 }
 
 @Component({
   selector: 'app-paginated-table',
   templateUrl: './paginated-table.component.html',
-  styleUrl: './paginated-table.component.scss',
   imports: [
     MatPaginator,
   ],
@@ -32,52 +23,59 @@ export interface Pageable {
 })
 export class PaginatedTableComponent implements OnInit {
 
-  public readonly total = input.required<number>();
-  public readonly onPageChange = output<Pageable>();
+  public readonly fetchFn = input.required<(page: number, size: number, sort: string) => Observable<Page<any>>>()
+  public readonly dataSource = output<any[]>();
+
+  private readonly defaultSort: Sort = { // TODO make configurable
+    active: "time",
+    direction: "desc",
+  };
 
   protected readonly pageSizeOptions = [5, 10, 25, 100];
-  private readonly defaultSort: {
-    sortActive: string;
-    sortDirection: "asc" | "desc" | "";
-  } = {
-    // TODO make configurable
-    sortActive: "time",
-    sortDirection: "desc",
-  };
+  private readonly sort = signal(this.defaultSort);
+  public readonly sortActive = computed(() => this.sort().active);
+  public readonly sortDirection = computed(() => this.sort().direction);
+
+  protected readonly total = signal(0);
   protected readonly pageIndex = signal(0);
-  protected readonly pageSize = signal(this.pageSizeOptions[0]);
-  public readonly sort = signal(this.defaultSort);
-  private readonly sortString = computed(() => `${this.sort().sortActive},${this.sort().sortDirection}`);
+  protected readonly pageSize = signal(this.pageSizeOptions[0]); // TODO make configurable
+  private forceRefresh$ = new BehaviorSubject(true);
+
+  private readonly sortString = computed(() => `${this.sort().active},${this.sort().direction}`);
   private readonly onPageChange$ = combineLatest([
     toObservable(this.pageIndex),
     toObservable(this.pageSize),
     toObservable(this.sortString),
+    this.forceRefresh$,
   ]);
 
   constructor(private readonly destroyRef: DestroyRef) {
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.onPageChange$.pipe(
       debounceTime(1), // changing sort and switching to first page would still emit value twice
-      map(([page, size, sortString]) => ({
-        page: page,
-        size: size,
-        sort: sortString,
-      } as Pageable)),
-      tap(page => this.onPageChange.emit(page)),
+      switchMap(([page, size, sortString]) => this.fetchFn()(page, size, sortString)),
+      tap(page => {
+        this.total.set(page.totalElements);
+        this.dataSource.emit(page.content);
+      }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   }
 
-  pageChanged(pageEvent: PageEvent) {
+  protected pageChanged(pageEvent: PageEvent) {
     this.pageIndex.set(pageEvent.pageIndex);
     this.pageSize.set(pageEvent.pageSize);
   }
 
   sortChanged(sort: Sort) {
-    this.sort.set({ sortActive: sort.active, sortDirection: sort.direction });
+    this.sort.set(sort);
     this.pageIndex.set(0);
+  }
+
+  forceRefresh() {
+    this.forceRefresh$.next(true);
   }
 
 }
