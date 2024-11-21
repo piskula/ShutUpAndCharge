@@ -1,54 +1,58 @@
 <h2>Your last transactions:</h2>
-<mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)"
-           [matSortActive]="sort().sortActive" [matSortDirection]="sort().sortDirection">
+<app-paginated-table
+  #pagination
+  (onPageChange)="refreshData($event)"
+  [total]="total()">
+  <mat-table
+    [dataSource]="dataSource" matSort
+    (matSortChange)="pagination.sortChanged($event)"
+    [matSortActive]="pagination.sort().sortActive"
+    [matSortDirection]="pagination.sort().sortDirection">
 
-  <ng-container matColumnDef="time">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Time</mat-header-cell>
-    <mat-cell *matCellDef="let group">
-      <span matTooltip="{{ group.time | date: 'shortTime' }}" matTooltipPosition="right">{{ group.time | date }}</span>
-    </mat-cell>
-  </ng-container>
+    <ng-container matColumnDef="time">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Time</mat-header-cell>
+      <mat-cell *matCellDef="let group">
+        <span matTooltip="{{ group.time | date: 'shortTime' }}" matTooltipPosition="right">{{ group.time | date }}</span>
+      </mat-cell>
+    </ng-container>
 
-  <ng-container matColumnDef="stationId">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>
-      Station Id
-    </mat-header-cell>
-    <mat-cell *matCellDef="let group">
-      <ng-container *ngIf="group.price > 0">
-        <mat-icon class="mr-1">savings</mat-icon>Credit
-      </ng-container>
-      <ng-container *ngIf="group.price <= 0">
-        <mat-icon class="fill-icon mr-1">power</mat-icon>{{ group.chargingStationId }}
-      </ng-container>
-    </mat-cell>
-  </ng-container>
+    <ng-container matColumnDef="stationId">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Station Id
+      </mat-header-cell>
+      <mat-cell *matCellDef="let group">
+        <ng-container *ngIf="group.price > 0">
+          <mat-icon class="mr-1">savings</mat-icon>Credit
+        </ng-container>
+        <ng-container *ngIf="group.price <= 0">
+          <mat-icon class="fill-icon mr-1">power</mat-icon>{{ group.chargingStationId }}
+        </ng-container>
+      </mat-cell>
+    </ng-container>
 
-  <ng-container matColumnDef="kwh">
-    <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">
-      kWh
-    </mat-header-cell>
-    <mat-cell *matCellDef="let group" class="table-column-right">
-      <ng-container *ngIf="group.price <= 0">
-        {{ group.kwh | number: '1.3-3' }}&nbsp;kWh
-      </ng-container>
-    </mat-cell>
-  </ng-container>
+    <ng-container matColumnDef="kwh">
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">
+        kWh
+      </mat-header-cell>
+      <mat-cell *matCellDef="let group" class="table-column-right">
+        <ng-container *ngIf="group.price <= 0">
+          {{ group.kwh | number: '1.3-3' }}&nbsp;kWh
+        </ng-container>
+      </mat-cell>
+    </ng-container>
 
-  <ng-container matColumnDef="price">
-    <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">
-      Price
-    </mat-header-cell>
-    <mat-cell *matCellDef="let group" class="table-column-right" style="font-weight: 600"
-              [class.color-error]="group.price < 0" [class.color-accent]="group.price > 0">
-      <span *ngIf="group.price > 0">+</span>{{ group.price | number: '1.2-2' }}&nbsp;€
-    </mat-cell>
-  </ng-container>
+    <ng-container matColumnDef="price">
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">
+        Price
+      </mat-header-cell>
+      <mat-cell *matCellDef="let group" class="table-column-right" style="font-weight: 600"
+                [class.color-error]="group.price < 0" [class.color-accent]="group.price > 0">
+        <span *ngIf="group.price > 0">+</span>{{ group.price | number: '1.2-2' }}&nbsp;€
+      </mat-cell>
+    </ng-container>
 
-  <mat-header-row *matHeaderRowDef="displayedColumns()"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns()"></mat-row>
+    <mat-header-row *matHeaderRowDef="displayedColumns()"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns()"></mat-row>
 
-</mat-table>
-<mat-paginator
-  (page)="pageChanged($event)" [pageSizeOptions]="pageSizeOptions"
-  [pageIndex]="pageIndex()" [pageSize]="pageSize()" [length]="total()">
-</mat-paginator>
+  </mat-table>
+</app-paginated-table>

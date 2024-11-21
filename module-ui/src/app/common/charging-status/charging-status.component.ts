@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { MatButton, MatMiniFabButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { NgIf } from '@angular/common';
@@ -14,11 +14,12 @@ import { NgIf } from '@angular/common';
     MatMiniFabButton,
   ],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChargingStatusComponent {
-  public isFree = Math.random() < 0.5;
+  public isFree = signal(Math.random() < 0.5);
 
   public refreshStatus() {
-    this.isFree = !this.isFree;
+    this.isFree.update(prev => !prev);
   }
 }
