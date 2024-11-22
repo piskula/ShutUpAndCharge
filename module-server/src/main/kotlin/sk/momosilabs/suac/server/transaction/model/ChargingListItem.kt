@@ -1,4 +1,4 @@
-package sk.momosilabs.suac.server.charging.model
+package sk.momosilabs.suac.server.transaction.model
 
 import java.math.BigDecimal
 import java.time.Instant
@@ -11,4 +11,6 @@ data class ChargingListItem(
     val kwh: BigDecimal,
     val price: BigDecimal,
     val chargingStationId: String,
+    val accountId: Long,
+    val accountName: String,
 )

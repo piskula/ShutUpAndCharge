@@ -1,4 +1,4 @@
-package sk.momosilabs.suac.server.charging.service.topUpAccount
+package sk.momosilabs.suac.server.transaction.service.topUpAccount
 
 import java.math.BigDecimal
 

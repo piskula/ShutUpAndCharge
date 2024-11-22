@@ -21,7 +21,10 @@
 
   <ng-container matColumnDef="firstName">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
-    <mat-cell *matCellDef="let user">{{ user.firstName }} {{ user.lastName }}</mat-cell>
+    <mat-cell *matCellDef="let user">
+      {{ user.firstName }} {{ user.lastName }}
+<!--      <mat-chip-set *ngIf="user.isAdmin"><mat-chip><mat-icon matChipAvatar>shield_person</mat-icon>Admin</mat-chip></mat-chip-set>-->
+    </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="verifiedForCharging">

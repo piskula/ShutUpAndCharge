@@ -1,6 +1,6 @@
 import { computed, Injectable, Signal, signal } from '@angular/core';
 import { CurrentUserService, CurrentUserDTO } from '@suac/api';
-import { catchError, combineLatest, filter, map, Observable, of, share, shareReplay, switchMap, take, tap } from 'rxjs';
+import { catchError, combineLatest, filter, map, Observable, of, take, tap } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
 
 export interface CurrentUser {

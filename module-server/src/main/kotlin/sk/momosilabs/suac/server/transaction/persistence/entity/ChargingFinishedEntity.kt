@@ -1,4 +1,4 @@
-package sk.momosilabs.suac.server.charging.persistence.entity
+package sk.momosilabs.suac.server.transaction.persistence.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue

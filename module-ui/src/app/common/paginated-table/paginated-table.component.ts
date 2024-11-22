@@ -3,6 +3,8 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { BehaviorSubject, combineLatest, debounceTime, Observable, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Sort } from '@angular/material/sort';
+import { NgIf } from '@angular/common';
+import { MatProgressBar } from '@angular/material/progress-bar';
 
 export interface Page<T> {
   content: Array<T>;
@@ -18,6 +20,8 @@ export interface Page<T> {
   templateUrl: './paginated-table.component.html',
   imports: [
     MatPaginator,
+    NgIf,
+    MatProgressBar,
   ],
   standalone: true,
 })
@@ -25,6 +29,7 @@ export class PaginatedTableComponent implements OnInit {
 
   public readonly fetchFn = input.required<(page: number, size: number, sort: string) => Observable<Page<any>>>()
   public readonly dataSource = output<any[]>();
+
 
   private readonly defaultSort: Sort = { // TODO make configurable
     active: "time",
@@ -39,6 +44,7 @@ export class PaginatedTableComponent implements OnInit {
   protected readonly total = signal(0);
   protected readonly pageIndex = signal(0);
   protected readonly pageSize = signal(this.pageSizeOptions[0]); // TODO make configurable
+  protected readonly isLoading = signal(false);
   private forceRefresh$ = new BehaviorSubject(true);
 
   private readonly sortString = computed(() => `${this.sort().active},${this.sort().direction}`);
@@ -55,10 +61,12 @@ export class PaginatedTableComponent implements OnInit {
   public ngOnInit(): void {
     this.onPageChange$.pipe(
       debounceTime(1), // changing sort and switching to first page would still emit value twice
+      tap(() => this.isLoading.set(true)),
       switchMap(([page, size, sortString]) => this.fetchFn()(page, size, sortString)),
       tap(page => {
         this.total.set(page.totalElements);
         this.dataSource.emit(page.content);
+        this.isLoading.set(false);
       }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe();

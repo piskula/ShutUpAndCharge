@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { ChargingService, ChargingListDTO } from '@suac/api';
+import { ChargingListDTO, DashboardService } from '@suac/api';
 import { map, Observable } from 'rxjs';
 import {
   MatCell, MatCellDef,
@@ -50,17 +50,17 @@ export class DashboardChargingListComponent {
 
   private readonly responsiveService = inject(ResponsiveService);
 
-  public displayedColumns =
+  protected displayedColumns =
     computed(() => this.responsiveService.isMobile() ? this.columnsSmall : this.columnsAll);
-  public dataSource = new MatTableDataSource<ChargingListDTO>([]);
+  protected dataSource = new MatTableDataSource<ChargingListDTO>([]);
 
   constructor(
-    private chargingService: ChargingService,
+    private readonly dashboardService: DashboardService,
   ) {
   }
 
-  public fetchFn = (page: number, size: number, sort: string): Observable<Page<ChargingListDTO>> => {
-    return this.chargingService.getChargingList(page, size, sort)
+  protected fetchFn = (page: number, size: number, sort: string): Observable<Page<ChargingListDTO>> => {
+    return this.dashboardService.getLastChargings(page, size, sort)
       .pipe(map(page => page as Page<ChargingListDTO>));
   }
 

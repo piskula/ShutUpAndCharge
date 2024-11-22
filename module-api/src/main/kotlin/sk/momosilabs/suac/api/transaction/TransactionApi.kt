@@ -1,4 +1,4 @@
-package sk.momosilabs.suac.api.charging
+package sk.momosilabs.suac.api.transaction
 
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiImplicitParam
@@ -13,14 +13,14 @@ import sk.momosilabs.suac.api.common.dto.PageDTO
 import sk.momosilabs.suac.api.common.dto.PageableDTO
 import java.math.BigDecimal
 
-@Api("Charging")
-interface ChargingApi {
+@Api("Transaction")
+interface TransactionApi {
 
     companion object {
-        private const val ENDPOINT_CHARGING = "/api/charging"
+        private const val ENDPOINT_CHARGING = "/api/transaction"
     }
 
-    @ApiOperation("Check version")
+    @ApiOperation("Get list of transactions")
     // TODO check if can be extracted to custom annotation
     @ApiImplicitParams(
         ApiImplicitParam(paramType = "query", name = "page", dataType = "integer", dataTypeClass = Integer::class),
@@ -28,7 +28,7 @@ interface ChargingApi {
         ApiImplicitParam(paramType = "query", name = "sort", dataType = "string", dataTypeClass = String::class)
     )
     @GetMapping(ENDPOINT_CHARGING, produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getChargingList(pageable: PageableDTO): PageDTO<ChargingListDTO>
+    fun getList(pageable: PageableDTO): PageDTO<ChargingListDTO>
 
     @PostMapping("${ENDPOINT_CHARGING}/topUp/{accountId}",
         produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.APPLICATION_JSON_VALUE]

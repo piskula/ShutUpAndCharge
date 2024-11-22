@@ -1,9 +1,9 @@
-package sk.momosilabs.suac.server.charging.temporary
+package sk.momosilabs.suac.server.transaction.temporary
 
 import org.springframework.stereotype.Service
-import sk.momosilabs.suac.server.charging.model.ChargingListItem
-import sk.momosilabs.suac.server.charging.persistence.ChargingPersistence
-import sk.momosilabs.suac.server.charging.persistence.repository.ChargingFinishedRepository
+import sk.momosilabs.suac.server.transaction.model.ChargingToCreate
+import sk.momosilabs.suac.server.transaction.persistence.TransactionFinishedPersistence
+import sk.momosilabs.suac.server.transaction.persistence.repository.ChargingFinishedRepository
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDateTime
@@ -14,7 +14,7 @@ import java.util.UUID
 @Service
 open class FakeChargingTemporaryService(
     private val chargingRepository: ChargingFinishedRepository,
-    private val chargingPersistence: ChargingPersistence,
+    private val chargingPersistence: TransactionFinishedPersistence,
 ) {
 
     fun mockChargingForUser(userId: Long) {
@@ -24,8 +24,7 @@ open class FakeChargingTemporaryService(
             val price = kwh.multiply(BigDecimal.valueOf(29L, 2))
                 .setScale(2, RoundingMode.HALF_UP)
             chargingPersistence.saveFinishedCharging(
-                charging = ChargingListItem(
-                    id = 0L,
+                charging = ChargingToCreate(
                     guid = UUID.randomUUID(),
                     time = LocalDateTime.now()
                         .minusMonths(Random().nextLong(16))

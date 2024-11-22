@@ -6,6 +6,8 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
+import sk.momosilabs.suac.api.security.dto.CurrentUserRoleDTO
+import sk.momosilabs.suac.api.security.dto.CurrentUserRoleDTO.Companion.fromKeycloakRole
 
 data class TruckerPrincipal(
     var id: Long,
@@ -24,7 +26,8 @@ data class TruckerPrincipal(
     override fun getUserInfo(): OidcUserInfo = defaultUser.userInfo
     override fun getIdToken(): OidcIdToken = defaultUser.idToken
 
-    fun momoRoles(): Set<String> = authorities.filter { it.authority.startsWith("ROLE_MOMO_") }
-        .mapTo(HashSet()) { it.authority.removePrefix("ROLE_") }
+    fun momoRoles(): Set<CurrentUserRoleDTO> = authorities
+        .filter { it.authority.startsWith("ROLE_MOMO_") }
+        .mapTo(HashSet()) { fromKeycloakRole(it.authority.removePrefix("ROLE_")) }
 
 }

@@ -1,4 +1,4 @@
-<h2>Your last transactions:</h2>
+<h2>Your last charging:</h2>
 <app-paginated-table #pagination [fetchFn]="fetchFn" (dataSource)="dataSource.data = $event">
   <mat-table
     [dataSource]="dataSource" matSort

@@ -11,9 +11,10 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser
 import org.springframework.security.oauth2.core.oidc.user.OidcUser
 import org.springframework.stereotype.Service
+import sk.momosilabs.suac.api.security.dto.CurrentUserRoleDTO
 import sk.momosilabs.suac.server.account.entity.AccountEntity
 import sk.momosilabs.suac.server.account.persistence.repository.AccountRepository
-import sk.momosilabs.suac.server.charging.temporary.FakeChargingTemporaryService
+import sk.momosilabs.suac.server.transaction.temporary.FakeChargingTemporaryService
 import sk.momosilabs.suac.server.security.model.TruckerPrincipal
 import sk.momosilabs.suac.server.security.model.UserTokenClaims
 import java.net.URL
@@ -89,7 +90,7 @@ open class OnAuthenticationConfig(
         idKeycloak = idKeycloak,
         firstName = firstName,
         lastName = lastName,
-        verifiedForCharging = momoRoles().contains("MOMO_ADMIN"),
+        verifiedForCharging = momoRoles().contains(CurrentUserRoleDTO.Admin),
     )
 
     // on each login
