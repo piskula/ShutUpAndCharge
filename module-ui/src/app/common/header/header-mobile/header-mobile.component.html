@@ -10,7 +10,7 @@
           <mat-icon class="mr-2">power</mat-icon>
           Charge
         </button>
-        <button mat-button class="navigation-button text-darker" *ngIf="headerData.roles.includes('Admin')"
+        <button mat-button class="navigation-button text-darker" *ngIf="headerData.roles.includes('User')"
                 routerLinkActive="selected" [routerLink]="['transaction']">
           <mat-icon class="mr-2">trolley</mat-icon>
           Transactions
@@ -24,6 +24,7 @@
       <mat-divider></mat-divider>
       <mat-chip-set class="mr-2" [matTooltip]="headerData.roles.join(', ')">
         <mat-chip>{{ headerData.name }}</mat-chip>
+        <mat-chip *ngFor="let role of headerData.roles">{{ role }}</mat-chip>
       </mat-chip-set>
     </ng-container>
   </mat-menu>

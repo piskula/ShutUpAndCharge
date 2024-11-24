@@ -10,7 +10,7 @@ import {
   MatRowDef,
   MatTable, MatTableDataSource,
 } from '@angular/material/table';
-import { MatSort, MatSortHeader } from '@angular/material/sort';
+import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { DatePipe, DecimalPipe, NgIf } from '@angular/common';
@@ -47,6 +47,11 @@ import { Page, PaginatedTableComponent } from '../../../common/paginated-table/p
 export class DashboardChargingListComponent {
   private readonly columnsAll = ['time', 'stationId', 'kwh', 'price'];
   private readonly columnsSmall = ['time', 'kwh', 'price'];
+
+  protected readonly defaultSort: Sort = {
+    active: "time",
+    direction: "desc",
+  };
 
   private readonly responsiveService = inject(ResponsiveService);
 

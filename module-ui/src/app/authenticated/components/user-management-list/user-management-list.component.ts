@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { AccountDTO, AccountService, PageDTOAccountDTO, TransactionService } from '@suac/api';
-import { BehaviorSubject, combineLatest, filter, finalize, map, switchMap, take, tap } from 'rxjs';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, viewChild } from '@angular/core';
+import { AccountDTO, AccountService, TransactionService } from '@suac/api';
+import { filter, finalize, map, Observable, switchMap, take, tap } from 'rxjs';
 import {
   MatCell, MatCellDef,
   MatColumnDef,
@@ -25,6 +25,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { ConfirmDialogComponent, ConfirmDialogData } from './confirm-dialog/confirm-dialog.component';
 import { ResponsiveDirective } from '../../../common/responsive.directive';
 import { ResponsiveService } from '../../../common/responsive.service';
+import { Page, PaginatedTableComponent } from '../../../common/paginated-table/paginated-table.component';
 
 @Component({
   selector: 'app-user-management-list',
@@ -56,28 +57,21 @@ import { ResponsiveService } from '../../../common/responsive.service';
     MatMenuTrigger,
     MatProgressSpinner,
     ResponsiveDirective,
+    PaginatedTableComponent,
   ],
 })
-export class UserManagementListComponent implements OnInit {
+export class UserManagementListComponent {
   private allColumns = ['id', 'idKeycloak', 'firstName', 'verifiedForCharging', 'action'];
   private smallColumns = ['id', 'firstName', 'verifiedForCharging', 'action'];
 
   private readonly responsiveService = inject(ResponsiveService);
+  private readonly pagination = viewChild(PaginatedTableComponent);
 
   public displayedColumns =
     computed(() => this.responsiveService.isMobile() ? this.smallColumns : this.allColumns);
   public dataSource = new MatTableDataSource<AccountDTO>([]);
 
   public isLoadingAccountId = signal<number | null>(null)
-
-  public refresh$ = new BehaviorSubject(true);
-  public sort$ = new BehaviorSubject<{
-    sortActive: string;
-    sortDirection: "asc" | "desc" | "";
-  }>({
-    sortActive: "id",
-    sortDirection: "desc",
-  });
 
   constructor(
     private readonly accountService: AccountService,
@@ -88,19 +82,9 @@ export class UserManagementListComponent implements OnInit {
   ) {
   }
 
-  ngOnInit(): void {
-    combineLatest([
-      this.sort$,
-      this.refresh$,
-    ]).pipe(
-      switchMap(([sort]) => this.accountService.getUserList(0, 20, `${sort.sortActive},${sort.sortDirection}`)),
-      map((page: PageDTOAccountDTO) => page.content || []),
-      tap((list: AccountDTO[]) => this.dataSource.data = list),
-    ).subscribe();
-  }
-
-  onSortChange(sort: Sort) {
-    this.sort$.next({ sortActive: sort.active, sortDirection: sort.direction });
+  protected fetchFn = (page: number, size: number, sort: string): Observable<Page<AccountDTO>> => {
+    return this.accountService.getUserList(page, size, sort)
+      .pipe(map(page => page as Page<AccountDTO>));
   }
 
   setVerifiedFlag(
@@ -121,7 +105,7 @@ export class UserManagementListComponent implements OnInit {
       tap((isAllowed: boolean) => {
         const msg = isAllowed ? 'is allowed' : 'is not allowed';
         this.snackBarService.showInfoSnackBar(`Account of user ${name} ${msg} to charge from now on.`);
-        this.refresh$.next(true);
+        this.pagination()?.forceRefresh();
       }),
       finalize(() => this.isLoadingAccountId.set(null)),
       takeUntilDestroyed(this.destroyRef),

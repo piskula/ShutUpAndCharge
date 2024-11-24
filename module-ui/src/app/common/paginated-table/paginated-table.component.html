@@ -1,4 +1,6 @@
+<div class="fk-p" *ngIf="!isLoading()"></div>
 <mat-progress-bar *ngIf="isLoading()" mode="indeterminate"></mat-progress-bar>
+
 <ng-content></ng-content>
 <mat-paginator
   (page)="pageChanged($event)" [pageSizeOptions]="pageSizeOptions" [disabled]="isLoading()"

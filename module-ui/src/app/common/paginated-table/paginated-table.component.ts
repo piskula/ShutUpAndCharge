@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, input, OnInit, output, signal } from '@angular/core';
+import { Component, computed, DestroyRef, input, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { BehaviorSubject, combineLatest, debounceTime, Observable, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
@@ -18,6 +18,7 @@ export interface Page<T> {
 @Component({
   selector: 'app-paginated-table',
   templateUrl: './paginated-table.component.html',
+  styleUrl: 'paginated-table.component.scss',
   imports: [
     MatPaginator,
     NgIf,
@@ -25,25 +26,27 @@ export interface Page<T> {
   ],
   standalone: true,
 })
-export class PaginatedTableComponent implements OnInit {
+export class PaginatedTableComponent implements OnInit, OnChanges {
 
   public readonly fetchFn = input.required<(page: number, size: number, sort: string) => Observable<Page<any>>>()
   public readonly dataSource = output<any[]>();
 
 
-  private readonly defaultSort: Sort = { // TODO make configurable
-    active: "time",
+  public readonly defaultSort = input<Sort>({
+    active: "id",
     direction: "desc",
-  };
+  });
 
   protected readonly pageSizeOptions = [5, 10, 25, 100];
-  private readonly sort = signal(this.defaultSort);
+  public readonly defaultPageSize = input<number>(this.pageSizeOptions[1]);
+
+  private readonly sort = signal(this.defaultSort());
   public readonly sortActive = computed(() => this.sort().active);
   public readonly sortDirection = computed(() => this.sort().direction);
 
   protected readonly total = signal(0);
   protected readonly pageIndex = signal(0);
-  protected readonly pageSize = signal(this.pageSizeOptions[0]); // TODO make configurable
+  protected readonly pageSize = signal(this.defaultPageSize());
   protected readonly isLoading = signal(false);
   private forceRefresh$ = new BehaviorSubject(true);
 
@@ -56,6 +59,15 @@ export class PaginatedTableComponent implements OnInit {
   ]);
 
   constructor(private readonly destroyRef: DestroyRef) {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['defaultSort']) {
+      this.sort.set(changes['defaultSort'].currentValue);
+    }
+    if (changes['defaultPageSize']) {
+      this.pageSize.set(changes['defaultPageSize'].currentValue);
+    }
   }
 
   public ngOnInit(): void {

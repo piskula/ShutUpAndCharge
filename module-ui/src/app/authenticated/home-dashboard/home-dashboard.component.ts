@@ -5,19 +5,21 @@ import { ChargingStatusComponent } from '../../common/charging-status/charging-s
 import { DashboardChargingListComponent } from '../components/dashboard-charging-list/dashboard-charging-list.component';
 import { AuthenticationService } from '../../security/authentication.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PaginatedTableComponent } from '../../common/paginated-table/paginated-table.component';
 
 @Component({
-  selector: 'app-home-charge',
-  templateUrl: './home-charge.component.html',
-  styleUrl: 'home-charge.component.scss',
+  selector: 'app-home-dashboard',
+  templateUrl: './home-dashboard.component.html',
+  styleUrl: 'home-dashboard.component.scss',
   imports: [
     ChargingStatusComponent,
     DashboardChargingListComponent,
+    PaginatedTableComponent,
   ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeChargeComponent implements OnInit {
+export class HomeDashboardComponent implements OnInit {
   public headerData = signal<HeaderData>({ user: '', roles: []});
 
   constructor(

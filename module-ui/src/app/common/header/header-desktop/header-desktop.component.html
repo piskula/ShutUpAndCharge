@@ -6,7 +6,7 @@
     <mat-icon class="mr-1">power</mat-icon>
     Charge
   </button>
-  <button mat-button class="navigation-button text-darker" *ngIf="currentUser()?.roles?.includes('Admin')"
+  <button mat-button class="navigation-button text-darker" *ngIf="currentUser()?.roles?.includes('User')"
           routerLinkActive="selected" [routerLink]="['transaction']">
     <mat-icon class="mr-1">trolley</mat-icon>
     Transactions

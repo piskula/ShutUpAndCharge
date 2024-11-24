@@ -1,70 +1,74 @@
-<h1>User management</h1>
-<mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)"
-           [matSortActive]="sort$.value.sortActive" [matSortDirection]="sort$.value.sortDirection">
+<app-paginated-table #pagination [fetchFn]="fetchFn" (dataSource)="dataSource.data = $event">
+  <mat-table
+    [dataSource]="dataSource" matSort
+    (matSortChange)="pagination.sortChanged($event)"
+    [matSortActive]="pagination.sortActive()"
+    [matSortDirection]="pagination.sortDirection()">
 
-  <ng-container matColumnDef="id">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
-    <mat-cell *matCellDef="let user">
-      {{ user.id }}
-    </mat-cell>
-  </ng-container>
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+      <mat-cell *matCellDef="let user">
+        {{ user.id }}
+      </mat-cell>
+    </ng-container>
 
-  <ng-container matColumnDef="idKeycloak">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Keycloak ID</mat-header-cell>
-    <mat-cell *matCellDef="let user">
-      <span *ifScreen="'desktop'">{{ user.idKeycloak }}</span>
-      <button mat-icon-button class="ml-2" [cdkCopyToClipboard]="user.idKeycloak" matTooltip="Copy Keycloak ID">
-        <mat-icon>content_copy</mat-icon>
-      </button>
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="firstName">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
-    <mat-cell *matCellDef="let user">
-      {{ user.firstName }} {{ user.lastName }}
-<!--      <mat-chip-set *ngIf="user.isAdmin"><mat-chip><mat-icon matChipAvatar>shield_person</mat-icon>Admin</mat-chip></mat-chip-set>-->
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="verifiedForCharging">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>
-      <ng-container *ifScreen="'desktop'">Can Charge</ng-container>
-    </mat-header-cell>
-    <mat-cell *matCellDef="let user">
-      <ng-container *ngIf="user.verifiedForCharging">
-        <mat-icon class="color-accent fill-icon">power</mat-icon>
-        <span *ifScreen="'desktop'" class="ml-1">Yes</span>
-      </ng-container>
-      <ng-container *ngIf="!user.verifiedForCharging">
-        <mat-icon class="color-error">power_off</mat-icon>
-        <span *ifScreen="'desktop'" class="ml-1">No</span>
-      </ng-container>
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="action">
-    <mat-header-cell *matHeaderCellDef class="table-column-center">
-      <mat-icon>settings</mat-icon>
-    </mat-header-cell>
-    <mat-cell *matCellDef="let user">
-      <button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="isLoadingAccountId() === user.id">
-        <mat-icon *ngIf="isLoadingAccountId() !== user.id">more_vert</mat-icon>
-        <mat-spinner *ngIf="isLoadingAccountId() === user.id" diameter="24"></mat-spinner>
-      </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="topUp(user.id, user.firstName + ' ' + user.lastName)">
-          <mat-icon>euro</mat-icon>Add credit
+    <ng-container matColumnDef="idKeycloak">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Keycloak ID</mat-header-cell>
+      <mat-cell *matCellDef="let user">
+        <span *ifScreen="'desktop'">{{ user.idKeycloak }}</span>
+        <button mat-icon-button class="ml-2" [cdkCopyToClipboard]="user.idKeycloak" matTooltip="Copy Keycloak ID">
+          <mat-icon>content_copy</mat-icon>
         </button>
-        <button mat-menu-item (click)="setVerifiedFlag(user.id, user.firstName + ' ' + user.lastName, !user.verifiedForCharging)">
-          <mat-icon [class.fill-icon]="!user.verifiedForCharging">{{ user.verifiedForCharging ? 'power_off' : 'power' }}</mat-icon>
-          {{ user.verifiedForCharging ? 'Disable charging' : 'Verify for charging' }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="firstName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+      <mat-cell *matCellDef="let user">
+        {{ user.firstName }} {{ user.lastName }}
+  <!--      <mat-chip-set *ngIf="user.isAdmin"><mat-chip><mat-icon matChipAvatar>shield_person</mat-icon>Admin</mat-chip></mat-chip-set>-->
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="verifiedForCharging">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        <ng-container *ifScreen="'desktop'">Can Charge</ng-container>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let user">
+        <ng-container *ngIf="user.verifiedForCharging">
+          <mat-icon class="color-accent fill-icon">power</mat-icon>
+          <span *ifScreen="'desktop'" class="ml-1">Yes</span>
+        </ng-container>
+        <ng-container *ngIf="!user.verifiedForCharging">
+          <mat-icon class="color-error">power_off</mat-icon>
+          <span *ifScreen="'desktop'" class="ml-1">No</span>
+        </ng-container>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <mat-header-cell *matHeaderCellDef class="table-column-center">
+        <mat-icon>settings</mat-icon>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let user">
+        <button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="isLoadingAccountId() === user.id">
+          <mat-icon *ngIf="isLoadingAccountId() !== user.id">more_vert</mat-icon>
+          <mat-spinner *ngIf="isLoadingAccountId() === user.id" diameter="24"></mat-spinner>
         </button>
-      </mat-menu>
-    </mat-cell>
-  </ng-container>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="topUp(user.id, user.firstName + ' ' + user.lastName)">
+            <mat-icon>euro</mat-icon>Add credit
+          </button>
+          <button mat-menu-item (click)="setVerifiedFlag(user.id, user.firstName + ' ' + user.lastName, !user.verifiedForCharging)">
+            <mat-icon [class.fill-icon]="!user.verifiedForCharging">{{ user.verifiedForCharging ? 'power_off' : 'power' }}</mat-icon>
+            {{ user.verifiedForCharging ? 'Disable charging' : 'Verify for charging' }}
+          </button>
+        </mat-menu>
+      </mat-cell>
+    </ng-container>
 
-  <mat-header-row *matHeaderRowDef="displayedColumns()"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns()"></mat-row>
+    <mat-header-row *matHeaderRowDef="displayedColumns()"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns()"></mat-row>
 
-</mat-table>
+  </mat-table>
+</app-paginated-table>

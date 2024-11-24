@@ -1,0 +1,59 @@
+<app-paginated-table #pagination [fetchFn]="fetchFn" (dataSource)="dataSource.data = $event" [defaultSort]="defaultSort">
+  <mat-table
+    [dataSource]="dataSource" matSort
+    (matSortChange)="pagination.sortChanged($event)"
+    [matSortActive]="pagination.sortActive()"
+    [matSortDirection]="pagination.sortDirection()">
+
+    <ng-container matColumnDef="time">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Time</mat-header-cell>
+      <mat-cell *matCellDef="let chrg">
+        <span matTooltip="{{ chrg.time | date: 'shortTime' }}" matTooltipPosition="right">{{ chrg.time | date }}</span>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="account">
+      <mat-header-cell *matHeaderCellDef mat-sort-header="account.lastName">User</mat-header-cell>
+      <mat-cell *matCellDef="let chrg">{{ chrg.accountName }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="stationId">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        Station Id
+      </mat-header-cell>
+      <mat-cell *matCellDef="let chrg">
+        <ng-container *ngIf="chrg.price > 0">
+          <mat-icon class="mr-1">savings</mat-icon>Credit
+        </ng-container>
+        <ng-container *ngIf="chrg.price <= 0">
+          <mat-icon class="fill-icon mr-1">power</mat-icon>{{ chrg.chargingStationId }}
+        </ng-container>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="kwh">
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">
+        kWh
+      </mat-header-cell>
+      <mat-cell *matCellDef="let chrg" class="table-column-right">
+        <ng-container *ngIf="chrg.price <= 0">
+          {{ chrg.kwh | number: '1.3-3' }}&nbsp;kWh
+        </ng-container>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">
+        Price
+      </mat-header-cell>
+      <mat-cell *matCellDef="let chrg" class="table-column-right" style="font-weight: 600"
+                [class.color-error]="chrg.price < 0" [class.color-accent]="chrg.price > 0">
+        <span *ngIf="chrg.price > 0">+</span>{{ chrg.price | number: '1.2-2' }}&nbsp;€
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+  </mat-table>
+</app-paginated-table>

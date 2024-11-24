@@ -1,5 +1,4 @@
-<h2>Your last charging:</h2>
-<app-paginated-table #pagination [fetchFn]="fetchFn" (dataSource)="dataSource.data = $event">
+<app-paginated-table #pagination [fetchFn]="fetchFn" (dataSource)="dataSource.data = $event" [defaultSort]="defaultSort" [defaultPageSize]="5">
   <mat-table
     [dataSource]="dataSource" matSort
     (matSortChange)="pagination.sortChanged($event)"
