@@ -1,8 +1,5 @@
 @use '@angular/material' as mat;
-@import './suac-theme';
 
-$error-container: if(mat.get-theme-type($theme) == 'light', #ba1a1a, #a80710);
-$error-container-text: if(mat.get-theme-type($theme) == 'light', #fff8f7, #ffedea);
-
-$success-container: if(mat.get-theme-type($theme) == 'light', #50a400, #418700);
-$success-container-text: if(mat.get-theme-type($theme) == 'light', #f8ffeb, #eeffdc);
+// TODO update this, usages and remove this file
+$success-container: green;// if(mat.get-theme-type($theme) == 'light', #50a400, #418700);
+$success-container-text: white;// if(mat.get-theme-type($theme) == 'light', #f8ffeb, #eeffdc);

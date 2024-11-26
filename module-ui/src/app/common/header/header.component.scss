@@ -1,12 +1,11 @@
 @use '@angular/material' as mat;
-@import '../../../styling/suac-theme';
 @import '../../../styling/header-and-footer-sizes';
 
 :host {
   height: 100%;
   display: block;
-  background-color: mat.get-theme-color($theme, secondary-container);
-  color: mat.get-theme-color($theme, primary);
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-primary);
 }
 
 .mobile-bar {

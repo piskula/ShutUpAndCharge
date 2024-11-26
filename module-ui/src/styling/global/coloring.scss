@@ -1,31 +1,30 @@
 @use '@angular/material' as mat;
-@import '../suac-theme';
 @import '../custom-colors';
 
 .text-darker {
-  color: mat.get-theme-color($theme, on-surface-variant) !important; // important to override top menu bar default color
+  color: var(--mat-sys-on-surface-variant) !important;
 }
 .text-light {
-  color: mat.get-theme-color($theme, outline);
+  color: var(--mat-sys-outline);
 }
 .text-very-light,
 .text-pale {
-  color: mat.get-theme-color($theme, outline-variant);
+  color: var(--mat-sys-outline-variant);
 }
 
 .color-accent {
-  color: mat.get-theme-color($theme, tertiary);
+  color: var(--mat-sys-primary);
 }
 .color-error {
-  color: mat.get-theme-color($theme, error);
+  color: var(--mat-sys-error);
 }
 
 .snackbar-error {
   .mat-mdc-snackbar-surface {
-    background-color: $error-container !important;
-    color: $error-container-text !important;
+    background-color: var(--mat-sys-error-container) !important;
+    color: var(--mat-sys-on-error-container) !important;
     button {
-      color: $error-container-text !important;
+      color: var(--mat-sys-on-error-container) !important;
     }
   }
 }

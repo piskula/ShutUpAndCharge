@@ -1,11 +1,10 @@
 @use '@angular/material' as mat;
-@import '../../../styling/suac-theme';
 @import '../../../styling/header-and-footer-sizes';
 
 .footer {
   height: $height-footer-desktop;
-  background-color: mat.get-theme-color($theme, surface-container-highest);
-  color: mat.get-theme-color($theme, on-surface);
+  background-color: var(--mat-sys-surface-container-highest);
+  color: var(--mat-sys-on-surface);
   font-size: .9em;
   white-space: unset;
 }

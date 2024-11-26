@@ -1,15 +1,8 @@
 @use '@angular/material' as mat;
-@import 'styling/suac-theme';
 @import 'styling/global/coloring';
 @import 'styling/global/global-overrides';
 @import 'styling/global/position-helpers';
 @import 'styling/global/table-helpers';
-
-@include mat.core();
-
-:root {
-  @include mat.all-component-themes($theme);
-}
 
 // Comment out the line below if you want to use the pre-defined typography utility classes.
 // For more information: https://material.angular.io/guide/typography#using-typography-styles-in-your-application.
@@ -18,17 +11,38 @@
 html, body {
   height: 100%;
 }
+
+html {
+  color-scheme: light dark;
+  @include mat.theme((
+    //color: mat.$chartreuse-palette,
+    //color: mat.$orange-palette,
+    //color: mat.$rose-palette,
+    color: mat.$azure-palette,
+    typography: (
+      plain-family: 'Open Sans',
+      brand-family: 'Ubuntu',
+      bold-weight: 900,
+      medium-weight: 600,
+      regular-weight: 400,
+    ),
+    density: -1,
+  ));
+}
+
 body {
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
   margin: 0;
-  font: mat.get-theme-typography($theme, body-large, font);
+  font: var(--mat-sys-body-large);
 }
 
 h1 {
-  font: mat.get-theme-typography($theme, headline-large, font);
+  font: var(--mat-sys-headline-large);
 }
 h2 {
-  font: mat.get-theme-typography($theme, headline-medium, font);
+  font: var(--mat-sys-headline-medium);
 }
 h3 {
-  font: mat.get-theme-typography($theme, headline-small, font);
+  font: var(--mat-sys-headline-small);
 }

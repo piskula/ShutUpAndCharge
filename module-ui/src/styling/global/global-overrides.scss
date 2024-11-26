@@ -1,5 +1,4 @@
 @use '@angular/material' as mat;
-@import '../../styling/suac-theme';
 
 // do not color links by default blue
 a {
@@ -7,7 +6,7 @@ a {
 }
 
 .mat-mdc-row:hover .mat-mdc-cell {
-  background-color: mat.get-theme-color($theme, surface-container);
+  background-color: var(--mat-sys-surface-container);
 }
 .mat-mdc-row .mat-mdc-cell {
   //cursor: pointer;

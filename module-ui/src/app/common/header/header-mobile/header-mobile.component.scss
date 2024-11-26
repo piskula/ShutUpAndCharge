@@ -1,5 +1,4 @@
 @use '@angular/material' as mat;
-@import '../../../../styling/suac-theme';
 
 mat-toolbar {
   background-color: transparent;
@@ -24,8 +23,8 @@ mat-toolbar {
   text-align: left;
 
   &.selected {
-    color: mat.get-theme-color($theme, primary) !important;
-    border-left: .125rem solid mat.get-theme-color($theme, primary);
+    color: var(--mat-sys-primary) !important;
+    border-bottom: solid var(--mat-sys-primary);
     margin-left: 0;
     mat-icon {
       font-variation-settings: 'FILL' 1;

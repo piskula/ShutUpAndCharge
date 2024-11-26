@@ -6,8 +6,8 @@
 }
 
 .status-button {
-  background-color: $error-container !important;
-  color: $error-container-text !important;
+  background-color: var(--mat-sys-error-container) !important;
+  color: var(--mat-sys-on-error-container) !important;
   margin-left: .5rem;
   border: 0;
   &:hover {

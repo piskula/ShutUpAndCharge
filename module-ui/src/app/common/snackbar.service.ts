@@ -12,14 +12,14 @@ export class SnackbarService {
   public showErrorSnackBar(msg: string): void {
     this.snackBar.open(msg, 'Close', {
       duration: 150000,
-      panelClass: ['snackbar-error']
+      panelClass: ['snackbar-error'],
     });
   }
 
   public showInfoSnackBar(msg: string): void {
     this.snackBar.open(msg, undefined, {
       duration: 5000,
-      panelClass: ['snackbar-success']
+      panelClass: ['snackbar-success'],
     });
   }
 
