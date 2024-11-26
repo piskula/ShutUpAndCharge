@@ -10,7 +10,6 @@ import {PaginatedTableComponent} from '../../common/paginated-table/paginated-ta
     UserManagementListComponent,
     PaginatedTableComponent,
   ],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeUserManagementComponent {

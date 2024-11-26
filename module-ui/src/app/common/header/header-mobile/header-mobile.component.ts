@@ -36,7 +36,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     RouterLinkActive,
     RouterLink,
   ],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderMobileComponent implements OnInit {

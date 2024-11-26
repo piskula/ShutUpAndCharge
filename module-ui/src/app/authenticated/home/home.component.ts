@@ -12,7 +12,6 @@ import { FooterComponent } from '../../common/footer/footer.component';
     HeaderComponent,
     FooterComponent,
   ],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {

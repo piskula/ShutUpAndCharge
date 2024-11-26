@@ -21,7 +21,6 @@ import { Page, PaginatedTableComponent } from '../../../common/paginated-table/p
   selector: 'app-dashboard-charging-list',
   templateUrl: './dashboard-charging-list.component.html',
   styleUrl: 'dashboard-charging-list.component.scss',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatTable,

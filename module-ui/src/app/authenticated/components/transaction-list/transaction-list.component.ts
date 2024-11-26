@@ -24,7 +24,6 @@ import { Page, PaginatedTableComponent } from '../../../common/paginated-table/p
   selector: 'app-transaction-list',
   templateUrl: './transaction-list.component.html',
   styleUrl: 'transaction-list.component.scss',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PaginatedTableComponent,

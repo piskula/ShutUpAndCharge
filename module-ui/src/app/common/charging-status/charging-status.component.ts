@@ -13,7 +13,6 @@ import { NgIf } from '@angular/common';
     NgIf,
     MatMiniFabButton,
   ],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChargingStatusComponent {

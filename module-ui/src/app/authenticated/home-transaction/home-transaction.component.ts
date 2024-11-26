@@ -8,7 +8,6 @@ import { TransactionListComponent } from '../components/transaction-list/transac
   imports: [
     TransactionListComponent,
   ],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeTransactionComponent {

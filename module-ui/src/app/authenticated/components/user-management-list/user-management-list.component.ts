@@ -31,7 +31,6 @@ import { Page, PaginatedTableComponent } from '../../../common/paginated-table/p
   selector: 'app-user-management-list',
   templateUrl: './user-management-list.component.html',
   styleUrl: 'user-management-list.component.scss',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatTable,

@@ -21,7 +21,6 @@ export interface PriceDialogData {
 @Component({
   selector: 'app-price-dialog',
   templateUrl: './price-dialog.component.html',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,

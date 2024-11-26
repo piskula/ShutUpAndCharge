@@ -10,7 +10,6 @@ import { HeaderMobileComponent } from './header-mobile/header-mobile.component';
     HeaderDesktopComponent,
     HeaderMobileComponent,
   ],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {

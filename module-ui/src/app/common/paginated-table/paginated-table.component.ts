@@ -24,7 +24,6 @@ export interface Page<T> {
     NgIf,
     MatProgressBar,
   ],
-  standalone: true,
 })
 export class PaginatedTableComponent implements OnInit, OnChanges {
 

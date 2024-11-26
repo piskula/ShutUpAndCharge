@@ -16,7 +16,6 @@ import { HeaderComponent } from '../../common/header/header.component';
     MatIcon,
     MatAnchor,
   ],
-  standalone: true,
 })
 export class WelcomeComponent {
 }

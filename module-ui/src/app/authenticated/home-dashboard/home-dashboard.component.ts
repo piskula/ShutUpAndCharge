@@ -16,7 +16,6 @@ import { PaginatedTableComponent } from '../../common/paginated-table/paginated-
     DashboardChargingListComponent,
     PaginatedTableComponent,
   ],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeDashboardComponent implements OnInit {

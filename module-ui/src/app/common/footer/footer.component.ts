@@ -14,7 +14,6 @@ import { DatePipe } from '@angular/common';
     MatIcon,
     DatePipe,
   ],
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FooterComponent implements OnInit {
