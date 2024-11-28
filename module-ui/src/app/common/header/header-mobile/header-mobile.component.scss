@@ -24,7 +24,7 @@ mat-toolbar {
 
   &.selected {
     color: var(--mat-sys-primary) !important;
-    border-bottom: solid var(--mat-sys-primary);
+    border-left: solid var(--mat-sys-primary);
     margin-left: 0;
     mat-icon {
       font-variation-settings: 'FILL' 1;
