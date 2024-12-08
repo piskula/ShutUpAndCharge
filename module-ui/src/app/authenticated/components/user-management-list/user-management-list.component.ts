@@ -13,7 +13,7 @@ import {
 import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { DatePipe, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { MatIconButton } from '@angular/material/button';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
@@ -47,7 +47,6 @@ import { Page, PaginatedTableComponent } from '../../../common/paginated-table/p
     MatHeaderRowDef,
     MatHeaderCellDef,
     MatCellDef,
-    DatePipe,
     MatIconButton,
     CdkCopyToClipboard,
     NgIf,

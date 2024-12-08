@@ -25,7 +25,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     MatChip,
     MatAnchor,
     NgForOf,
-    MatFabAnchor,
     NgIf,
     MatTooltip,
     MatMenu,

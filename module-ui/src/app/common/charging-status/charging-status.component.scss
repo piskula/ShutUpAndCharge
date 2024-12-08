@@ -1,4 +1,4 @@
-@import '../../../styling/custom-colors';
+@use '../../../styling/custom-colors' as colors;
 
 :host {
   display: block;
@@ -15,6 +15,6 @@
   }
 }
 .is-free {
-  background-color: $success-container !important;
-  color: $success-container-text !important;
+  background-color: colors.$success-container !important;
+  color: colors.$success-container-text !important;
 }

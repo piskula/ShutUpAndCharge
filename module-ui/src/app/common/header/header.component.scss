@@ -1,5 +1,5 @@
 @use '@angular/material' as mat;
-@import '../../../styling/header-and-footer-sizes';
+@use '../../../styling/header-and-footer-sizes' as sizes;
 
 :host {
   height: 100%;
@@ -16,7 +16,7 @@
   display: none;
 }
 
-@media (min-width: $mobile-width-header-threshold) {
+@media (min-width: sizes.$mobile-width-header-threshold) {
   .mobile-bar {
     display: none;
   }

@@ -1,4 +1,4 @@
-@import '../../../../styling/header-and-footer-sizes';
+@use '../../../../styling/header-and-footer-sizes' as sizes;
 
 .mat-column-id {
   min-width: 3.5rem;
@@ -11,7 +11,7 @@
   padding: 0;
 }
 
-@media screen and (max-width: $mobile-main-content-threshold) {
+@media screen and (max-width: sizes.$mobile-main-content-threshold) {
   .mat-column-verifiedForCharging {
     min-width: var(--mdc-icon-button-state-layer-size, 48px);
     max-width: var(--mdc-icon-button-state-layer-size, 48px);

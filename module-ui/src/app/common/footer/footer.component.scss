@@ -1,16 +1,16 @@
 @use '@angular/material' as mat;
-@import '../../../styling/header-and-footer-sizes';
+@use '../../../styling/header-and-footer-sizes' as sizes;
 
 .footer {
-  height: $height-footer-desktop;
+  height: sizes.$height-footer-desktop;
   background-color: var(--mat-sys-surface-container-highest);
   color: var(--mat-sys-on-surface);
   font-size: .9em;
   white-space: unset;
 }
-@media screen and (max-width: $mobile-width-footer-threshold) {
+@media screen and (max-width: sizes.$mobile-width-footer-threshold) {
   .footer {
-    height: $height-footer-mobile;
+    height: sizes.$height-footer-mobile;
   }
 }
 
@@ -23,7 +23,7 @@
 
 .row {
   width: 100%;
-  min-height: $height-footer-desktop;
+  min-height: sizes.$height-footer-desktop;
   text-align: center;
 
   :nth-child(2) {
@@ -49,9 +49,9 @@
   vertical-align: top; // Fix for different height elements
   display: inline-flex;
   line-height: 1.25rem;
-  height: $height-footer-desktop;
+  height: sizes.$height-footer-desktop;
 }
-@media screen and (max-width: $mobile-width-footer-threshold) {
+@media screen and (max-width: sizes.$mobile-width-footer-threshold) {
   .columns {
     width: 100%;
     height: unset;

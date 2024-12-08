@@ -1,8 +1,12 @@
 @use '@angular/material' as mat;
-@import '../../../styling/header-and-footer-sizes';
+@use '../../../styling/header-and-footer-sizes' as sizes;
+
+$height-header: sizes.$height-header;
+$height-footer-mobile: sizes.$height-footer-mobile;
+$height-footer-desktop: sizes.$height-footer-desktop;
 
 .header {
-  height: $height-header;
+  height: sizes.$height-header;
 }
 
 main {
@@ -14,15 +18,15 @@ main {
   padding: 0 1rem 1.5rem;
   box-sizing: border-box;
 
-  max-width: $main-content-max-width;
+  max-width: sizes.$main-content-max-width;
   margin: auto;
 }
-@media screen and (min-width: $mobile-width-footer-threshold) {
+@media screen and (min-width: sizes.$mobile-width-footer-threshold) {
   #main-content {
     min-height: calc(100vh - $height-header - $height-footer-desktop);
   }
 }
-@media screen and (min-width: $mobile-width-header-threshold) {
+@media screen and (min-width: sizes.$mobile-width-header-threshold) {
   #main-content {
     padding: 1rem 2rem;
   }

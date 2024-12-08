@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal } from '@angular/core';
-import { filter, map, tap } from 'rxjs';
+import { map, tap } from 'rxjs';
 import { HeaderData } from '../../common/header/model/header-data';
 import { ChargingStatusComponent } from '../../common/charging-status/charging-status.component';
 import { DashboardChargingListComponent } from '../components/dashboard-charging-list/dashboard-charging-list.component';
 import { AuthenticationService } from '../../security/authentication.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { PaginatedTableComponent } from '../../common/paginated-table/paginated-table.component';
 
 @Component({
   selector: 'app-home-dashboard',
@@ -14,7 +13,6 @@ import { PaginatedTableComponent } from '../../common/paginated-table/paginated-
   imports: [
     ChargingStatusComponent,
     DashboardChargingListComponent,
-    PaginatedTableComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
