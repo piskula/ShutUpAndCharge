@@ -61,7 +61,7 @@ export class TransactionListComponent {
   }
 
   protected fetchFn = (page: number, size: number, sort: string): Observable<Page<ChargingListDTO>> => {
-    return this.transactionService.getList(page, size, sort)
+    return this.transactionService.getList({}, page, size, sort)
       .pipe(map(page => page as Page<ChargingListDTO>));
   }
 

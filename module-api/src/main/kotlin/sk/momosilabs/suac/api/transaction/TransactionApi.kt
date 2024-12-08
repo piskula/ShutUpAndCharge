@@ -3,7 +3,6 @@ package sk.momosilabs.suac.api.transaction
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -21,8 +20,10 @@ interface TransactionApi {
 
     @ApiOperation("Get list of transactions")
     @PageableApiParam
-    @GetMapping(ENDPOINT_CHARGING, produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getList(pageable: PageableDTO): PageDTO<ChargingListDTO>
+    @PostMapping(ENDPOINT_CHARGING,
+        produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun getList(@RequestBody filter: TransactionFilterDTO, pageable: PageableDTO): PageDTO<ChargingListDTO>
 
     @PostMapping("${ENDPOINT_CHARGING}/topUp/{accountId}",
         produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.APPLICATION_JSON_VALUE]

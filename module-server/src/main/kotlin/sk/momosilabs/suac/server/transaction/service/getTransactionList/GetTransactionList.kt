@@ -9,6 +9,7 @@ import sk.momosilabs.suac.server.transaction.model.ChargingListItem
 import sk.momosilabs.suac.server.transaction.persistence.TransactionFinishedPersistence
 import sk.momosilabs.suac.server.common.IsUser
 import sk.momosilabs.suac.server.security.service.CurrentUserService
+import sk.momosilabs.suac.server.transaction.model.TransactionFilter
 
 @Service
 open class GetTransactionList(
@@ -18,12 +19,18 @@ open class GetTransactionList(
 
     @IsUser
     @Transactional(readOnly = true)
-    override fun get(pageable: Pageable): Page<ChargingListItem> {
+    override fun get(filter: TransactionFilter, pageable: Pageable): Page<ChargingListItem> {
         val isAdmin = currentUserService.getCurrentUser().momoRoles().contains(CurrentUserRoleDTO.Admin)
         return transactionPersistence.getAll(
-            filterByUserId = if (isAdmin) null else currentUserService.userId(),
+            filter = filter.addCurrentUserWhen(isNotAdmin = !isAdmin, currentUserService.userId()),
             pageable = pageable,
         )
     }
+
+    private fun TransactionFilter.addCurrentUserWhen(isNotAdmin: Boolean, currentUserId: Long) =
+        if (isNotAdmin)
+            copy(accountIds = accountIds.plus(currentUserId))
+        else
+            this
 
 }
