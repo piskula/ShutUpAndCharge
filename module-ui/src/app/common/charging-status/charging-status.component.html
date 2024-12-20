@@ -1,14 +1,17 @@
 <h2>Kutlíkova
-  <button class="status-button mat-elevation-z2" disabled [class.is-free]="isFree()" mat-stroked-button>
+  <button class="status-button" disabled [class.is-free]="isFree()" mat-stroked-button>
     <mat-icon>{{ isFree() ? 'check_circle' : 'cancel' }}</mat-icon>
     {{ isFree() ? 'Free' : 'Occupied' }}
   </button>
+  <button mat-icon-button (click)="refreshStatus()" class="py-0 v-middle">
+    <mat-icon style="top: 0.1875rem">refresh</mat-icon>
+  </button>
 </h2>
-<div *ngIf="isFree()" class="mr-2">
+<div *ngIf="isFree()">
   To start charging, please connect the cable first and then click on refresh button.
   <span>Only previously-verified users can initiate charging process.</span>
 </div>
-<div *ngIf="!isFree()" class="mr-2">Station is occupied currently.</div>
-<button mat-mini-fab (click)="refreshStatus()" class="ml-2 mb-3">
-  <mat-icon>refresh</mat-icon>
+<div *ngIf="!isFree()">Station is occupied currently.</div>
+<button mat-flat-button class="mt-3 mb-2" disabled>
+  <mat-icon class="fill-icon">flash_on</mat-icon>Start charging
 </button>

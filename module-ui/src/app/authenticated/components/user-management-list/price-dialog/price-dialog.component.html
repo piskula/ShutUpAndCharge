@@ -10,5 +10,5 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="close()">Cancel</button>
-  <button mat-button [mat-dialog-close]="amount()" [disabled]="amount() <= 0">Yes, add credit {{ amount() | number: '1.2-2'}}&nbsp;€</button>
+  <button mat-button [mat-dialog-close]="amount()" [disabled]="amount() <= 0">Yes, add credit {{ amount() | currency }}</button>
 </mat-dialog-actions>

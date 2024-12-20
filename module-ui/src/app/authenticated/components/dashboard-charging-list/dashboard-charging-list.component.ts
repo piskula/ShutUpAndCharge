@@ -13,7 +13,7 @@ import {
 import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { DatePipe, DecimalPipe, NgIf } from '@angular/common';
+import { CurrencyPipe, DatePipe, DecimalPipe, NgIf } from '@angular/common';
 import { ResponsiveService } from '../../../common/responsive.service';
 import { Page, PaginatedTableComponent } from '../../../common/paginated-table/paginated-table.component';
 
@@ -41,6 +41,7 @@ import { Page, PaginatedTableComponent } from '../../../common/paginated-table/p
     DecimalPipe,
     NgIf,
     PaginatedTableComponent,
+    CurrencyPipe,
   ],
 })
 export class DashboardChargingListComponent {

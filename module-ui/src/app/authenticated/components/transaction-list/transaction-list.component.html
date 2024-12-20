@@ -48,7 +48,7 @@
       </mat-header-cell>
       <mat-cell *matCellDef="let chrg" class="table-column-right" style="font-weight: 600"
                 [class.color-error]="chrg.price < 0" [class.color-accent]="chrg.price > 0">
-        <span *ngIf="chrg.price > 0">+</span>{{ chrg.price | number: '1.2-2' }}&nbsp;€
+        <span *ngIf="chrg.price > 0">+</span>{{ chrg.price | currency }}
       </mat-cell>
     </ng-container>
 

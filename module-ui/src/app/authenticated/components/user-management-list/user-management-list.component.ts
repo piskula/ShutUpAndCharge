@@ -10,7 +10,7 @@ import {
   MatRowDef,
   MatTable, MatTableDataSource,
 } from '@angular/material/table';
-import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { NgIf } from '@angular/common';

@@ -17,7 +17,7 @@ import {
 import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { DatePipe, DecimalPipe, NgIf } from '@angular/common';
+import { CurrencyPipe, DatePipe, DecimalPipe, NgIf } from '@angular/common';
 import { Page, PaginatedTableComponent } from '../../../common/paginated-table/paginated-table.component';
 
 @Component({
@@ -44,6 +44,7 @@ import { Page, PaginatedTableComponent } from '../../../common/paginated-table/p
     MatRow,
     MatColumnDef,
     NgIf,
+    CurrencyPipe,
   ],
 })
 export class TransactionListComponent {
