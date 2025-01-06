@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal } from '
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatIcon } from '@angular/material/icon';
 import { NgForOf, NgIf } from '@angular/common';
-import { MatAnchor, MatButton, MatFabAnchor, MatIconButton } from '@angular/material/button';
+import { MatAnchor, MatButton, MatIconButton } from '@angular/material/button';
 import { MatChip, MatChipSet } from '@angular/material/chips';
 import { tap } from 'rxjs';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
-import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { MatDivider } from '@angular/material/divider';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthenticationService, CurrentUser } from '../../../security/authentication.service';
@@ -30,7 +29,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     MatMenu,
     MatMenuTrigger,
     MatButton,
-    CdkOverlayOrigin,
     MatDivider,
     RouterLinkActive,
     RouterLink,

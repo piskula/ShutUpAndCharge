@@ -1,5 +1,5 @@
 @use '@angular/material' as mat;
-@import '../custom-colors';
+@use '../custom-colors' as colors;
 
 .text-darker {
   color: var(--mat-sys-on-surface-variant) !important;
@@ -30,8 +30,8 @@
 }
 .snackbar-success {
   .mat-mdc-snackbar-surface {
-    background-color: $success-container !important;
-    color: $success-container-text !important;
+    background-color: colors.$success-container !important;
+    color: colors.$success-container-text !important;
   }
 }
 

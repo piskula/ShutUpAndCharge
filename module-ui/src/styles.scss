@@ -1,8 +1,9 @@
 @use '@angular/material' as mat;
-@import 'styling/global/coloring';
-@import 'styling/global/global-overrides';
-@import 'styling/global/position-helpers';
-@import 'styling/global/table-helpers';
+
+@forward 'styling/global/coloring';
+@forward 'styling/global/global-overrides';
+@forward 'styling/global/position-helpers';
+@forward 'styling/global/table-helpers';
 
 // Comment out the line below if you want to use the pre-defined typography utility classes.
 // For more information: https://material.angular.io/guide/typography#using-typography-styles-in-your-application.
