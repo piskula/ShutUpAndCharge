@@ -38,13 +38,13 @@ val generationTask = tasks.findByPath("generateSwaggerCodeFrontendFromApi")!!
 
 generationTask.dependsOn += apiProject.tasks.findByPath("generateSwaggerDocumentation")
 
-tasks.npmInstall {
+tasks.yarn {
   dependsOn(generationTask)
 }
 
 val npmBuild = tasks.create("npmBuild", NpmTask::class) {
     args.set(listOf("run", "build"))
-    dependsOn(tasks.npmInstall)
+    dependsOn(tasks.yarn)
 }
 
 // make swagger codegen and npm build part of build task
