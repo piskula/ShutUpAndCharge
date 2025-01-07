@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { MatButton, MatIconButton, MatMiniFabButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { NgIf } from '@angular/common';
 
@@ -11,7 +11,6 @@ import { NgIf } from '@angular/common';
     MatButton,
     MatIcon,
     NgIf,
-    MatMiniFabButton,
     MatIconButton,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

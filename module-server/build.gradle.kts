@@ -11,6 +11,11 @@ springBoot {
   buildInfo()
 }
 
+// do not build *plain.jar, only fat jar
+tasks.getByName<Jar>("jar") {
+    enabled = false
+}
+
 dependencies {
     implementation(project(":module-api"))
     implementation(uiProject) /* because of putting static sources into jar, can be removed */
@@ -34,15 +39,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 //    testImplementation("io.mockk:mockk:1.13.4")
 }
-
-//kapt {
-//    javacOptions {
-//        option("querydsl.entityAccessors", true)
-//    }
-//    arguments {
-//        arg("plugin", "com.querydsl.apt.jpa.JPAAnnotationProcessor")
-//    }
-//}
 
 val frontendDestination = "src/main/resources/public"
 // extend cleanup also to angular build directory

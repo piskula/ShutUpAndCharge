@@ -1,3 +1,28 @@
+<mat-accordion>
+  <mat-expansion-panel class="my-1 mx-1">
+    <mat-expansion-panel-header>
+
+      <mat-panel-title style="flex-grow: unset">
+        <mat-icon class="mr-1" *ngIf="activeFilters().length > 0">filter_alt</mat-icon>
+        <mat-icon class="mr-1" *ngIf="activeFilters().length <= 0">filter_alt_off</mat-icon>
+      </mat-panel-title>
+
+      <mat-panel-description>
+        <mat-chip-set>
+          @for (activeFilter of activeFilters(); track activeFilter.id) {
+          <mat-chip-row [editable]="false" (removed)="removeFilter(activeFilter.id)">
+            <mat-icon matChipAvatar>{{ activeFilter.icon }}</mat-icon>
+            {{ activeFilter.title }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip-row>
+          }
+        </mat-chip-set>
+      </mat-panel-description>
+
+    </mat-expansion-panel-header>
+    <button mat-stroked-button (click)="addCurrentUserFilter()">Only mine</button>
+  </mat-expansion-panel>
+</mat-accordion>
 <app-paginated-table #pagination [fetchFn]="fetchFn" (dataSource)="dataSource.data = $event" [defaultSort]="defaultSort">
   <mat-table
     [dataSource]="dataSource" matSort

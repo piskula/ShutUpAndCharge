@@ -28,6 +28,7 @@ export class AuthenticationService {
       roles: rolesEnum.map((r: CurrentUserDTO.RolesEnum) => r.toString()),
     } as CurrentUser;
   });
+  readonly currentUserValue = computed(() => this._currentUser());
   private readonly currentUser$ = toObservable(this._currentUser);
 
   constructor(
