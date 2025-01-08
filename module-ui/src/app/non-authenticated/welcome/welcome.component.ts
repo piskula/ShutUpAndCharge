@@ -4,6 +4,7 @@ import { MatIcon } from "@angular/material/icon";
 import { FooterComponent } from "../../common/footer/footer.component";
 import { ChargingStatusComponent } from '../../common/charging-status/charging-status.component';
 import { HeaderComponent } from '../../common/header/header.component';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-welcome',
@@ -15,6 +16,7 @@ import { HeaderComponent } from '../../common/header/header.component';
     ChargingStatusComponent,
     MatIcon,
     MatAnchor,
+    NgOptimizedImage,
   ],
 })
 export class WelcomeComponent {

@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, OnInit, signal, viewChild } from '@angular/core';
 import { TransactionService, ChargingListDTO } from '@suac/api';
 import { map, Observable } from 'rxjs';
 import {
@@ -95,6 +89,7 @@ export class TransactionListComponent implements OnInit {
   private readonly pagination = viewChild(PaginatedTableComponent);
 
   readonly activeFilters = signal<TransactionFilter[]>([]);
+  readonly isAdmin = computed(() => this.authService.currentUserValue()?.roles?.includes('Admin') ?? false);
   currentUser: CurrentUser | null;
 
   constructor(

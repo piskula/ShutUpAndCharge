@@ -5,6 +5,8 @@ $height-header: sizes.$height-header;
 $height-footer-mobile: sizes.$height-footer-mobile;
 $height-footer-desktop: sizes.$height-footer-desktop;
 
+$pic-height: 22rem;
+
 .header {
   height: sizes.$height-header;
 }
@@ -14,20 +16,59 @@ main {
   overflow-y: auto;
 }
 #main-content {
-  min-height: calc(100vh - $height-header - $height-footer-mobile);
-  padding: 0 1rem 1.5rem;
-  box-sizing: border-box;
+  min-height: calc(100vh - $height-header - $height-footer-mobile - $pic-height);
+}
+.text-inside-logo {
+  display: none;
+  .title {
+    font-size: 3em;
+    .title-icon {
+      width: 1.25em;
+      height: 1em;
+      font-size: 1.25em;
+      top: .75rem;
+      position: relative;
+    }
+  }
+}
 
+#main-content,
+.text-inside-logo {
+  padding: 0 1rem 1.5rem;
   max-width: sizes.$main-content-max-width;
   margin: auto;
+  box-sizing: border-box;
 }
+
 @media screen and (min-width: sizes.$mobile-width-footer-threshold) {
+  main {
+    height: 100vh;
+  }
   #main-content {
-    min-height: calc(100vh - $height-header - $height-footer-desktop);
+    min-height: calc(100vh - $height-footer-desktop - $pic-height);
+  }
+  .header {
+    display: none;
+  }
+  .text-inside-logo {
+    display: grid;
   }
 }
 @media screen and (min-width: sizes.$mobile-width-header-threshold) {
-  #main-content {
+  #main-content,
+  .text-inside-logo {
     padding: 1rem 2rem;
   }
+}
+
+.logo {
+  $overlay: var(--mat-sys-on-primary-fixed);
+
+  height: $pic-height;
+  color: var(--mat-sys-primary-fixed);
+  background:linear-gradient(0deg, hsl(from $overlay h s l / 75%), hsl(from $overlay h s l / 65%)), url("/hajpark.jpg");
+
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
