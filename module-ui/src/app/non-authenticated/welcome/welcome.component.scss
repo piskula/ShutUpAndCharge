@@ -7,13 +7,18 @@ $height-footer-desktop: sizes.$height-footer-desktop;
 
 $pic-height: 22rem;
 
-.header {
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+#header {
   height: sizes.$height-header;
 }
 
 main {
-  height: calc(100vh - $height-header);
-  overflow-y: auto;
+  flex: 1;
+  overflow: auto;
 }
 #main-content {
   min-height: calc(100vh - $height-header - $height-footer-mobile - $pic-height);
@@ -41,13 +46,10 @@ main {
 }
 
 @media screen and (min-width: sizes.$mobile-width-footer-threshold) {
-  main {
-    height: 100vh;
-  }
   #main-content {
-    min-height: calc(100vh - $height-footer-desktop - $pic-height);
+    min-height: calc(100% - $height-footer-desktop - $pic-height);
   }
-  .header {
+  #header {
     display: none;
   }
   .text-inside-logo {
