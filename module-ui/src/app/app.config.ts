@@ -4,6 +4,7 @@ import {
   importProvidersFrom,
   LOCALE_ID,
   provideZoneChangeDetection,
+  isDevMode,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
@@ -16,6 +17,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 // locale
 import { registerLocaleData } from '@angular/common';
 import localeSk from '@angular/common/locales/sk';
+import { provideServiceWorker } from '@angular/service-worker';
 registerLocaleData(localeSk);
 
 export const appConfig: ApplicationConfig = {
@@ -31,5 +33,12 @@ export const appConfig: ApplicationConfig = {
     { provide: BASE_PATH, useValue: '.' },
     { provide: LOCALE_ID, useValue: 'sk-SK' }, // TODO this should be taken from browser (?)
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'EUR' },
+    provideServiceWorker(
+      'ngsw-worker.js',
+      {
+        enabled: !isDevMode(),
+        registrationStrategy: 'registerWhenStable:30000',
+      },
+    ),
   ],
 };
