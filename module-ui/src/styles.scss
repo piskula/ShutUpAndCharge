@@ -13,22 +13,38 @@ html, body {
   height: 100%;
 }
 
+$typography: (
+  plain-family: 'Open Sans',
+  brand-family: 'Ubuntu',
+  bold-weight: 900,
+  medium-weight: 600,
+  regular-weight: 400,
+);
+
+// to support iOS/MacOS browsers before 17.5
 html {
-  color-scheme: light dark;
   @include mat.theme((
-    //color: mat.$chartreuse-palette,
-    //color: mat.$orange-palette,
-    //color: mat.$rose-palette,
-    color: mat.$azure-palette,
-    typography: (
-      plain-family: 'Open Sans',
-      brand-family: 'Ubuntu',
-      bold-weight: 900,
-      medium-weight: 600,
-      regular-weight: 400,
+    color: (
+      primary: mat.$azure-palette,
+      theme-type: light,
     ),
+    typography: $typography,
     density: -1,
   ));
+}
+
+@supports (color: light-dark(black, white)) {
+  html {
+    color-scheme: light dark;
+    @include mat.theme((
+      //color: mat.$chartreuse-palette,
+      //color: mat.$orange-palette,
+      //color: mat.$rose-palette,
+      color: mat.$azure-palette,
+      typography: $typography,
+      density: -1,
+    ));
+  }
 }
 
 body {
