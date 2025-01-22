@@ -21,7 +21,8 @@ $typography: (
   regular-weight: 400,
 );
 
-// to support iOS/MacOS browsers before 17.5
+// to support iOS/MacOS browsers before 17.5, which do not support light-dark
+// we are using light mode by default unless user "asked" for dark mode
 html {
   @include mat.theme((
     color: (
@@ -32,20 +33,28 @@ html {
     density: -1,
   ));
 }
-
-@supports (color: light-dark(black, white)) {
+@media (prefers-color-scheme: dark) {
   html {
-    color-scheme: light dark;
     @include mat.theme((
-      //color: mat.$chartreuse-palette,
-      //color: mat.$orange-palette,
-      //color: mat.$rose-palette,
-      color: mat.$azure-palette,
+      color: (
+        primary: mat.$azure-palette,
+        theme-type: dark,
+      ),
       typography: $typography,
       density: -1,
     ));
   }
 }
+
+// following code is achieving the same, but there is no support for older browsers on Apple devices before 17.5
+//html {
+//  color-scheme: light dark;
+//  @include mat.theme((
+//    color: mat.$azure-palette,
+//    typography: $typography,
+//    density: -1,
+//  ));
+//}
 
 body {
   background: var(--mat-sys-surface);
