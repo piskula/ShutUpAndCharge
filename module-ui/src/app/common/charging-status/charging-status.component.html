@@ -1,17 +1,34 @@
 <h2>Kutlíkova
-  <button class="status-button" disabled [class.is-free]="isFree()" mat-stroked-button>
-    <mat-icon>{{ isFree() ? 'check_circle' : 'cancel' }}</mat-icon>
-    {{ isFree() ? 'Free' : 'Occupied' }}
+  <button class="status-button" *ngIf="status().offline" disabled mat-flat-button>
+    <mat-icon class="fill-icon">dangerous</mat-icon>
+    {{ 'Offline (out of service)' }}
   </button>
-  <button mat-icon-button (click)="refreshStatus()" class="py-0 v-middle">
+
+  <button class="status-button ready" *ngIf="status().ready" disabled mat-stroked-button>
+    <mat-icon>check_circle</mat-icon>
+    Free
+  </button>
+
+  <button class="status-button awaiting" *ngIf="status().awaitingAuthorization" disabled mat-stroked-button>
+    <mat-icon class="pulse">link</mat-icon>
+    Connected, you can press 'start'
+  </button>
+
+  <button class="status-button occupied" *ngIf="status().occupied" disabled mat-stroked-button>
+    <mat-icon class="pulse-bigger">power</mat-icon>
+<!--    Occupied (21:14) {{ status().chargedKwh }} kWh-->
+    Occupied for 21:14
+  </button>
+
+  <button mat-icon-button (click)="refreshStatus()" class="py-0 v-middle" [disabled]="isBeingRefreshed()">
     <mat-icon style="top: 0.1875rem">refresh</mat-icon>
   </button>
 </h2>
-<div *ngIf="isFree()">
+<div *ngIf="!status().occupied">
   To start charging, please connect the cable first and then click on refresh button.
   <span>Only previously-verified users can initiate charging process.</span>
 </div>
-<div *ngIf="!isFree()">Station is occupied currently.</div>
-<button mat-flat-button class="mt-3 mb-2" disabled>
-  <mat-icon class="fill-icon">flash_on</mat-icon>Start charging
+<div *ngIf="status().occupied">Station is occupied currently.</div>
+<button mat-flat-button class="mt-3 mb-2" [disabled]="!status().awaitingAuthorization">
+  <mat-icon class="fill-icon" [class.pulse]="status().awaitingAuthorization">flash_on</mat-icon>Start charging
 </button>

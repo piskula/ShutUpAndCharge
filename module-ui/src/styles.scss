@@ -33,6 +33,12 @@ html {
     density: -1,
   ));
 }
+:root {
+  --success: #b5d887;
+  --on-success: #002200;
+  --warn: #ffdcc7;
+  --on-warn: #311300;
+}
 @media (prefers-color-scheme: dark) {
   html {
     @include mat.theme((
@@ -44,7 +50,14 @@ html {
       density: -1,
     ));
   }
+  :root {
+    --success: #1b5e20;
+    --on-success: #e8f5e9;
+    --warn: #ff7100;
+    --on-warn: #ffffff;
+  }
 }
+
 
 // following code is achieving the same, but there is no support for older browsers on Apple devices before 17.5
 //html {
@@ -54,6 +67,12 @@ html {
 //    typography: $typography,
 //    density: -1,
 //  ));
+//}
+//:root {
+//  --success: light-dark(#b5d887, #1b5e20);
+//  --on-success: light-dark(#002200, #e8f5e9);
+//  --warn: light-dark(#ffdcc7, #ff7100);
+//  --on-warn: light-dark(#311300, #ffffff);
 //}
 
 body {
