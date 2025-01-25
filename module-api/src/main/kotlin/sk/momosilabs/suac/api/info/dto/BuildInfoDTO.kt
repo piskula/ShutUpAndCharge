@@ -1,4 +1,4 @@
-package sk.momosilabs.suac.api.version.dto
+package sk.momosilabs.suac.api.info.dto
 
 import java.time.ZonedDateTime
 

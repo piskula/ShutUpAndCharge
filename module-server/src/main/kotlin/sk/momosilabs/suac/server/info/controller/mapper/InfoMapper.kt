@@ -1,4 +1,4 @@
-package sk.momosilabs.suac.server.dashboard.controller.mapper
+package sk.momosilabs.suac.server.info.controller.mapper
 
 import sk.momosilabs.suac.api.dashboard.dto.CarStateDTO
 import sk.momosilabs.suac.api.dashboard.dto.ChargerStatusDTO

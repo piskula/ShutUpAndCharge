@@ -8,7 +8,6 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import sk.momosilabs.suac.server.dashboard.model.charging.ChargerStatus
-import java.time.OffsetDateTime
 
 data class ExternalChargerDataWrapper(
     val error: Boolean,
@@ -18,7 +17,7 @@ data class ExternalChargerDataWrapper(
 )
 
 data class ExternalChargerDataError(
-    val lastUpdate: OffsetDateTime,
+    val lastAliveSecondsAgo: Long,
 )
 
 @Serializable
@@ -32,6 +31,12 @@ data class ExternalChargerSuccessResponse(
     val lri: String?,
     val ocppcs: OcppConnectorStatusEnum,
     val wh: Double,
+)
+
+@Serializable
+data class ExternalChargerErrorResponse(
+    val reason: String,
+    val age: Double,
 )
 
 open class EnumAsIntSerializer<T:Enum<*>>(

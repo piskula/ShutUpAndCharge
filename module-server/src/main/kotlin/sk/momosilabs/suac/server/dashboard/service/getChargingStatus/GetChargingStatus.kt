@@ -1,5 +1,6 @@
 package sk.momosilabs.suac.server.dashboard.service.getChargingStatus
 
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sk.momosilabs.suac.server.dashboard.model.charging.ChargerStatus
@@ -14,6 +15,10 @@ open class GetChargingStatus(
     private val externalChargingApi: ExternalChargingApi,
 ): GetChargingStatusUseCase {
 
+    companion object {
+        private val logger = LoggerFactory.getLogger(GetChargingStatus::class.java)
+    }
+
     private fun unknownStatus() = ChargerStatus(
         carState = CarStateEnum.UnknownOrError,
         modelStatus = ExternalChargerStatusEnum.NotChargingBecauseError,
@@ -25,7 +30,10 @@ open class GetChargingStatus(
     @Transactional(readOnly = true)
     override fun getChargerStatus(): ChargerStatus {
         val statusResponse = externalChargingApi.getChargerStatus()
-        return statusResponse.ifSuccess ?: unknownStatus()
+        return statusResponse.ifSuccess
+            ?: unknownStatus().also {
+                logger.error("Error while fetching charger status: " + statusResponse.ifError?.toString())
+            }
     }
 
 }

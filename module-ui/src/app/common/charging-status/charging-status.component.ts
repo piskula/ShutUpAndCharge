@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, OnInit, signal } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { NgIf } from '@angular/common';
-import { ChargingService, ChargerStatusDTO } from '@suac/api';
+import { DashboardService, InfoPublicService, ChargerStatusDTO } from '@suac/api';
 import { finalize, take, tap } from 'rxjs';
 
 @Component({
@@ -21,16 +21,24 @@ export class ChargingStatusComponent implements OnInit {
   CarStateEnum = ChargerStatusDTO.CarStateEnum;
   ConnectorStatusOcppEnum = ChargerStatusDTO.ConnectorStatusOcppEnum;
 
-  protected readonly isBeingRefreshed = signal(false);
-  protected readonly status = signal<ChargerStatusDTO>({
+  protected readonly refreshLoading = signal(false);
+  protected readonly chargeStatusChangeLoading = signal(false);
+
+  protected readonly statusModel = signal<ChargerStatusDTO>({
     carState: this.CarStateEnum.UnknownOrError,
     connectorStatusOcpp: this.ConnectorStatusOcppEnum.Unavailable,
     occupiedFrom: undefined,
     chargedKwh: 0,
   });
+  protected readonly carState = computed(() => this.statusModel().carState!!);
+  protected readonly canBeStarted = computed(() =>
+    this.carState() === this.CarStateEnum.WaitCar);
+  protected readonly canBeStopped = computed(() =>
+    this.carState() === this.CarStateEnum.Charging);
 
   constructor(
-    private readonly chargingService: ChargingService,
+    private readonly infoService: InfoPublicService,
+    private readonly dashboardService: DashboardService,
   ) {
   }
 
@@ -39,15 +47,42 @@ export class ChargingStatusComponent implements OnInit {
   }
 
   public refreshStatus() {
-    if (this.isBeingRefreshed()) {
+    if (this.refreshLoading()) {
       return;
     }
 
-    this.isBeingRefreshed.set(true);
-    this.chargingService.getChargerStatus().pipe(
+    this.refreshLoading.set(true);
+    this.infoService.getChargerStatus().pipe(
       take(1),
-      tap(status => this.status.set(status)),
-      finalize(() => this.isBeingRefreshed.set(false)),
+      tap(status => this.statusModel.set(status)),
+      finalize(() => this.refreshLoading.set(false)),
     ).subscribe();
   }
+
+  public startCharging(): void {
+    // if (this.chargeStatusChangeLoading()) {
+    //   return;
+    // }
+    //
+    // this.chargeStatusChangeLoading.set(true);
+    // this.dashboardService.startCharging().pipe(
+    //   take(1),
+    //   tap(status => this.statusModel.set(status)),
+    //   finalize(() => this.chargeStatusChangeLoading.set(false)),
+    // ).subscribe();
+  }
+
+  public stopCharging(): void {
+    // if (this.chargeStatusChangeLoading()) {
+    //   return;
+    // }
+    //
+    // this.chargeStatusChangeLoading.set(true);
+    // this.dashboardService.stopCharging().pipe(
+    //   take(1),
+    //   tap(status => this.statusModel.set(status)),
+    //   finalize(() => this.chargeStatusChangeLoading.set(false)),
+    // ).subscribe();
+  }
+
 }

@@ -1,5 +1,6 @@
-<h2>Kutlíkova
-  @switch (status().carState) {
+<h2>Kutlíkova</h2>
+<div>
+  @switch (carState()) {
     @case (CarStateEnum.UnknownOrError) {
       <button class="status-button" disabled mat-flat-button>
         <mat-icon class="fill-icon">dangerous</mat-icon>{{ 'Offline (out of service)' }}
@@ -10,38 +11,61 @@
         <mat-icon>check_circle</mat-icon>Free
       </button>
     }
-    @case (CarStateEnum.Charging) {
-      <button class="status-button occupied" disabled mat-stroked-button>
-<!--        <mat-icon class="pulse-bigger">power</mat-icon>Occupied for 21:14-->
-        <mat-icon class="pulse-bigger">power</mat-icon>Occupied ({{ status().chargedKwh }} kWh)
-        <!--    Occupied (21:14) {{ status().chargedKwh }} kWh-->
-      </button>
-    }
-    @case (CarStateEnum.Complete) {
-      <button class="status-button occupied" disabled mat-stroked-button>
-        <mat-icon class="pulse-bigger">power</mat-icon>Completed ({{ status().chargedKwh }} kWh)
-      </button>
-    }
     @case (CarStateEnum.WaitCar) {
       <button class="status-button awaiting" disabled mat-stroked-button>
         <mat-icon class="pulse">link</mat-icon>Connected, you can press 'start'
       </button>
     }
+    @case (CarStateEnum.Charging) {
+      <button class="status-button occupied" disabled mat-stroked-button>
+<!--        <mat-icon class="pulse-bigger">power</mat-icon>Occupied for 21:14-->
+        <mat-icon class="pulse-bigger">power</mat-icon>Occupied ({{ statusModel().chargedKwh }} kWh)
+        <!--    Occupied (21:14) {{ status().chargedKwh }} kWh-->
+      </button>
+    }
+    @case (CarStateEnum.Complete) {
+      <button class="status-button occupied" disabled mat-stroked-button>
+        <mat-icon class="pulse-bigger">power</mat-icon>Completed ({{ statusModel().chargedKwh }} kWh)
+      </button>
+    }
     @default {
       <button class="status-button" disabled mat-flat-button>
-        <mat-icon>question_mark</mat-icon>{{ status().carState }}
+        <mat-icon>question_mark</mat-icon>{{ carState() }}
       </button>
     }
   }
-  <button mat-icon-button (click)="refreshStatus()" class="py-0 v-middle" [disabled]="isBeingRefreshed()">
+  <button mat-icon-button (click)="refreshStatus()" class="py-0 v-middle" [disabled]="refreshLoading()">
     <mat-icon style="top: 0.1875rem">refresh</mat-icon>
   </button>
-</h2>
-<div *ngIf="status().carState !== CarStateEnum.Charging">
-  To start charging, please connect the cable first and then click on refresh button.
-  <span>Only previously-verified users can initiate charging process.</span>
 </div>
-<div *ngIf="status().carState === CarStateEnum.Charging">Station is occupied currently.</div>
-<button mat-flat-button class="mt-3 mb-2" [disabled]="status().carState !== CarStateEnum.WaitCar">
-  <mat-icon class="fill-icon" [class.pulse]="status().carState === CarStateEnum.WaitCar">flash_on</mat-icon>Start charging
+
+@switch (carState()) {
+  @case (CarStateEnum.UnknownOrError) {
+    <div class="mt-2">We are sorry, but station seems out of service (we are not able to connect to it)</div>
+  }
+  @case (CarStateEnum.Idle) {
+    <div class="mt-2">Station is ready. To start charging, please connect the cable and then click on refresh button.</div>
+  }
+  @case (CarStateEnum.WaitCar) {
+    <div class="mt-2">There is car detected, you can initiate charging:</div>
+  }
+  @case (CarStateEnum.Charging) {
+    <div class="mt-2">There is charging in progress at the moment.</div>
+  }
+  @case (CarStateEnum.Complete) {
+    <div class="mt-2">Charging process is complete. You can unplug the cable.</div>
+  }
+  @default {
+    <div class="mt-2">We are sorry, but station seems out of service (we do not know the reason yet)</div>
+  }
+}
+<button
+  mat-flat-button class="mt-2 mb-2" *ngIf="!canBeStopped()"
+  [disabled]="!canBeStarted() || chargeStatusChangeLoading()" (click)="startCharging()">
+  <mat-icon class="fill-icon" [class.pulse]="canBeStarted()">flash_on</mat-icon>Start charging
+</button>
+<button
+  mat-flat-button class="mt-2 mb-2" *ngIf="canBeStopped()"
+  [disabled]="chargeStatusChangeLoading()" (click)="stopCharging()">
+  <mat-icon class="fill-icon">link_off</mat-icon>Stop charging
 </button>

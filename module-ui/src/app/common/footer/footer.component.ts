@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
-import { BuildInfoService } from '@suac/api';
+import { InfoPublicService } from '@suac/api';
 import { tap } from 'rxjs';
 import { MatToolbar } from "@angular/material/toolbar";
 import { MatIcon } from "@angular/material/icon";
@@ -22,12 +22,12 @@ export class FooterComponent implements OnInit {
   public year = signal(new Date().getFullYear());
 
   constructor(
-    private buildInfoService: BuildInfoService,
+    private infoService: InfoPublicService,
   ) {
   }
 
   ngOnInit(): void {
-    this.buildInfoService.get().pipe(
+    this.infoService.get().pipe(
       tap(version => {
         this.version.set(version.version!);
         this.versionTime.set(version.time!);
