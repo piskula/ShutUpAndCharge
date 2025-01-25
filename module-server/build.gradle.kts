@@ -1,6 +1,7 @@
 plugins {
     id("org.springframework.boot") version "3.3.5"
-    kotlin("plugin.jpa") version "1.9.23"
+    kotlin("plugin.jpa") version "2.1.0"
+    kotlin("plugin.serialization") version "2.1.0"
     kotlin("kapt")
 }
 
@@ -22,6 +23,9 @@ dependencies {
 
     // controller
     implementation("org.springframework.boot:spring-boot-starter-web")
+
+    // JSON serialization for external rest client calls
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("org.postgresql:postgresql:42.7.4")

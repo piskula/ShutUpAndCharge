@@ -33,3 +33,9 @@ spring:
 # to allow swagger-ui to perform requests against HTTPS
 server:
   forward-headers-strategy: framework
+
+application:
+  station:
+    cloudStatusUrl: "YOUR_VALUE"
+    cloudSetUrl: "YOUR_VALUE"
+    cloudToken: "YOUR_VALUE"

@@ -18,14 +18,15 @@ import { finalize, take, tap } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChargingStatusComponent implements OnInit {
+  CarStateEnum = ChargerStatusDTO.CarStateEnum;
+  ConnectorStatusOcppEnum = ChargerStatusDTO.ConnectorStatusOcppEnum;
 
   protected readonly isBeingRefreshed = signal(false);
   protected readonly status = signal<ChargerStatusDTO>({
-    awaitingAuthorization: false,
-    chargedKwh: 0,
-    occupied: false,
+    carState: this.CarStateEnum.UnknownOrError,
+    connectorStatusOcpp: this.ConnectorStatusOcppEnum.Unavailable,
     occupiedFrom: undefined,
-    offline: true,
+    chargedKwh: 0,
   });
 
   constructor(

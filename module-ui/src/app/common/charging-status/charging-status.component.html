@@ -1,34 +1,47 @@
 <h2>Kutlíkova
-  <button class="status-button" *ngIf="status().offline" disabled mat-flat-button>
-    <mat-icon class="fill-icon">dangerous</mat-icon>
-    {{ 'Offline (out of service)' }}
-  </button>
-
-  <button class="status-button ready" *ngIf="status().ready" disabled mat-stroked-button>
-    <mat-icon>check_circle</mat-icon>
-    Free
-  </button>
-
-  <button class="status-button awaiting" *ngIf="status().awaitingAuthorization" disabled mat-stroked-button>
-    <mat-icon class="pulse">link</mat-icon>
-    Connected, you can press 'start'
-  </button>
-
-  <button class="status-button occupied" *ngIf="status().occupied" disabled mat-stroked-button>
-    <mat-icon class="pulse-bigger">power</mat-icon>
-<!--    Occupied (21:14) {{ status().chargedKwh }} kWh-->
-    Occupied for 21:14
-  </button>
-
+  @switch (status().carState) {
+    @case (CarStateEnum.UnknownOrError) {
+      <button class="status-button" disabled mat-flat-button>
+        <mat-icon class="fill-icon">dangerous</mat-icon>{{ 'Offline (out of service)' }}
+      </button>
+    }
+    @case (CarStateEnum.Idle) {
+      <button class="status-button idle" disabled mat-stroked-button>
+        <mat-icon>check_circle</mat-icon>Free
+      </button>
+    }
+    @case (CarStateEnum.Charging) {
+      <button class="status-button occupied" disabled mat-stroked-button>
+<!--        <mat-icon class="pulse-bigger">power</mat-icon>Occupied for 21:14-->
+        <mat-icon class="pulse-bigger">power</mat-icon>Occupied ({{ status().chargedKwh }} kWh)
+        <!--    Occupied (21:14) {{ status().chargedKwh }} kWh-->
+      </button>
+    }
+    @case (CarStateEnum.Complete) {
+      <button class="status-button occupied" disabled mat-stroked-button>
+        <mat-icon class="pulse-bigger">power</mat-icon>Completed ({{ status().chargedKwh }} kWh)
+      </button>
+    }
+    @case (CarStateEnum.WaitCar) {
+      <button class="status-button awaiting" disabled mat-stroked-button>
+        <mat-icon class="pulse">link</mat-icon>Connected, you can press 'start'
+      </button>
+    }
+    @default {
+      <button class="status-button" disabled mat-flat-button>
+        <mat-icon>question_mark</mat-icon>{{ status().carState }}
+      </button>
+    }
+  }
   <button mat-icon-button (click)="refreshStatus()" class="py-0 v-middle" [disabled]="isBeingRefreshed()">
     <mat-icon style="top: 0.1875rem">refresh</mat-icon>
   </button>
 </h2>
-<div *ngIf="!status().occupied">
+<div *ngIf="status().carState !== CarStateEnum.Charging">
   To start charging, please connect the cable first and then click on refresh button.
   <span>Only previously-verified users can initiate charging process.</span>
 </div>
-<div *ngIf="status().occupied">Station is occupied currently.</div>
-<button mat-flat-button class="mt-3 mb-2" [disabled]="!status().awaitingAuthorization">
-  <mat-icon class="fill-icon" [class.pulse]="status().awaitingAuthorization">flash_on</mat-icon>Start charging
+<div *ngIf="status().carState === CarStateEnum.Charging">Station is occupied currently.</div>
+<button mat-flat-button class="mt-3 mb-2" [disabled]="status().carState !== CarStateEnum.WaitCar">
+  <mat-icon class="fill-icon" [class.pulse]="status().carState === CarStateEnum.WaitCar">flash_on</mat-icon>Start charging
 </button>

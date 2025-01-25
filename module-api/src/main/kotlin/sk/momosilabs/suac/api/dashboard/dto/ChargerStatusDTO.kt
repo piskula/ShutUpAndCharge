@@ -4,10 +4,29 @@ import java.math.BigDecimal
 import java.time.OffsetDateTime
 
 data class ChargerStatusDTO(
-    val ready: Boolean,
-    val offline: Boolean,
-    val occupied: Boolean,
+    val carState: CarStateDTO,
+    val connectorStatusOcpp: OcppConnectorStatusDTO,
     val occupiedFrom: OffsetDateTime? = null,
     val chargedKwh: BigDecimal,
-    val awaitingAuthorization: Boolean,
 )
+
+enum class CarStateDTO {
+    UnknownOrError,
+    Idle,
+    Charging,
+    WaitCar,
+    Complete,
+    Error;
+}
+
+enum class OcppConnectorStatusDTO {
+    Available,
+    Preparing,
+    Charging,
+    SuspendedEVSE,
+    SuspendedEV,
+    Finishing,
+    Reserved,
+    Unavailable,
+    Faulted,
+}

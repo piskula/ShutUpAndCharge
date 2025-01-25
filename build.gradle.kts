@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("io.spring.dependency-management") version "1.1.6"
-    kotlin("jvm") version "1.9.23"
+    kotlin("jvm") version "2.1.0"
 }
 
 allprojects {
@@ -21,7 +21,7 @@ allprojects {
 
 subprojects {
     group = "sk.momosilabs.suac"
-    version = "1.0.22-SNAPSHOT"
+    version = "1.0.23-SNAPSHOT"
 
     apply {
         plugin("io.spring.dependency-management")
