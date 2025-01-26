@@ -11,6 +11,7 @@ import sk.momosilabs.suac.server.transaction.model.ChargingListItem
 import sk.momosilabs.suac.server.dashboard.service.getMyChargingList.GetMyChargingListUseCase
 import sk.momosilabs.suac.server.common.toDto
 import sk.momosilabs.suac.server.common.toModel
+import sk.momosilabs.suac.server.dashboard.model.charging.external.ExternalChargerDataWrapper
 import sk.momosilabs.suac.server.dashboard.service.startCharging.StartChargingUseCase
 import sk.momosilabs.suac.server.dashboard.service.stopCharging.StopChargingUseCase
 import sk.momosilabs.suac.server.info.controller.mapper.toDto

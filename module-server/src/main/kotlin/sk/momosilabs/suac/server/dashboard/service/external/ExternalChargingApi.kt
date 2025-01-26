@@ -6,4 +6,8 @@ interface ExternalChargingApi {
 
     fun getChargerStatus(): ExternalChargerDataWrapper
 
+    fun startCharging(): ExternalChargerDataWrapper
+
+    fun stopCharging(): ExternalChargerDataWrapper
+
 }

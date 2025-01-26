@@ -4,6 +4,7 @@ import { MatIcon } from '@angular/material/icon';
 import { NgIf } from '@angular/common';
 import { DashboardService, InfoPublicService, ChargerStatusDTO } from '@suac/api';
 import { finalize, take, tap } from 'rxjs';
+import { AuthenticationService } from '../../security/authentication.service';
 
 @Component({
   selector: 'app-charging-status',
@@ -30,15 +31,19 @@ export class ChargingStatusComponent implements OnInit {
     occupiedFrom: undefined,
     chargedKwh: 0,
   });
+  protected readonly isLoggedIn = computed(() => this.authService.currentUserValue() !== null);
   protected readonly carState = computed(() => this.statusModel().carState!!);
+  protected readonly showStart = computed(() =>
+    this.carState() !== this.CarStateEnum.Charging && this.carState() !== this.CarStateEnum.Complete);
   protected readonly canBeStarted = computed(() =>
     this.carState() === this.CarStateEnum.WaitCar);
-  protected readonly canBeStopped = computed(() =>
-    this.carState() === this.CarStateEnum.Charging);
+  protected readonly showStop = computed(() =>
+    this.carState() === this.CarStateEnum.Charging && this.isLoggedIn());
 
   constructor(
     private readonly infoService: InfoPublicService,
     private readonly dashboardService: DashboardService,
+    private readonly authService: AuthenticationService,
   ) {
   }
 
@@ -60,29 +65,29 @@ export class ChargingStatusComponent implements OnInit {
   }
 
   public startCharging(): void {
-    // if (this.chargeStatusChangeLoading()) {
-    //   return;
-    // }
-    //
-    // this.chargeStatusChangeLoading.set(true);
-    // this.dashboardService.startCharging().pipe(
-    //   take(1),
-    //   tap(status => this.statusModel.set(status)),
-    //   finalize(() => this.chargeStatusChangeLoading.set(false)),
-    // ).subscribe();
+    if (this.chargeStatusChangeLoading()) {
+      return;
+    }
+
+    this.chargeStatusChangeLoading.set(true);
+    this.dashboardService.startCharging().pipe(
+      take(1),
+      tap(status => this.statusModel.set(status)),
+      finalize(() => this.chargeStatusChangeLoading.set(false)),
+    ).subscribe();
   }
 
   public stopCharging(): void {
-    // if (this.chargeStatusChangeLoading()) {
-    //   return;
-    // }
-    //
-    // this.chargeStatusChangeLoading.set(true);
-    // this.dashboardService.stopCharging().pipe(
-    //   take(1),
-    //   tap(status => this.statusModel.set(status)),
-    //   finalize(() => this.chargeStatusChangeLoading.set(false)),
-    // ).subscribe();
+    if (this.chargeStatusChangeLoading()) {
+      return;
+    }
+
+    this.chargeStatusChangeLoading.set(true);
+    this.dashboardService.stopCharging().pipe(
+      take(1),
+      tap(status => this.statusModel.set(status)),
+      finalize(() => this.chargeStatusChangeLoading.set(false)),
+    ).subscribe();
   }
 
 }

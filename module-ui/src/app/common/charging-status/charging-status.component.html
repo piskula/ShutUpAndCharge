@@ -25,7 +25,7 @@
     }
     @case (CarStateEnum.Complete) {
       <button class="status-button occupied" disabled mat-stroked-button>
-        <mat-icon class="pulse-bigger">power</mat-icon>Completed ({{ statusModel().chargedKwh }} kWh)
+        <mat-icon>power_off</mat-icon>Completed ({{ statusModel().chargedKwh }} kWh)
       </button>
     }
     @default {
@@ -34,7 +34,7 @@
       </button>
     }
   }
-  <button mat-icon-button (click)="refreshStatus()" class="py-0 v-middle" [disabled]="refreshLoading()">
+  <button mat-icon-button (click)="refreshStatus()" class="py-0 v-middle" [disabled]="refreshLoading() || chargeStatusChangeLoading()">
     <mat-icon style="top: 0.1875rem">refresh</mat-icon>
   </button>
 </div>
@@ -60,12 +60,12 @@
   }
 }
 <button
-  mat-flat-button class="mt-2 mb-2" *ngIf="!canBeStopped()"
+  mat-flat-button class="mt-2 mb-2" *ngIf="showStart()"
   [disabled]="!canBeStarted() || chargeStatusChangeLoading()" (click)="startCharging()">
   <mat-icon class="fill-icon" [class.pulse]="canBeStarted()">flash_on</mat-icon>Start charging
 </button>
 <button
-  mat-flat-button class="mt-2 mb-2" *ngIf="canBeStopped()"
+  mat-flat-button class="mt-2 mb-2" *ngIf="showStop()"
   [disabled]="chargeStatusChangeLoading()" (click)="stopCharging()">
   <mat-icon class="fill-icon">link_off</mat-icon>Stop charging
 </button>

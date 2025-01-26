@@ -26,4 +26,8 @@ open class AccountPersistenceProvider(
         return account.verifiedForCharging
     }
 
+    @Transactional(readOnly = true)
+    override fun canCharge(accountId: Long): Boolean =
+        accountRepository.getReferenceById(accountId).verifiedForCharging
+
 }

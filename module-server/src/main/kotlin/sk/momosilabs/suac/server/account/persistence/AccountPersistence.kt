@@ -10,4 +10,6 @@ interface AccountPersistence {
 
     fun setVerifiedForCharging(accountId: Long, verified: Boolean): Boolean
 
+    fun canCharge(accountId: Long): Boolean
+
 }
