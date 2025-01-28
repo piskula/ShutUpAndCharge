@@ -12,4 +12,6 @@ interface AccountPersistence {
 
     fun canCharge(accountId: Long): Boolean
 
+    fun findUserIdByChipUid(chipUid: String): Long?
+
 }

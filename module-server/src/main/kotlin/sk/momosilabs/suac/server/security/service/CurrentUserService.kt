@@ -3,6 +3,7 @@ package sk.momosilabs.suac.server.security.service
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.stereotype.Service
+import sk.momosilabs.suac.api.security.dto.CurrentUserRoleDTO
 import sk.momosilabs.suac.server.security.model.TruckerPrincipal
 
 @Service
@@ -13,5 +14,7 @@ open class CurrentUserService {
             .principal as TruckerPrincipal
 
     fun userId(): Long = getCurrentUser().id
+
+    fun isAdmin() = getCurrentUser().momoRoles().contains(CurrentUserRoleDTO.Admin)
 
 }

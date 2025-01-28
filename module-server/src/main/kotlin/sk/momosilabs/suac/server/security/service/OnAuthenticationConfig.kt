@@ -91,6 +91,7 @@ open class OnAuthenticationConfig(
         firstName = firstName,
         lastName = lastName,
         verifiedForCharging = momoRoles().contains(CurrentUserRoleDTO.Admin),
+        assignedChipUid = null,
     )
 
     // on each login

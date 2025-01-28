@@ -22,15 +22,19 @@ data class ExternalChargerDataError(
 
 @Serializable
 data class ExternalChargerSuccessResponse(
-    val fna: String,
-    val amp: Int,
-    val tma: List<Double>,
     val frc: ForceStateEnum,
     val car: CarStateEnum,
     val modelStatus: ExternalChargerStatusEnum,
-    val lri: String?,
+    val tsi: String?,
+    val ct: String,
+    val trx: Int?,
     val ocppcs: OcppConnectorStatusEnum,
     val wh: Double,
+    val etop: Long,
+//    val fna: String,
+//    val amp: Int,
+//    val tma: List<Double>,
+//    val lri: String?,
 )
 
 @Serializable

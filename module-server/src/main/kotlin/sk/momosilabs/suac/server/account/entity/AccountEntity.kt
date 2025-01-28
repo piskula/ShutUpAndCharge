@@ -27,4 +27,6 @@ class AccountEntity(
     @field:NotNull
     var verifiedForCharging: Boolean,
 
+    var assignedChipUid: String?,
+
 )

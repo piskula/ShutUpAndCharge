@@ -20,7 +20,7 @@ open class GetTransactionList(
     @IsUser
     @Transactional(readOnly = true)
     override fun get(filter: TransactionFilter, pageable: Pageable): Page<ChargingListItem> {
-        val isAdmin = currentUserService.getCurrentUser().momoRoles().contains(CurrentUserRoleDTO.Admin)
+        val isAdmin = currentUserService.isAdmin()
         return transactionPersistence.getAll(
             filter = filter.addCurrentUserWhen(isNotAdmin = !isAdmin, currentUserService.userId()),
             pageable = pageable,

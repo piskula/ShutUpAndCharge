@@ -2,26 +2,46 @@ package sk.momosilabs.suac.server.dashboard.service.stopCharging
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import sk.momosilabs.suac.server.account.persistence.AccountPersistence
 import sk.momosilabs.suac.server.common.IsUser
 import sk.momosilabs.suac.server.dashboard.model.charging.ChargerStatus
 import sk.momosilabs.suac.server.dashboard.model.charging.external.CarStateEnum
+import sk.momosilabs.suac.server.dashboard.persistence.ChargingOngoingPersistence
 import sk.momosilabs.suac.server.dashboard.service.external.ExternalChargingApi
 import sk.momosilabs.suac.server.dashboard.service.getChargingStatus.GetChargingStatus.Companion.unknownStatus
+import sk.momosilabs.suac.server.security.service.CurrentUserService
 
 @Service
 open class StopCharging(
     private val externalChargingApi: ExternalChargingApi,
+    private val chargingOngoingPersistence: ChargingOngoingPersistence,
+    private val accountPersistence: AccountPersistence,
+    private val currentUserService: CurrentUserService,
 ): StopChargingUseCase {
 
     @IsUser
     @Transactional
     override fun stopCharging(): ChargerStatus {
-        // TODO check if charging belong to this user
-        val carState = externalChargingApi.getChargerStatus().ifSuccess?.carState
-        if (carState != CarStateEnum.Charging)
-            throw IllegalArgumentException("charging is not ongoing, but $carState")
+        val status = externalChargingApi.getChargerStatus().ifSuccess
+        if (status?.carState != CarStateEnum.Charging)
+            throw ChargingNotOngoingException(status?.carState)
+
+        if (currentUserService.isAdmin())
+            return stopChargingAndReturnStatus()
+
+        val userId = currentUserService.userId()
+        val canThisUserStop = if (status.rfidUid == null)
+            chargingOngoingPersistence.isChargingOfUserOngoing(trxIdentifier = status.customIdentifier, accountId = userId)
+        else
+            accountPersistence.findUserIdByChipUid(status.rfidUid) == userId
+
+        if (!canThisUserStop) {
+            throw ChargingDoesNotBelongToUserException()
+        }
 
         return externalChargingApi.stopCharging().ifSuccess ?: unknownStatus
     }
+
+    private fun stopChargingAndReturnStatus() = externalChargingApi.stopCharging().ifSuccess ?: unknownStatus
 
 }

@@ -9,4 +9,6 @@ interface AccountRepository: JpaRepository<AccountEntity, Long> {
 
     fun findByIdKeycloak(idKeycloak: String): AccountEntity?
 
+    fun findByAssignedChipUid(assignedChipUid: String): AccountEntity?
+
 }

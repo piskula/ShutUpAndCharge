@@ -14,4 +14,8 @@ data class ChargerStatus(
     val forceState: ForceStateEnum,
     val occupiedFrom: Instant?,
     val chargedKwh: BigDecimal,
+    val trxNumber: Int?,
+    val meterEnergyTotal: Long,
+    val customIdentifier: String,
+    val rfidUid: String?,
 )

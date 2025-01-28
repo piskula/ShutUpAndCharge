@@ -14,7 +14,6 @@ import sk.momosilabs.suac.server.dashboard.model.charging.external.CarStateEnum
 import sk.momosilabs.suac.server.dashboard.model.charging.external.ExternalChargerDataError
 import sk.momosilabs.suac.server.dashboard.model.charging.external.ExternalChargerErrorResponse
 import sk.momosilabs.suac.server.dashboard.model.charging.external.ExternalChargerSuccessResponse
-import sk.momosilabs.suac.server.dashboard.model.charging.external.ForceStateEnum
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -27,7 +26,7 @@ open class ExternalChargingService(
         private val logger = LoggerFactory.getLogger(ExternalChargingService::class.java)
         private val deserializer = Json { ignoreUnknownKeys = true }
 
-        private val refreshDelays = longArrayOf(0, 3000, 2000, 2000, 1500, 1500)
+        private val refreshDelays = longArrayOf(0, 4000, 2500, 2000, 2000, 1500, 1500)
     }
 
     override fun getChargerStatus(): ExternalChargerDataWrapper {
@@ -44,8 +43,8 @@ open class ExternalChargingService(
             }.also { logger.debug(it.ifSuccess.toString()) }
     }
 
-    override fun startCharging(): ExternalChargerDataWrapper {
-        val started = connectionWriteToStation(applicationProperties.station, "trx" to 8)
+    override fun startCharging(trxNumber: Int, identifier: String): ExternalChargerDataWrapper {
+        val started = connectionWriteToStation(applicationProperties.station, "lrn" to trxNumber, "trx" to trxNumber, "ct" to identifier)
             .exchange { _, response -> response.statusCode.is2xxSuccessful }
         if (!started) {
             return getChargerStatus()
@@ -89,6 +88,10 @@ open class ExternalChargingService(
         forceState = frc,
         occupiedFrom = null,
         chargedKwh = BigDecimal.valueOf(wh).divide(BigDecimal.valueOf(1000), 3, RoundingMode.FLOOR),
+        trxNumber = trx,
+        meterEnergyTotal = etop,
+        customIdentifier = ct,
+        rfidUid = tsi,
     )
 
     private fun ExternalChargerErrorResponse.toModel() = ExternalChargerDataError(
@@ -101,9 +104,12 @@ open class ExternalChargingService(
 
     private fun connectionWriteToStation(
         station: ApplicationPropertiesStation,
-        param: Pair<String, Any>,
-    ) = RestClient.create().get()
-        .uri("${station.cloudSetUrl}?${param.first}=${param.second}")
-        .header(HttpHeaders.AUTHORIZATION, "Bearer ${station.cloudToken}")
+        vararg param: Pair<String, Any>,
+    ): RestClient.RequestHeadersSpec<*> {
+        val params = param.joinToString("&") { (key, value) -> "$key=$value" }
+        return RestClient.create().get()
+            .uri("${station.cloudSetUrl}?$params")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer ${station.cloudToken}")
+    }
 
 }

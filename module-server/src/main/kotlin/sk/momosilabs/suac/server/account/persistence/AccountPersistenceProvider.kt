@@ -30,4 +30,8 @@ open class AccountPersistenceProvider(
     override fun canCharge(accountId: Long): Boolean =
         accountRepository.getReferenceById(accountId).verifiedForCharging
 
+    @Transactional(readOnly = true)
+    override fun findUserIdByChipUid(chipUid: String): Long? =
+        accountRepository.findByAssignedChipUid(assignedChipUid = chipUid)?.id
+
 }

@@ -26,6 +26,10 @@ open class GetChargingStatus(
             forceState = ForceStateEnum.Neutral,
             occupiedFrom = null,
             chargedKwh = BigDecimal.ZERO,
+            trxNumber = null,
+            meterEnergyTotal = 0L,
+            customIdentifier = "",
+            rfidUid = null,
         )
     }
 
@@ -34,7 +38,7 @@ open class GetChargingStatus(
         val statusResponse = externalChargingApi.getChargerStatus()
         return statusResponse.ifSuccess
             ?: unknownStatus.also {
-                logger.error("Error while fetching charger status: " + statusResponse.ifError?.toString())
+                logger.debug("Error while fetching charger status: " + statusResponse.ifError?.toString())
             }
     }
 
