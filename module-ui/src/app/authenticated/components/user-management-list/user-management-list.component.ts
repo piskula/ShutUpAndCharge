@@ -13,7 +13,7 @@ import {
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { NgIf } from '@angular/common';
+import { NgIf, SlicePipe } from '@angular/common';
 import { MatIconButton } from '@angular/material/button';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
@@ -26,6 +26,10 @@ import { ConfirmDialogComponent, ConfirmDialogData } from './confirm-dialog/conf
 import { ResponsiveDirective } from '../../../common/responsive.directive';
 import { ResponsiveService } from '../../../common/responsive.service';
 import { Page, PaginatedTableComponent } from '../../../common/paginated-table/paginated-table.component';
+import { TableBadgeComponent } from '../../../common/table-badge/table-badge.component';
+import { AssignRfidDialogComponent, AssignRfidDialogData } from './assign-rfid-dialog/assign-rfid-dialog.component';
+import { AccountDetailDialogComponent } from './account-detail-dialog/account-detail-dialog.component';
+import { MatDivider } from '@angular/material/divider';
 
 @Component({
   selector: 'app-user-management-list',
@@ -56,10 +60,13 @@ import { Page, PaginatedTableComponent } from '../../../common/paginated-table/p
     MatProgressSpinner,
     ResponsiveDirective,
     PaginatedTableComponent,
+    SlicePipe,
+    TableBadgeComponent,
+    MatDivider,
   ],
 })
 export class UserManagementListComponent {
-  private allColumns = ['id', 'idKeycloak', 'firstName', 'verifiedForCharging', 'action'];
+  private allColumns = ['id', 'idKeycloak', 'firstName', 'assignedChipUid', 'verifiedForCharging', 'action'];
   private smallColumns = ['id', 'firstName', 'verifiedForCharging', 'action'];
 
   private readonly responsiveService = inject(ResponsiveService);
@@ -110,6 +117,27 @@ export class UserManagementListComponent {
     ).subscribe();
   }
 
+  assignChipUid(
+    accountId: number,
+    name: String,
+    assignedChipUid?: String,
+  ): void {
+    const dialogRef = this.dialog.open(AssignRfidDialogComponent, {
+      data: { accountName: name, assignedChipUid: assignedChipUid } as AssignRfidDialogData });
+    dialogRef.afterClosed().pipe(
+      take(1),
+      filter((newChipUid) => newChipUid != assignedChipUid),
+      tap(() => this.isLoadingAccountId.set(accountId)),
+      switchMap((newChipUid: string) => this.accountService.updateAssignedChipUid(accountId, newChipUid)),
+      tap(() => {
+        this.snackBarService.showInfoSnackBar(`You updated RFID chip for ${name}`);
+        this.pagination()?.forceRefresh();
+      }),
+      finalize(() => this.isLoadingAccountId.set(null)),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe();
+  }
+
   topUp(accountId: number, name: string) {
     const dialogRef = this.dialog.open(PriceDialogComponent, {
       data: { accountName: name, price: 0 } as PriceDialogData,
@@ -123,6 +151,16 @@ export class UserManagementListComponent {
         this.snackBarService.showInfoSnackBar(`Account of user ${name} has been given credit ${amount.toFixed(2)} euro`);
       }),
       finalize(() => this.isLoadingAccountId.set(null)),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe();
+  }
+
+  showDetail(account: AccountDTO): void {
+    const dialogRef = this.dialog.open(AccountDetailDialogComponent, {
+      data: account as AccountDTO,
+    });
+    dialogRef.afterClosed().pipe(
+      take(1),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   }

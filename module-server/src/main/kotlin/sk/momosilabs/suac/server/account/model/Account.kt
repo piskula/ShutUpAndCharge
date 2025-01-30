@@ -6,4 +6,5 @@ data class Account(
     val firstName: String,
     val lastName: String,
     val verifiedForCharging: Boolean,
+    val assignedChipUid: String?,
 )

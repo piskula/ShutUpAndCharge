@@ -7,6 +7,7 @@ import sk.momosilabs.suac.api.common.dto.PageDTO
 import sk.momosilabs.suac.api.common.dto.PageableDTO
 import sk.momosilabs.suac.server.account.controller.mapper.toDto
 import sk.momosilabs.suac.server.account.model.Account
+import sk.momosilabs.suac.server.account.service.assignChipUid.AssignChipUidUseCase
 import sk.momosilabs.suac.server.account.service.getUserList.GetUserListUseCase
 import sk.momosilabs.suac.server.account.service.setUserVerifiedFlag.SetUserVerifiedFlagUseCase
 import sk.momosilabs.suac.server.common.toDto
@@ -16,6 +17,7 @@ import sk.momosilabs.suac.server.common.toModel
 class AccountController(
     private val getUserList: GetUserListUseCase,
     private val setUserVerifiedFlag: SetUserVerifiedFlagUseCase,
+    private val assignChipUidUseCase: AssignChipUidUseCase,
 ) : AccountApi {
 
     override fun getUserList(pageable: PageableDTO): PageDTO<AccountDTO> =
@@ -23,5 +25,8 @@ class AccountController(
 
     override fun updateVerifiedFlag(accountId: Long, verified: Boolean): Boolean =
         setUserVerifiedFlag.setFlag(accountId, verified)
+
+    override fun updateAssignedChipUid(accountId: Long, chipUid: String?) =
+        assignChipUidUseCase.assignChipUid(accountId, chipUid)
 
 }

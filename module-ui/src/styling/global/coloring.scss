@@ -30,8 +30,8 @@
 }
 .snackbar-success {
   .mat-mdc-snackbar-surface {
-    background-color: var(--success);
-    color: var(--on-success);
+    background-color: var(--success) !important;
+    color: var(--on-success) !important;
   }
 }
 

@@ -15,7 +15,7 @@
     <ng-container matColumnDef="idKeycloak">
       <mat-header-cell *matHeaderCellDef mat-sort-header>Keycloak ID</mat-header-cell>
       <mat-cell *matCellDef="let user">
-        <span *ifScreen="'desktop'">{{ user.idKeycloak }}</span>
+        <span [matTooltip]="user.idKeycloak">{{ user.idKeycloak | slice:0:8 }}&hellip;</span>
         <button mat-icon-button class="ml-2" [cdkCopyToClipboard]="user.idKeycloak" matTooltip="Copy Keycloak ID">
           <mat-icon>content_copy</mat-icon>
         </button>
@@ -26,7 +26,17 @@
       <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
       <mat-cell *matCellDef="let user">
         {{ user.firstName }} {{ user.lastName }}
-  <!--      <mat-chip-set *ngIf="user.isAdmin"><mat-chip><mat-icon matChipAvatar>shield_person</mat-icon>Admin</mat-chip></mat-chip-set>-->
+        <ng-container *ifScreen="'mobile'">
+          <app-table-badge *ngIf="user.assignedChipUid" class="pl-2 ml-2">RFID</app-table-badge>
+        </ng-container>
+        <!--      <mat-chip-set *ngIf="user.isAdmin"><mat-chip><mat-icon matChipAvatar>shield_person</mat-icon>Admin</mat-chip></mat-chip-set>-->
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="assignedChipUid">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>RFID</mat-header-cell>
+      <mat-cell *matCellDef="let user">
+        <app-table-badge *ngIf="user.assignedChipUid" icon="nfc">RFID</app-table-badge>
       </mat-cell>
     </ng-container>
 
@@ -63,6 +73,13 @@
             <mat-icon [class.fill-icon]="!user.verifiedForCharging">{{ user.verifiedForCharging ? 'power_off' : 'power' }}</mat-icon>
             {{ user.verifiedForCharging ? 'Disable charging' : 'Verify for charging' }}
           </button>
+          <button mat-menu-item (click)="assignChipUid(user.id, user.firstName + ' ' + user.lastName, user.assignedChipUid)">
+            <mat-icon [class.fill-icon]="!user.assignedChipUid">nfc</mat-icon>
+            {{ user.assignedChipUid ? 'Change RFID chip' : 'Link RFID chip' }}
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)=" showDetail(user)">
+            <mat-icon>info</mat-icon>See details</button>
         </mat-menu>
       </mat-cell>
     </ng-container>

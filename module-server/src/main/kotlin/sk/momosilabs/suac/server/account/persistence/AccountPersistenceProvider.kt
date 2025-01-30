@@ -26,6 +26,13 @@ open class AccountPersistenceProvider(
         return account.verifiedForCharging
     }
 
+    @Transactional
+    override fun setAssignedChipUid(accountId: Long, chipUid: String?): String? {
+        val account = accountRepository.findById(accountId).get()
+        account.assignedChipUid = chipUid
+        return account.assignedChipUid
+    }
+
     @Transactional(readOnly = true)
     override fun canCharge(accountId: Long): Boolean =
         accountRepository.getReferenceById(accountId).verifiedForCharging

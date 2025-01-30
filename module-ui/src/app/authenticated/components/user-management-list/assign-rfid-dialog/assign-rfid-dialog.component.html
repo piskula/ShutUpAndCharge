@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Configure RFID card for {{data.accountName}}</h2>
+<mat-dialog-content>
+  <mat-form-field class="w-100">
+    <mat-label>New RFID ChipUid</mat-label>
+    <input #chipUidInput matInput [(ngModel)]="chipUid" cdkFocusInitial type="text" (focus)="chipUidInput.select()"/>
+    @if (chipUid()) {
+      <button matSuffix mat-icon-button aria-label="Clear" (click)="chipUid.set('')">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="''" [disabled]="chipUid().length !== 0">
+    <mat-icon class="fill-icon">delete</mat-icon>
+    Delete RFID
+  </button>
+  <button mat-button [mat-dialog-close]="chipUid()" [disabled]="chipUid().length === 0 || chipUid() === data.assignedChipUid">
+    <mat-icon class="fill-icon">nfc</mat-icon>
+    Add this RFID
+  </button>
+  <button mat-button [mat-dialog-close]="chipUid()">Cancel</button>
+</mat-dialog-actions>

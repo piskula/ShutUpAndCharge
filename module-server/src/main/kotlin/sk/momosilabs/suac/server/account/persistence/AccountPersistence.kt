@@ -10,6 +10,8 @@ interface AccountPersistence {
 
     fun setVerifiedForCharging(accountId: Long, verified: Boolean): Boolean
 
+    fun setAssignedChipUid(accountId: Long, chipUid: String?): String?
+
     fun canCharge(accountId: Long): Boolean
 
     fun findUserIdByChipUid(chipUid: String): Long?

@@ -9,4 +9,5 @@ fun AccountEntity.toModel() = Account(
     firstName = firstName,
     lastName = lastName,
     verifiedForCharging = verifiedForCharging,
+    assignedChipUid = assignedChipUid,
 )

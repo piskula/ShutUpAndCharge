@@ -9,4 +9,5 @@ fun Account.toDto() = AccountDTO(
     firstName = firstName,
     lastName = lastName,
     verifiedForCharging = verifiedForCharging,
+    assignedChipUid = assignedChipUid,
 )
