@@ -1,0 +1,37 @@
+<app-paginated-table #pagination [fetchFn]="fetchFn" (dataSource)="dataSource.data = $event" [defaultSort]="defaultSort">
+  <mat-table
+    [dataSource]="dataSource" matSort
+    (matSortChange)="pagination.sortChanged($event)"
+    [matSortActive]="pagination.sortActive()"
+    [matSortDirection]="pagination.sortDirection()">
+
+    <ng-container matColumnDef="timeStartUtc">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Start Time</mat-header-cell>
+      <mat-cell *matCellDef="let transaction">{{ transaction.timeStart | date:'short' }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="trxNumber">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Trx Number</mat-header-cell>
+      <mat-cell *matCellDef="let transaction">{{ transaction.trxNumber }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="trxIdentifier">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Trx ID</mat-header-cell>
+      <mat-cell *matCellDef="let transaction">{{ transaction.trxIdentifier }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="energyMeter">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Meter Start</mat-header-cell>
+      <mat-cell *matCellDef="let transaction">{{ transaction.energyMeter }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="accountName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header="account.lastName">User</mat-header-cell>
+      <mat-cell *matCellDef="let transaction">{{ transaction.accountName }}</mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+  </mat-table>
+</app-paginated-table>

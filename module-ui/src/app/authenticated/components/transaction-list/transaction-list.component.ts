@@ -89,12 +89,11 @@ export class TransactionListComponent implements OnInit {
   private readonly pagination = viewChild(PaginatedTableComponent);
 
   readonly activeFilters = signal<TransactionFilter[]>([]);
-  readonly isAdmin = computed(() => this.authService.currentUserValue()?.roles?.includes('Admin') ?? false);
   currentUser: CurrentUser | null;
 
   constructor(
     private readonly transactionService: FinishedTransactionService,
-    private readonly authService: AuthenticationService,
+    protected readonly authService: AuthenticationService,
   ) {
     this.currentUser = this.authService.currentUserValue();
   }

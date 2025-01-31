@@ -1,2 +1,6 @@
 <h1>Transactions</h1>
 <app-transaction-list></app-transaction-list>
+@if (authService.isAdmin()) {
+  <h2>Not-processed transactions</h2>
+  <app-transaction-temporary-list></app-transaction-temporary-list>
+}

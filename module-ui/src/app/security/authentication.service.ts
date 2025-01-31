@@ -31,6 +31,8 @@ export class AuthenticationService {
   readonly currentUserValue = computed(() => this._currentUser());
   private readonly currentUser$ = toObservable(this._currentUser);
 
+  readonly isAdmin = computed(() => this.currentUserValue()?.roles?.includes('Admin') ?? false);
+
   constructor(
     private currentUserService: CurrentUserService,
   ) {
