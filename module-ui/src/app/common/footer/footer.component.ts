@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
-import { InfoPublicService } from '@suac/api';
-import { tap } from 'rxjs';
-import { MatToolbar } from "@angular/material/toolbar";
-import { MatIcon } from "@angular/material/icon";
 import { DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatToolbar } from '@angular/material/toolbar';
+import { PublicInfoService } from '@suac/api';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-footer',
@@ -22,12 +22,12 @@ export class FooterComponent implements OnInit {
   public year = signal(new Date().getFullYear());
 
   constructor(
-    private infoService: InfoPublicService,
+    private infoService: PublicInfoService,
   ) {
   }
 
   ngOnInit(): void {
-    this.infoService.get().pipe(
+    this.infoService.getVersion().pipe(
       tap(version => {
         this.version.set(version.version!);
         this.versionTime.set(version.time!);

@@ -6,7 +6,7 @@ import sk.momosilabs.suac.server.account.persistence.AccountPersistence
 import sk.momosilabs.suac.server.common.IsUser
 import sk.momosilabs.suac.server.dashboard.model.charging.ChargerStatus
 import sk.momosilabs.suac.server.dashboard.model.charging.external.CarStateEnum
-import sk.momosilabs.suac.server.dashboard.persistence.ChargingOngoingPersistence
+import sk.momosilabs.suac.server.transaction.temporary.persistence.TransactionTemporaryPersistence
 import sk.momosilabs.suac.server.dashboard.service.external.ExternalChargingApi
 import sk.momosilabs.suac.server.dashboard.service.getChargingStatus.GetChargingStatus.Companion.unknownStatus
 import sk.momosilabs.suac.server.security.service.CurrentUserService
@@ -17,7 +17,7 @@ import java.util.UUID
 open class StartCharging(
     private val currentUserService: CurrentUserService,
     private val accountPersistence: AccountPersistence,
-    private val chargingOngoingPersistence: ChargingOngoingPersistence,
+    private val transactionPersistence: TransactionTemporaryPersistence,
     private val externalChargingApi: ExternalChargingApi,
 ): StartChargingUseCase {
 
@@ -32,11 +32,11 @@ open class StartCharging(
         if (!isCableConnected)
             throw CableNotRecognizedException()
 
-        val trxNumber = (chargingOngoingPersistence.getLastNotProcessedTrxNumber()?.plus(1) ?: 5) % 5 + 5
+        val trxNumber = (transactionPersistence.getLastNotProcessedTrxNumber()?.plus(1) ?: 5) % 5 + 5
 
         val identifier = UUID.randomUUID().toString()
         val startingResult = externalChargingApi.startCharging(trxNumber, identifier).ifSuccess ?: unknownStatus
-        chargingOngoingPersistence.addOngoingTransaction(
+        transactionPersistence.addOngoingTransaction(
             timestamp = Instant.now(),
             accountId = currentUserService.userId(),
             trxNumber = startingResult.trxNumber!!,

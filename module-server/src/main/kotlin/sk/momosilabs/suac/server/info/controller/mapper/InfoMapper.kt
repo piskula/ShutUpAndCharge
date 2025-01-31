@@ -1,8 +1,8 @@
 package sk.momosilabs.suac.server.info.controller.mapper
 
-import sk.momosilabs.suac.api.dashboard.dto.CarStateDTO
-import sk.momosilabs.suac.api.dashboard.dto.ChargerStatusDTO
-import sk.momosilabs.suac.api.dashboard.dto.OcppConnectorStatusDTO
+import sk.momosilabs.suac.api.publicInfo.dto.CarStateDTO
+import sk.momosilabs.suac.api.publicInfo.dto.ChargerStatusDTO
+import sk.momosilabs.suac.api.publicInfo.dto.OcppConnectorStatusDTO
 import sk.momosilabs.suac.server.dashboard.model.charging.ChargerStatus
 import java.time.ZoneOffset
 

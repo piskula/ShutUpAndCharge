@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, viewChild } from '@angular/core';
-import { AccountDTO, AccountService, TransactionService } from '@suac/api';
+import { AccountDTO, AccountService } from '@suac/api';
 import { filter, finalize, map, Observable, switchMap, take, tap } from 'rxjs';
 import {
   MatCell, MatCellDef,
@@ -80,7 +80,6 @@ export class UserManagementListComponent {
 
   constructor(
     private readonly accountService: AccountService,
-    private readonly transactionService: TransactionService,
     private readonly snackBarService: SnackbarService,
     private readonly dialog: MatDialog,
     private readonly destroyRef: DestroyRef,
@@ -146,7 +145,7 @@ export class UserManagementListComponent {
       take(1),
       filter((amount): amount is number => !!amount),
       tap(() => this.isLoadingAccountId.set(accountId)),
-      switchMap((amount: number) => this.transactionService.topUpAccount(accountId!!, amount)),
+      switchMap((amount: number) => this.accountService.topUpAccount(accountId!!, amount)),
       tap((amount: number) => {
         this.snackBarService.showInfoSnackBar(`Account of user ${name} has been given credit ${amount.toFixed(2)} euro`);
       }),

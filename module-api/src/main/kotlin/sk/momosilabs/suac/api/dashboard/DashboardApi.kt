@@ -5,11 +5,11 @@ import io.swagger.annotations.ApiOperation
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import sk.momosilabs.suac.api.transaction.ChargingListDTO
+import sk.momosilabs.suac.api.transaction.finished.dto.ChargingListDTO
 import sk.momosilabs.suac.api.common.dto.PageDTO
 import sk.momosilabs.suac.api.common.dto.PageableApiParam
 import sk.momosilabs.suac.api.common.dto.PageableDTO
-import sk.momosilabs.suac.api.dashboard.dto.ChargerStatusDTO
+import sk.momosilabs.suac.api.publicInfo.dto.ChargerStatusDTO
 
 @Api("Dashboard")
 interface DashboardApi {

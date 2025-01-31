@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, OnInit, signal, viewChild } from '@angular/core';
-import { TransactionService, ChargingListDTO } from '@suac/api';
+import { ChargingListDTO, FinishedTransactionService } from '@suac/api';
 import { map, Observable } from 'rxjs';
 import {
   MatCell,
@@ -83,8 +83,8 @@ export class TransactionListComponent implements OnInit {
   protected dataSource = new MatTableDataSource<ChargingListDTO>([]);
 
   protected readonly defaultSort: Sort = {
-    active: "time",
-    direction: "desc",
+    active: 'time',
+    direction: 'desc',
   };
   private readonly pagination = viewChild(PaginatedTableComponent);
 
@@ -93,7 +93,7 @@ export class TransactionListComponent implements OnInit {
   currentUser: CurrentUser | null;
 
   constructor(
-    private readonly transactionService: TransactionService,
+    private readonly transactionService: FinishedTransactionService,
     private readonly authService: AuthenticationService,
   ) {
     this.currentUser = this.authService.currentUserValue();

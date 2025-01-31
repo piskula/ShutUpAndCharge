@@ -11,6 +11,7 @@ import sk.momosilabs.suac.api.account.dto.AccountDTO
 import sk.momosilabs.suac.api.common.dto.PageDTO
 import sk.momosilabs.suac.api.common.dto.PageableApiParam
 import sk.momosilabs.suac.api.common.dto.PageableDTO
+import java.math.BigDecimal
 
 @Api("Account")
 interface AccountApi {
@@ -29,5 +30,11 @@ interface AccountApi {
 
     @PostMapping("$ENDPOINT_ACCOUNT/{accountId}/chipUid", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun updateAssignedChipUid(@PathVariable accountId: Long, @RequestBody chipUid: String?)
+
+    @PostMapping(
+        "${ENDPOINT_ACCOUNT}/{accountId}/topUp",
+        produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun topUpAccount(@PathVariable accountId: Long, @RequestBody amount: BigDecimal): BigDecimal
 
 }

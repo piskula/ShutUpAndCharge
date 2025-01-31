@@ -32,8 +32,8 @@ export class PaginatedTableComponent implements OnInit, OnChanges {
 
 
   public readonly defaultSort = input<Sort>({
-    active: "id",
-    direction: "desc",
+    active: 'id',
+    direction: 'desc',
   });
 
   protected readonly pageSizeOptions = [5, 10, 25, 100];

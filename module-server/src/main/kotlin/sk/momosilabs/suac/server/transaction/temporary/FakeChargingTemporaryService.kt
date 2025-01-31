@@ -1,9 +1,9 @@
 package sk.momosilabs.suac.server.transaction.temporary
 
 import org.springframework.stereotype.Service
-import sk.momosilabs.suac.server.transaction.model.ChargingToCreate
-import sk.momosilabs.suac.server.transaction.persistence.TransactionFinishedPersistence
-import sk.momosilabs.suac.server.transaction.persistence.repository.ChargingFinishedRepository
+import sk.momosilabs.suac.server.transaction.finished.model.ChargingToCreate
+import sk.momosilabs.suac.server.transaction.finished.persistence.TransactionFinishedPersistence
+import sk.momosilabs.suac.server.transaction.finished.persistence.repository.ChargingFinishedRepository
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDateTime

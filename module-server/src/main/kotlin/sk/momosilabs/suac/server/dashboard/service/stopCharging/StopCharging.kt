@@ -6,7 +6,7 @@ import sk.momosilabs.suac.server.account.persistence.AccountPersistence
 import sk.momosilabs.suac.server.common.IsUser
 import sk.momosilabs.suac.server.dashboard.model.charging.ChargerStatus
 import sk.momosilabs.suac.server.dashboard.model.charging.external.CarStateEnum
-import sk.momosilabs.suac.server.dashboard.persistence.ChargingOngoingPersistence
+import sk.momosilabs.suac.server.transaction.temporary.persistence.TransactionTemporaryPersistence
 import sk.momosilabs.suac.server.dashboard.service.external.ExternalChargingApi
 import sk.momosilabs.suac.server.dashboard.service.getChargingStatus.GetChargingStatus.Companion.unknownStatus
 import sk.momosilabs.suac.server.security.service.CurrentUserService
@@ -14,7 +14,7 @@ import sk.momosilabs.suac.server.security.service.CurrentUserService
 @Service
 open class StopCharging(
     private val externalChargingApi: ExternalChargingApi,
-    private val chargingOngoingPersistence: ChargingOngoingPersistence,
+    private val transactionPersistence: TransactionTemporaryPersistence,
     private val accountPersistence: AccountPersistence,
     private val currentUserService: CurrentUserService,
 ): StopChargingUseCase {
@@ -31,7 +31,7 @@ open class StopCharging(
 
         val userId = currentUserService.userId()
         val canThisUserStop = if (status.rfidUid == null)
-            chargingOngoingPersistence.isChargingOfUserOngoing(trxIdentifier = status.customIdentifier, accountId = userId)
+            transactionPersistence.isChargingOfUserOngoing(trxIdentifier = status.customIdentifier, accountId = userId)
         else
             accountPersistence.findUserIdByChipUid(status.rfidUid) == userId
 

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, OnInit, signal } from '@a
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { NgIf } from '@angular/common';
-import { DashboardService, InfoPublicService, ChargerStatusDTO } from '@suac/api';
+import { DashboardService, ChargerStatusDTO, PublicInfoService } from '@suac/api';
 import { finalize, take, tap } from 'rxjs';
 import { AuthenticationService } from '../../security/authentication.service';
 
@@ -41,7 +41,7 @@ export class ChargingStatusComponent implements OnInit {
     this.carState() === this.CarStateEnum.Charging && this.isLoggedIn());
 
   constructor(
-    private readonly infoService: InfoPublicService,
+    private readonly infoService: PublicInfoService,
     private readonly dashboardService: DashboardService,
     private readonly authService: AuthenticationService,
   ) {

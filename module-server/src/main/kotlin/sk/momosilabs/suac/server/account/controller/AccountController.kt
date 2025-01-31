@@ -12,12 +12,15 @@ import sk.momosilabs.suac.server.account.service.getUserList.GetUserListUseCase
 import sk.momosilabs.suac.server.account.service.setUserVerifiedFlag.SetUserVerifiedFlagUseCase
 import sk.momosilabs.suac.server.common.toDto
 import sk.momosilabs.suac.server.common.toModel
+import sk.momosilabs.suac.server.transaction.finished.service.topUpAccount.TopUpAccountUseCase
+import java.math.BigDecimal
 
 @RestController
 class AccountController(
     private val getUserList: GetUserListUseCase,
     private val setUserVerifiedFlag: SetUserVerifiedFlagUseCase,
-    private val assignChipUidUseCase: AssignChipUidUseCase,
+    private val assignChipUid: AssignChipUidUseCase,
+    private val topUpAccount: TopUpAccountUseCase,
 ) : AccountApi {
 
     override fun getUserList(pageable: PageableDTO): PageDTO<AccountDTO> =
@@ -27,6 +30,9 @@ class AccountController(
         setUserVerifiedFlag.setFlag(accountId, verified)
 
     override fun updateAssignedChipUid(accountId: Long, chipUid: String?) =
-        assignChipUidUseCase.assignChipUid(accountId, chipUid)
+        assignChipUid.assignChipUid(accountId, chipUid)
+
+    override fun topUpAccount(accountId: Long, amount: BigDecimal): BigDecimal =
+        topUpAccount.topUp(accountId, amount)
 
 }

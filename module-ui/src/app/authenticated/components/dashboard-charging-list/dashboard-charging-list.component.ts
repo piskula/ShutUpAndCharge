@@ -49,8 +49,8 @@ export class DashboardChargingListComponent {
   private readonly columnsSmall = ['time', 'kwh', 'price'];
 
   protected readonly defaultSort: Sort = {
-    active: "time",
-    direction: "desc",
+    active: 'time',
+    direction: 'desc',
   };
 
   private readonly responsiveService = inject(ResponsiveService);
