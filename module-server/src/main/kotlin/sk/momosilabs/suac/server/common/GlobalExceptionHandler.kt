@@ -1,6 +1,7 @@
 package sk.momosilabs.suac.server.common
 
 import org.slf4j.LoggerFactory
+import org.springframework.core.annotation.Order
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -8,9 +9,21 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
+import org.springframework.web.servlet.resource.NoResourceFoundException
 import org.springframework.web.util.WebUtils
 import sk.momosilabs.suac.server.common.model.ErrorDTO
 import java.util.UUID
+
+// this is a workaround to fix broken FE hard refresh in browser getting 404 no static resource
+@ControllerAdvice
+@Order(-1)
+internal class NoResourceFoundExceptionHandler {
+    @ExceptionHandler(NoResourceFoundException::class)
+    @Throws(Exception::class)
+    fun handleResourceNotFound(ex: Exception): ResponseEntity<Any?>? {
+        throw ex
+    }
+}
 
 @ControllerAdvice
 class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
