@@ -40,12 +40,12 @@ open class ExternalChargingService(
                     ifSuccess = if (isOk) deserializer.decodeFromString<ExternalChargerSuccessResponse>(String(response.body.readAllBytes())).toModel() else null,
                     ifError = if (is404) deserializer.decodeFromString<ExternalChargerErrorResponse>(String(response.body.readAllBytes())).toModel() else null,
                 )
-            }.also { logger.debug(it.ifSuccess.toString()) }
+            }!!.also { logger.debug(it.ifSuccess.toString()) }
     }
 
     override fun startCharging(trxNumber: Int, identifier: String): ExternalChargerDataWrapper {
         val started = connectionWriteToStation(applicationProperties.station, "lrn" to trxNumber, "trx" to trxNumber, "ct" to identifier)
-            .exchange { _, response -> response.statusCode.is2xxSuccessful }
+            .exchange { _, response -> response.statusCode.is2xxSuccessful }!!
         if (!started) {
             return getChargerStatus()
         }
@@ -57,7 +57,7 @@ open class ExternalChargingService(
     override fun stopCharging(): ExternalChargerDataWrapper {
         logger.debug("Stopping charging...")
         val stopped = connectionWriteToStation(applicationProperties.station, "frc" to 1)
-            .exchange { _, response -> response.statusCode.is2xxSuccessful }
+            .exchange { _, response -> response.statusCode.is2xxSuccessful }!!
         if (!stopped) {
             return getChargerStatus()
         }

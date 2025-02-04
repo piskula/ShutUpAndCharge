@@ -18,7 +18,7 @@ val apiProject = project(":module-api")
 
 dependencies {
   compileOnly(apiProject)
-  swaggerCodegen("io.swagger.codegen.v3:swagger-codegen-cli:3.0.34")
+  swaggerCodegen("io.swagger.codegen.v3:swagger-codegen-cli:3.0.67")
 
   buildFrontendBundle(files(npmBuild))
 }

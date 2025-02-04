@@ -1,27 +1,27 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("io.spring.dependency-management") version "1.1.6"
-    kotlin("jvm") version "2.1.0"
+    id("io.spring.dependency-management") version "1.1.7"
+    kotlin("jvm") version "2.1.10"
 }
 
 allprojects {
     tasks.withType<JavaCompile> {
-        sourceCompatibility = JavaVersion.VERSION_17.toString()
-        targetCompatibility = JavaVersion.VERSION_17.toString()
+        sourceCompatibility = JavaVersion.VERSION_21.toString()
+        targetCompatibility = JavaVersion.VERSION_21.toString()
     }
 
     tasks.withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = JavaVersion.VERSION_17.toString()
+            jvmTarget = JavaVersion.VERSION_21.toString()
         }
     }
 }
 
 subprojects {
     group = "sk.momosilabs.suac"
-    version = "1.0.27-SNAPSHOT"
+    version = "1.0.28-SNAPSHOT"
 
     apply {
         plugin("io.spring.dependency-management")
@@ -37,5 +37,5 @@ repositories {
 }
 
 dependencies {
-    platform("org.springframework.boot:spring-boot-dependencies:3.3.5.RELEASE")
+    platform("org.springframework.boot:spring-boot-dependencies:3.4.2.RELEASE")
 }
