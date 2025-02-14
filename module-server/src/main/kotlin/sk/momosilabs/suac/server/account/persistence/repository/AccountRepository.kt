@@ -11,4 +11,6 @@ interface AccountRepository: JpaRepository<AccountEntity, Long> {
 
     fun findByAssignedChipUid(assignedChipUid: String): AccountEntity?
 
+    fun findByAssignedChipUidIn(assignedChipUids: Set<String>): List<AccountEntity>
+
 }

@@ -12,6 +12,8 @@ interface TransactionFinishedPersistence {
 
     fun getNegativeByUserId(userId: Long, pageable: Pageable): Page<TransactionFinished>
 
-    fun saveFinishedCharging(charging: ChargingToCreate, userId: Long): TransactionFinished
+    fun saveFinishedCharging(charging: ChargingToCreate): TransactionFinished
+
+    fun saveFinishedChargingBulk(chargings: Collection<ChargingToCreate>): Int
 
 }

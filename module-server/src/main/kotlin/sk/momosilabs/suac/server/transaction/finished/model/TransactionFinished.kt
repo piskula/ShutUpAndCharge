@@ -10,7 +10,7 @@ data class TransactionFinished(
     val time: Instant,
     val kwh: BigDecimal,
     val price: BigDecimal,
-    val chargingStationId: String,
+    val chargingStationId: String?,
     val accountId: Long,
     val accountName: String,
 )

@@ -9,7 +9,7 @@ data class ChargingListDTO(
     val time: OffsetDateTime,
     val kwh: BigDecimal,
     val price: BigDecimal,
-    val chargingStationId: String,
+    val chargingStationId: String?,
     val accountId: Long,
     val accountName: String,
 )

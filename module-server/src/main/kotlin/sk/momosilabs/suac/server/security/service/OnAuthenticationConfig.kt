@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service
 import sk.momosilabs.suac.api.security.dto.CurrentUserRoleDTO
 import sk.momosilabs.suac.server.account.entity.AccountEntity
 import sk.momosilabs.suac.server.account.persistence.repository.AccountRepository
-import sk.momosilabs.suac.server.transaction.temporary.FakeChargingTemporaryService
 import sk.momosilabs.suac.server.security.model.TruckerPrincipal
 import sk.momosilabs.suac.server.security.model.UserTokenClaims
 import java.net.URL
@@ -22,7 +21,6 @@ import java.net.URL
 @Service
 open class OnAuthenticationConfig(
     private val accountRepository: AccountRepository,
-    private val fakeChargingTemporaryService: FakeChargingTemporaryService,
 ) {
 
     companion object {
@@ -61,7 +59,6 @@ open class OnAuthenticationConfig(
                 } else{
                     existingUser.updateWith(principal.defaultUser.tokenClaims())
                 }
-                fakeChargingTemporaryService.mockChargingForUser(principal.id)
             }
         }
     }

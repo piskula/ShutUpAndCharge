@@ -79,11 +79,11 @@ export interface TransactionFilter {
   ],
 })
 export class TransactionListComponent implements OnInit {
-  protected readonly displayedColumns = ['time', 'account', 'stationId', 'kwh', 'price'];
+  protected readonly displayedColumns = ['timeStartUtc', 'account', 'stationId', 'kwh', 'price'];
   protected dataSource = new MatTableDataSource<ChargingListDTO>([]);
 
   protected readonly defaultSort: Sort = {
-    active: 'time',
+    active: 'timeStartUtc',
     direction: 'desc',
   };
   private readonly pagination = viewChild(PaginatedTableComponent);

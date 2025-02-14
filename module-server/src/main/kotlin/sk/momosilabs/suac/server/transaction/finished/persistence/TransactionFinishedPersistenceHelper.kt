@@ -4,6 +4,8 @@ import com.querydsl.core.types.dsl.BooleanExpression
 import sk.momosilabs.suac.server.transaction.finished.model.TransactionFinishedFilter
 import sk.momosilabs.suac.server.transaction.finished.persistence.entity.QChargingFinishedEntity
 import java.math.BigDecimal
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 fun TransactionFinishedFilter.transformToWhereClause(
     qTransaction: QChargingFinishedEntity,
@@ -11,10 +13,10 @@ fun TransactionFinishedFilter.transformToWhereClause(
     val expressions = mutableListOf<BooleanExpression>()
 
     if (timeFrom != null)
-        expressions.add(qTransaction.time.after(timeFrom))
+        expressions.add(qTransaction.timeStartUtc.after(LocalDateTime.ofInstant(timeFrom, ZoneOffset.UTC)))
 
     if (timeTo != null)
-        expressions.add(qTransaction.time.before(timeTo))
+        expressions.add(qTransaction.timeStartUtc.before(LocalDateTime.ofInstant(timeTo, ZoneOffset.UTC)))
 
     if (kwhFrom != null)
         expressions.add(qTransaction.kwh.goe(kwhFrom))

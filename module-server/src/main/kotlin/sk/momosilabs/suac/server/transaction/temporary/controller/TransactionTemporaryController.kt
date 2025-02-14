@@ -9,15 +9,20 @@ import sk.momosilabs.suac.server.common.toDto
 import sk.momosilabs.suac.server.common.toModel
 import sk.momosilabs.suac.server.transaction.temporary.controller.mapper.toDto
 import sk.momosilabs.suac.server.transaction.temporary.model.TransactionTemporary
+import sk.momosilabs.suac.server.transaction.temporary.service.enforceSync.EnforceDownloadAndSyncUseCase
 import sk.momosilabs.suac.server.transaction.temporary.service.getTransactionList.GetTransactionTemporaryListUseCase
 
 @RestController
 class TransactionTemporaryController(
     private val getTransactionTemporaryList: GetTransactionTemporaryListUseCase,
+    private val enforceDownloadAndSync: EnforceDownloadAndSyncUseCase,
 ) : TransactionTemporaryApi {
 
     override fun getList(pageable: PageableDTO): PageDTO<TransactionTemporaryDTO> =
         getTransactionTemporaryList.get(pageable.toModel())
             .toDto(TransactionTemporary::toDto)
+
+    override fun enforceDownloadAndSync() =
+        enforceDownloadAndSync.enforceSync()
 
 }

@@ -45,11 +45,11 @@ import { Page, PaginatedTableComponent } from '../../../common/paginated-table/p
   ],
 })
 export class DashboardChargingListComponent {
-  private readonly columnsAll = ['time', 'stationId', 'kwh', 'price'];
-  private readonly columnsSmall = ['time', 'kwh', 'price'];
+  private readonly columnsAll = ['timeStartUtc', 'stationId', 'kwh', 'price'];
+  private readonly columnsSmall = ['timeStartUtc', 'kwh', 'price'];
 
   protected readonly defaultSort: Sort = {
-    active: 'time',
+    active: 'timeStartUtc',
     direction: 'desc',
   };
 

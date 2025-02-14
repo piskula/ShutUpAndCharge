@@ -20,7 +20,7 @@ open class StopCharging(
 ): StopChargingUseCase {
 
     @IsUser
-    @Transactional
+    @Transactional(readOnly = true)
     override fun stopCharging(): ChargerStatus {
         val status = externalChargingApi.getChargerStatus().ifSuccess
         if (status?.carState != CarStateEnum.Charging)
@@ -40,6 +40,7 @@ open class StopCharging(
         }
 
         return externalChargingApi.stopCharging().ifSuccess ?: unknownStatus
+        // TODO schedule download event
     }
 
     private fun stopChargingAndReturnStatus() = externalChargingApi.stopCharging().ifSuccess ?: unknownStatus

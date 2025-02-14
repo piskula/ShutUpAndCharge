@@ -2,5 +2,14 @@
 <app-transaction-list></app-transaction-list>
 @if (authService.isAdmin()) {
   <h2>Not-processed transactions</h2>
+  <button mat-flat-button (click)="enforceSync()" [disabled]="isOngoing()">
+    @if (isOngoing()) {
+      <!-- TODO loader styling -->
+      <mat-spinner diameter="16" style="display: inline-flex" class="mr-1"></mat-spinner>
+    } @else {
+      <mat-icon class="mr-1">sync</mat-icon>
+    }
+    Enforce sync
+  </button>
   <app-transaction-temporary-list></app-transaction-temporary-list>
 }

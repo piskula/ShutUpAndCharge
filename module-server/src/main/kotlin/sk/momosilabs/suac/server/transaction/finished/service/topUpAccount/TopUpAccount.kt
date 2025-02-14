@@ -18,14 +18,21 @@ open class TopUpAccount(
     @IsAdmin
     @Transactional
     override fun topUp(accountId: Long, amount: BigDecimal): BigDecimal {
+        val now = Instant.now()
         val creditToSave = ChargingToCreate(
             guid = UUID.randomUUID(),
-            time = Instant.now(),
+            userId = accountId,
+            timeStart = now,
+            timeEnd = now,
             kwh = BigDecimal.ZERO,
+            stationId = null,
             price = amount.setScale(2, RoundingMode.FLOOR).abs(),
-            chargingStationId = "",
+            stationSession = null,
+            energyMeter = null,
+            chipUid = null,
+            link = null,
         )
-        return chargingPersistence.saveFinishedCharging(creditToSave, accountId).price
+        return chargingPersistence.saveFinishedCharging(creditToSave).price
     }
 
 }

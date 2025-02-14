@@ -1,2 +1,0 @@
-ALTER TABLE account
-  ADD COLUMN assigned_chip_uid VARCHAR(255) DEFAULT NULL;

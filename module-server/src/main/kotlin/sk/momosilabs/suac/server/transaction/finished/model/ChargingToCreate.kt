@@ -6,8 +6,14 @@ import java.util.UUID
 
 data class ChargingToCreate(
     val guid: UUID,
-    val time: Instant,
+    val userId: Long,
+    val timeStart: Instant,
+    val timeEnd: Instant,
     val kwh: BigDecimal,
+    val stationId: String?,
     val price: BigDecimal,
-    val chargingStationId: String,
+    val stationSession: Long?,
+    val energyMeter: Long?,
+    val chipUid: String?,
+    val link: String?,
 )

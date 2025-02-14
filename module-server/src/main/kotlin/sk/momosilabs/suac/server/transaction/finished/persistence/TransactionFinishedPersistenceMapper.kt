@@ -4,11 +4,13 @@ import sk.momosilabs.suac.server.account.entity.AccountEntity
 import sk.momosilabs.suac.server.transaction.finished.model.TransactionFinished
 import sk.momosilabs.suac.server.transaction.finished.model.ChargingToCreate
 import sk.momosilabs.suac.server.transaction.finished.persistence.entity.ChargingFinishedEntity
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 fun ChargingFinishedEntity.toModel() = TransactionFinished(
     id = id,
     guid = guid,
-    time = time,
+    time = timeStartUtc.toInstant(ZoneOffset.UTC),
     kwh = kwh,
     price = price,
     chargingStationId = stationId,
@@ -16,12 +18,16 @@ fun ChargingFinishedEntity.toModel() = TransactionFinished(
     accountName = "${account.firstName} ${account.lastName}",
 )
 
-fun ChargingToCreate.asNewEntity(account: AccountEntity) = ChargingFinishedEntity(
+fun ChargingToCreate.asNewEntity(accountResolver: (Long) -> AccountEntity) = ChargingFinishedEntity(
     id = 0L,
     guid = guid,
-    account = account,
-    time = time,
+    account = accountResolver.invoke(userId),
+    timeStartUtc = LocalDateTime.ofInstant(timeStart, ZoneOffset.UTC),
     kwh = kwh,
-    stationId = chargingStationId,
+    stationId = stationId,
     price = price,
+    stationSession = stationSession,
+    energyMeter = energyMeter,
+    triggeredByChipUid = chipUid,
+    link = link,
 )

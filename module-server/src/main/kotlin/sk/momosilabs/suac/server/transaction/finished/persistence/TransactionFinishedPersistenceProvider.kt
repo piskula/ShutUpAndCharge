@@ -45,10 +45,20 @@ open class TransactionFinishedPersistenceProvider(
         chargingRepository.findAllByAccountIdAndPriceLessThan(userId, BigDecimal.ZERO, pageable).map { it.toModel() }
 
     @Transactional
-    override fun saveFinishedCharging(charging: ChargingToCreate, userId: Long): TransactionFinished {
-        val account = accountRepository.getReferenceById(userId)
-        val chargingEntity = charging.asNewEntity(account)
+    override fun saveFinishedCharging(charging: ChargingToCreate): TransactionFinished {
+        val account = accountRepository.getReferenceById(charging.userId)
+        val chargingEntity = charging.asNewEntity { account }
         return chargingRepository.save(chargingEntity).toModel()
+    }
+
+    @Transactional
+    override fun saveFinishedChargingBulk(chargings: Collection<ChargingToCreate>): Int {
+        val accountIds = chargings.mapTo(HashSet()) { it.userId }
+        val accounts = accountRepository.findAllById(accountIds).associateBy { it.id }
+
+        return chargingRepository.saveAll(
+            chargings.map { it.asNewEntity { accountId -> accounts[accountId]!! } }
+        ).size
     }
 
     private fun <T> JPQLQuery<T>.applyPagination(pageable: Pageable) =
@@ -65,7 +75,7 @@ open class TransactionFinishedPersistenceProvider(
     private fun Sort.toQueryDslOrderBy(): OrderSpecifier<*> {
         val orderBy = if (isSorted) this.get().findFirst().get() else Sort.Order.desc("id")
         val expression = when (orderBy.property) {
-            "time" -> transaction.time
+            "timeStartUtc" -> transaction.timeStartUtc
             "account.lastName" -> transaction.account.lastName
             "stationId" -> transaction.stationId
             "kwh" -> transaction.kwh

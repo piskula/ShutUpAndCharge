@@ -14,8 +14,13 @@ import sk.momosilabs.suac.server.dashboard.model.charging.external.CarStateEnum
 import sk.momosilabs.suac.server.dashboard.model.charging.external.ExternalChargerDataError
 import sk.momosilabs.suac.server.dashboard.model.charging.external.ExternalChargerErrorResponse
 import sk.momosilabs.suac.server.dashboard.model.charging.external.ExternalChargerSuccessResponse
+import sk.momosilabs.suac.server.dashboard.model.charging.external.ExternalChargingLog
+import sk.momosilabs.suac.server.dashboard.model.charging.external.ExternalDownloadDataResponse
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 @Service
 open class ExternalChargingService(
@@ -33,14 +38,14 @@ open class ExternalChargingService(
         return connectionReadToStation(applicationProperties.station)
             .exchange { _, response ->
                 val isOk = response.statusCode.is2xxSuccessful
-                val is404 = response.statusCode === HttpStatus.NOT_FOUND
+                val is403 = response.statusCode === HttpStatus.FORBIDDEN
                 ExternalChargerDataWrapper(
                     error = !isOk,
                     success = isOk,
                     ifSuccess = if (isOk) deserializer.decodeFromString<ExternalChargerSuccessResponse>(String(response.body.readAllBytes())).toModel() else null,
-                    ifError = if (is404) deserializer.decodeFromString<ExternalChargerErrorResponse>(String(response.body.readAllBytes())).toModel() else null,
+                    ifError = if (is403) deserializer.decodeFromString<ExternalChargerErrorResponse>(String(response.body.readAllBytes())).toModel() else null,
                 )
-            }!!.also { logger.debug(it.ifSuccess.toString()) }
+            }!!.also { logger.debug(it.ifSuccess?.toString() ?: it.ifError?.toString()) }
     }
 
     override fun startCharging(trxNumber: Int, identifier: String): ExternalChargerDataWrapper {
@@ -65,6 +70,12 @@ open class ExternalChargingService(
         logger.debug("Waiting for stopping to propagate...")
         return waitForStatusChangeToPropagate { it.ifSuccess?.carState == CarStateEnum.Complete }
     }
+
+    override fun downloadTransactionsFromCloud(fromTimestampUtc: LocalDateTime): List<ExternalChargingLog> =
+        connectionReadCloud(applicationProperties.station, fromTimestampUtc)
+            .exchange { _, response ->
+                deserializer.decodeFromString<ExternalDownloadDataResponse>(String(response.body.readAllBytes())).data
+            }!!
 
     private fun waitForStatusChangeToPropagate(conditionFullfiled: (ExternalChargerDataWrapper) -> Boolean): ExternalChargerDataWrapper {
         var status = getChargerStatus()
@@ -95,7 +106,8 @@ open class ExternalChargingService(
     )
 
     private fun ExternalChargerErrorResponse.toModel() = ExternalChargerDataError(
-        lastAliveSecondsAgo = age.toLong(),
+        // lastAliveSecondsAgo = age.toLong(), // TODO maybe no longer sent? It changed from 404 to 403 with text reason
+        lastAliveSecondsAgo = 0L,
     )
 
     private fun connectionReadToStation(station: ApplicationPropertiesStation) = RestClient.create().get()
@@ -110,6 +122,16 @@ open class ExternalChargingService(
         return RestClient.create().get()
             .uri("${station.cloudSetUrl}?$params")
             .header(HttpHeaders.AUTHORIZATION, "Bearer ${station.cloudToken}")
+    }
+
+    private fun connectionReadCloud(station: ApplicationPropertiesStation, fromTimestampUtc: LocalDateTime): RestClient.RequestHeadersSpec<*> {
+        val params = mapOf(
+            "e" to station.cloudDownloadToken,
+            "from" to fromTimestampUtc.toInstant(ZoneOffset.UTC).toEpochMilli().toString(),
+            "to" to Instant.now().toEpochMilli().toString(), // without TO timestamp filtering is not working
+            "timezone" to "Etc/UTC",
+        ).entries.joinToString("&") { (key, value) -> "$key=$value" }
+        return RestClient.create().get().uri("${station.cloudDownload}?$params")
     }
 
 }

@@ -8,7 +8,7 @@ import jakarta.persistence.ManyToOne
 import jakarta.validation.constraints.NotNull
 import sk.momosilabs.suac.server.account.entity.AccountEntity
 import java.math.BigDecimal
-import java.time.Instant
+import java.time.LocalDateTime
 import java.util.UUID
 
 @Entity(name = "charging_finished")
@@ -26,15 +26,22 @@ class ChargingFinishedEntity(
     val account: AccountEntity,
 
     @field:NotNull
-    val time: Instant,
+    val timeStartUtc: LocalDateTime,
 
     @field:NotNull
     val kwh: BigDecimal,
 
-    @field:NotNull
-    val stationId: String,
+    val stationId: String?,
 
     @field:NotNull
     val price: BigDecimal,
+
+    val stationSession: Long?,
+
+    val energyMeter: Long?,
+
+    val triggeredByChipUid: String?,
+
+    val link: String?,
 
 )

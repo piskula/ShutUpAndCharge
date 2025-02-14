@@ -41,4 +41,8 @@ open class AccountPersistenceProvider(
     override fun findUserIdByChipUid(chipUid: String): Long? =
         accountRepository.findByAssignedChipUid(assignedChipUid = chipUid)?.id
 
+    @Transactional(readOnly = true)
+    override fun getChipUidToUserIdMap(chipUids: Set<String>): Map<String, Long> =
+        accountRepository.findByAssignedChipUidIn(chipUids).associateBy({ it.assignedChipUid!! }, { it.id })
+
 }

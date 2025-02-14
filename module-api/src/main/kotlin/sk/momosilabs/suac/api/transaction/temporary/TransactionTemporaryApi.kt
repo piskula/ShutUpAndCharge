@@ -24,4 +24,8 @@ interface TransactionTemporaryApi {
     )
     fun getList(pageable: PageableDTO): PageDTO<TransactionTemporaryDTO>
 
+    @ApiOperation("Eforce download and sync")
+    @PostMapping("$ENDPOINT_TRANSACTION_TEMPORARY/sync")
+    fun enforceDownloadAndSync()
+
 }

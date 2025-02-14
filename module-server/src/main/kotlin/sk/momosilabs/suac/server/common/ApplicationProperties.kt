@@ -11,4 +11,6 @@ data class ApplicationPropertiesStation(
     val cloudStatusUrl: String,
     val cloudSetUrl: String,
     val cloudToken: String,
+    val cloudDownload: String,
+    val cloudDownloadToken: String,
 )

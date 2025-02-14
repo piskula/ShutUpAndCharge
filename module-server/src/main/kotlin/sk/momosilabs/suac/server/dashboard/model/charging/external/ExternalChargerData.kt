@@ -40,7 +40,7 @@ data class ExternalChargerSuccessResponse(
 @Serializable
 data class ExternalChargerErrorResponse(
     val reason: String,
-    val age: Double,
+//    val age: Double,
 )
 
 open class EnumAsIntSerializer<T:Enum<*>>(

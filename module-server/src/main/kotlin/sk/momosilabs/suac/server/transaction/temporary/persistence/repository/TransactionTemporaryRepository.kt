@@ -11,4 +11,8 @@ interface TransactionTemporaryRepository: JpaRepository<ChargingOngoingEntity, L
 
     fun existsByTrxIdentifierAndAccountId(trxIdentifier: String, accountId: Long): Boolean
 
+    fun findAllByOrderByIdAsc(): List<ChargingOngoingEntity>
+
+    fun deleteAllByEnergyMeterIn(energyMeterValues: Set<Long>)
+
 }

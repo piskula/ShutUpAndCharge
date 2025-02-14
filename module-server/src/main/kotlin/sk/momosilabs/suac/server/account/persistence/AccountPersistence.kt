@@ -16,4 +16,6 @@ interface AccountPersistence {
 
     fun findUserIdByChipUid(chipUid: String): Long?
 
+    fun getChipUidToUserIdMap(chipUids: Set<String>): Map<String, Long>
+
 }
