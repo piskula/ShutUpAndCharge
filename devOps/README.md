@@ -33,7 +33,8 @@
    - `sudo usermod -aG docker $USER`
    - `sudo chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose`
 7. Install Java
-  - `sudo apt install default-jre`
+  - ~~`sudo apt install default-jre`~~
+  - `sudo apt install openjdk-21-jdk`
 8. Git clone [keycloak-production](https://github.com/piskula/keycloak-production) repo into the machine and follow instructions there
    - After this step, you will have secured instance (HTTPS) available on your domain with:
      - shared PostgresDB (used for keycloak and charging app itself)

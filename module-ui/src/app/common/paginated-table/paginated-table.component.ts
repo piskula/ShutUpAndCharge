@@ -1,6 +1,17 @@
-import { Component, computed, DestroyRef, input, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  input,
+  OnChanges,
+  OnInit,
+  output,
+  signal,
+  SimpleChanges,
+} from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, combineLatest, debounceTime, finalize, Observable, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, debounceTime, Observable, switchMap, tap } from 'rxjs';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Sort } from '@angular/material/sort';
@@ -22,6 +33,7 @@ export interface Page<T> {
     MatPaginatorModule,
     MatProgressBarModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginatedTableComponent implements OnInit, OnChanges {
 
@@ -75,8 +87,12 @@ export class PaginatedTableComponent implements OnInit, OnChanges {
       tap(page => {
         this.total.set(page.totalElements);
         this.dataSource.emit(page.content);
+        this.isLoading.set(false);
       }),
-      finalize(() => this.isLoading.set(false)),
+      catchError((e) => {
+        this.isLoading.set(false);
+        throw e;
+      }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   }
