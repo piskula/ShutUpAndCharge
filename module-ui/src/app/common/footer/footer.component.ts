@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { MatIcon } from '@angular/material/icon';
-import { MatToolbar } from '@angular/material/toolbar';
-import { PublicInfoService } from '@suac/api';
 import { tap } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { PublicInfoService } from '@suac/api';
 
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrl: 'footer.component.scss',
   imports: [
-    MatToolbar,
-    MatIcon,
+    MatToolbarModule,
+    MatIconModule,
     DatePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

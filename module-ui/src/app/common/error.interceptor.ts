@@ -19,7 +19,9 @@ export function errorInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
 export function showErrorIfPossible(err: HttpErrorResponse, snackbarService: SnackbarService): void {
   if (typeof err.error === 'object' && 'userMessage' in err.error) {
     snackbarService.showErrorSnackBar(err.error.userMessage);
-  } else if (err.status === 500) {
-    snackbarService.showErrorSnackBar('Internal server error. Contact us, please.');
+  } else if (typeof err.error === 'string' || typeof err.error === 'object' && 'error' in err.error) {
+    snackbarService.showErrorSnackBar(`${err.status}: ${err.error?.error ?? err.error}`);
+  } else {
+    snackbarService.showErrorSnackBar(`${err.status}: Internal server error. Contact us, please.`);
   }
 }

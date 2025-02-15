@@ -59,13 +59,17 @@
     <div class="mt-2">We are sorry, but station seems out of service (we do not know the reason yet)</div>
   }
 }
-<button
-  mat-flat-button class="mt-2 mb-2" *ngIf="showStart()"
-  [disabled]="!canBeStarted() || chargeStatusChangeLoading()" (click)="startCharging()">
-  <mat-icon class="fill-icon" [class.pulse]="canBeStarted()">flash_on</mat-icon>Start charging
-</button>
-<button
-  mat-flat-button class="mt-2 mb-2" *ngIf="showStop()"
-  [disabled]="chargeStatusChangeLoading()" (click)="stopCharging()">
-  <mat-icon class="fill-icon">link_off</mat-icon>Stop charging
-</button>
+@if (showStart()) {
+  <button
+    mat-flat-button class="mt-2 mb-2"
+    [disabled]="!canBeStarted() || chargeStatusChangeLoading()" (click)="startCharging()">
+    <mat-icon class="fill-icon" [class.pulse]="canBeStarted()">flash_on</mat-icon>Start charging
+  </button>
+}
+@if (showStop()) {
+  <button
+    mat-flat-button class="mt-2 mb-2"
+    [disabled]="chargeStatusChangeLoading()" (click)="stopCharging()">
+    <mat-icon class="fill-icon">link_off</mat-icon>Stop charging
+  </button>
+}

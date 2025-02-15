@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, OnInit, signal } from '@angular/core';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { NgIf } from '@angular/common';
-import { DashboardService, ChargerStatusDTO, PublicInfoService } from '@suac/api';
 import { finalize, take, tap } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { DashboardService, ChargerStatusDTO, PublicInfoService } from '@suac/api';
 import { AuthenticationService } from '../../security/authentication.service';
 
 @Component({
@@ -11,10 +10,8 @@ import { AuthenticationService } from '../../security/authentication.service';
   templateUrl: './charging-status.component.html',
   styleUrl: './charging-status.component.scss',
   imports: [
-    MatButton,
-    MatIcon,
-    NgIf,
-    MatIconButton,
+    MatButtonModule,
+    MatIconModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

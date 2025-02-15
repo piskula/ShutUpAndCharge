@@ -1,8 +1,15 @@
-<div class="fk-p" *ngIf="!isLoading()"></div>
-<mat-progress-bar *ngIf="isLoading()" mode="indeterminate"></mat-progress-bar>
+@if (isLoading()) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+} @else {
+  <div class="fk-p"></div>
+}
 
-<ng-content></ng-content>
-<mat-paginator
-  (page)="pageChanged($event)" [pageSizeOptions]="pageSizeOptions" [disabled]="isLoading()"
-  [pageIndex]="pageIndex()" [pageSize]="pageSize()" [length]="total()">
-</mat-paginator>
+@if (total() !== 0) {
+  <ng-content></ng-content>
+  <mat-paginator
+    (page)="pageChanged($event)" [pageSizeOptions]="pageSizeOptions" [disabled]="isLoading()"
+    [pageIndex]="pageIndex()" [pageSize]="pageSize()" [length]="total()">
+  </mat-paginator>
+} @else {
+  <div>Unfortunately, there is no data here yet to be shown</div>
+}
