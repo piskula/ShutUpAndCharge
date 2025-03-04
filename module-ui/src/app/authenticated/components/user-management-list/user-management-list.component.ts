@@ -69,11 +69,11 @@ export class UserManagementListComponent {
   private allColumns = ['id', 'idKeycloak', 'firstName', 'assignedChipUid', 'verifiedForCharging', 'action'];
   private smallColumns = ['id', 'firstName', 'verifiedForCharging', 'action'];
 
-  private readonly responsiveService = inject(ResponsiveService);
+  #responsiveService = inject(ResponsiveService);
   private readonly pagination = viewChild(PaginatedTableComponent);
 
   public displayedColumns =
-    computed(() => this.responsiveService.isMobile() ? this.smallColumns : this.allColumns);
+    computed(() => this.#responsiveService.isMobile() ? this.smallColumns : this.allColumns);
   public dataSource = new MatTableDataSource<AccountDTO>([]);
 
   public isLoadingAccountId = signal<number | null>(null)

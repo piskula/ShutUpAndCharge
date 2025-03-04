@@ -2,7 +2,7 @@ package sk.momosilabs.suac.server.transaction.finished.controller
 
 import org.springframework.web.bind.annotation.RestController
 import sk.momosilabs.suac.api.transaction.finished.TransactionFinishedApi
-import sk.momosilabs.suac.api.transaction.finished.dto.ChargingListDTO
+import sk.momosilabs.suac.api.transaction.finished.dto.TransactionFinishedDTO
 import sk.momosilabs.suac.api.common.dto.PageDTO
 import sk.momosilabs.suac.api.common.dto.PageableDTO
 import sk.momosilabs.suac.api.transaction.finished.dto.TransactionFilterDTO
@@ -18,7 +18,7 @@ class TransactionFinishedController(
     private val getTransactionList: GetTransactionListUseCase,
 ) : TransactionFinishedApi {
 
-    override fun getList(filter: TransactionFilterDTO, pageable: PageableDTO): PageDTO<ChargingListDTO> =
+    override fun getList(filter: TransactionFilterDTO, pageable: PageableDTO): PageDTO<TransactionFinishedDTO> =
         getTransactionList.get(filter.toModel(), pageable.toModel())
             .toDto(TransactionFinished::toDto)
 

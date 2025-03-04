@@ -2,3 +2,9 @@
   display: block;
   overflow-y: hidden;
 }
+
+.mat-column-stats {
+  min-width: var(--mdc-icon-button-state-layer-size, 48px);
+  max-width: var(--mdc-icon-button-state-layer-size, 48px);
+  padding: 0;
+}

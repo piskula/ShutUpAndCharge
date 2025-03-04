@@ -2,7 +2,6 @@ package sk.momosilabs.suac.server.transaction.temporary.persistence
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import sk.momosilabs.suac.server.transaction.finished.model.TransactionFinished
 import sk.momosilabs.suac.server.transaction.temporary.model.TransactionTemporary
 import sk.momosilabs.suac.server.transaction.temporary.model.TransactionTemporaryToMatch
 import java.time.Instant

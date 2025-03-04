@@ -23,7 +23,7 @@ export class TransactionTemporaryListComponent {
   protected dataSource = new MatTableDataSource<TransactionTemporaryDTO>([]);
 
   protected readonly defaultSort: Sort = {
-    active: 'timeStartUtc',
+    active: 'energyMeter',
     direction: 'desc',
   };
 

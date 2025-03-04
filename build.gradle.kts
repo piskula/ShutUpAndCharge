@@ -21,7 +21,7 @@ allprojects {
 
 subprojects {
     group = "sk.momosilabs.suac"
-    version = "1.1.0-SNAPSHOT"
+    version = "1.1.1-SNAPSHOT"
 
     apply {
         plugin("io.spring.dependency-management")

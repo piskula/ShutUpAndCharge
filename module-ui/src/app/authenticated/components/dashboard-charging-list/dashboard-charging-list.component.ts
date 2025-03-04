@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { ChargingListDTO, DashboardService } from '@suac/api';
+import { DashboardService, TransactionFinishedDTO } from '@suac/api';
 import { map, Observable } from 'rxjs';
 import {
   MatCell, MatCellDef,
@@ -13,7 +13,7 @@ import {
 import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { CurrencyPipe, DatePipe, DecimalPipe, NgIf } from '@angular/common';
+import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { ResponsiveService } from '../../../common/responsive.service';
 import { Page, PaginatedTableComponent } from '../../../common/paginated-table/paginated-table.component';
 
@@ -39,7 +39,6 @@ import { Page, PaginatedTableComponent } from '../../../common/paginated-table/p
     MatCellDef,
     DatePipe,
     DecimalPipe,
-    NgIf,
     PaginatedTableComponent,
     CurrencyPipe,
   ],
@@ -57,16 +56,16 @@ export class DashboardChargingListComponent {
 
   protected displayedColumns =
     computed(() => this.responsiveService.isMobile() ? this.columnsSmall : this.columnsAll);
-  protected dataSource = new MatTableDataSource<ChargingListDTO>([]);
+  protected dataSource = new MatTableDataSource<TransactionFinishedDTO>([]);
 
   constructor(
     private readonly dashboardService: DashboardService,
   ) {
   }
 
-  protected fetchFn = (page: number, size: number, sort: string): Observable<Page<ChargingListDTO>> => {
+  protected fetchFn = (page: number, size: number, sort: string): Observable<Page<TransactionFinishedDTO>> => {
     return this.dashboardService.getLastChargings(page, size, sort)
-      .pipe(map(page => page as Page<ChargingListDTO>));
+      .pipe(map(page => page as Page<TransactionFinishedDTO>));
   }
 
 }

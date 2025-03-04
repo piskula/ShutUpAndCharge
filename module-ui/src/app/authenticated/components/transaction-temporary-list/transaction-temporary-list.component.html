@@ -21,8 +21,8 @@
     </ng-container>
 
     <ng-container matColumnDef="energyMeter">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Meter Start</mat-header-cell>
-      <mat-cell *matCellDef="let transaction">{{ transaction.energyMeter }}</mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">Meter Start</mat-header-cell>
+      <mat-cell *matCellDef="let transaction" class="table-column-right">{{ transaction.energyMeter }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="accountName">

@@ -1,37 +1,17 @@
-import { ChangeDetectionStrategy, Component, computed, OnInit, signal, viewChild } from '@angular/core';
-import { ChargingListDTO, FinishedTransactionService } from '@suac/api';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, viewChild } from '@angular/core';
+import { FinishedTransactionService, TransactionFinishedDTO } from '@suac/api';
 import { map, Observable } from 'rxjs';
-import {
-  MatCell,
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatRow,
-  MatRowDef,
-  MatTable,
-  MatTableDataSource,
-} from '@angular/material/table';
-import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
-import { MatIcon } from '@angular/material/icon';
-import { MatTooltip } from '@angular/material/tooltip';
-import { CurrencyPipe, DatePipe, DecimalPipe, NgIf } from '@angular/common';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSortModule, Sort } from '@angular/material/sort';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { Page, PaginatedTableComponent } from '../../../common/paginated-table/paginated-table.component';
-import {
-  MatAccordion,
-  MatExpansionPanel, MatExpansionPanelDescription,
-  MatExpansionPanelHeader,
-  MatExpansionPanelTitle,
-} from '@angular/material/expansion';
-import {
-  MatChipAvatar,
-  MatChipRemove,
-  MatChipRow, MatChipSet,
-} from '@angular/material/chips';
 import { AuthenticationService, CurrentUser } from '../../../security/authentication.service';
-import { MatButton } from '@angular/material/button';
+import { ResponsiveService } from '../../../common/responsive.service';
+import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
+import { MatChipsModule } from '@angular/material/chips';
+import { ResponsiveDirective } from '../../../common/responsive.directive';
 
 export interface TransactionFilter {
   id: string;
@@ -48,53 +28,41 @@ export interface TransactionFilter {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     PaginatedTableComponent,
-    MatTable,
-    MatSort,
-    MatSortHeader,
-    MatHeaderCell,
-    MatCell,
-    MatTooltip,
-    DatePipe,
-    MatIcon,
-    DecimalPipe,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRowDef,
-    MatHeaderCellDef,
-    MatCellDef,
-    MatRow,
-    MatColumnDef,
-    NgIf,
-    CurrencyPipe,
-    MatExpansionPanel,
-    MatExpansionPanelHeader,
     MatAccordion,
-    MatExpansionPanelTitle,
-    MatExpansionPanelDescription,
-    MatChipRemove,
-    MatChipRow,
-    MatChipAvatar,
-    MatChipSet,
-    MatButton,
+    MatExpansionModule,
+    MatIconModule,
+    MatChipsModule,
+    MatTableModule,
+    MatSortModule,
+    MatTooltipModule,
+    DatePipe,
+    DecimalPipe,
+    CurrencyPipe,
+    ResponsiveDirective,
   ],
 })
 export class TransactionListComponent implements OnInit {
-  protected readonly displayedColumns = ['timeStartUtc', 'account', 'stationId', 'kwh', 'price'];
-  protected dataSource = new MatTableDataSource<ChargingListDTO>([]);
+  private readonly allColumns = ['timeStartUtc', 'account', 'stationId', 'kwh', 'price', 'stats'];
+  private readonly smallColumns = ['timeStartUtc', 'account', 'kwh', 'price', 'stats'];
+
+  #responsiveService = inject(ResponsiveService);
+  #transactionService = inject(FinishedTransactionService);
+  protected authService = inject(AuthenticationService);
+  private readonly pagination = viewChild(PaginatedTableComponent);
+
+  public displayedColumns =
+    computed(() => this.#responsiveService.isMobile() ? this.smallColumns : this.allColumns);
+  protected dataSource = new MatTableDataSource<TransactionFinishedDTO>([]);
 
   protected readonly defaultSort: Sort = {
     active: 'timeStartUtc',
     direction: 'desc',
   };
-  private readonly pagination = viewChild(PaginatedTableComponent);
 
   readonly activeFilters = signal<TransactionFilter[]>([]);
   currentUser: CurrentUser | null;
 
-  constructor(
-    private readonly transactionService: FinishedTransactionService,
-    protected readonly authService: AuthenticationService,
-  ) {
+  constructor() {
     this.currentUser = this.authService.currentUserValue();
   }
 
@@ -102,9 +70,9 @@ export class TransactionListComponent implements OnInit {
     this.addCurrentUserFilter();
   }
 
-  protected fetchFn = (page: number, size: number, sort: string): Observable<Page<ChargingListDTO>> => {
-    return this.transactionService.getList({ accountIds: this.activeFilters().find(f => f.field === 'accountIds')?.values }, page, size, sort)
-      .pipe(map(page => page as Page<ChargingListDTO>));
+  protected fetchFn = (page: number, size: number, sort: string): Observable<Page<TransactionFinishedDTO>> => {
+    return this.#transactionService.getList({ accountIds: this.activeFilters().find(f => f.field === 'accountIds')?.values }, page, size, sort)
+      .pipe(map(page => page as Page<TransactionFinishedDTO>));
   }
 
   removeFilter(filterId: string): void {

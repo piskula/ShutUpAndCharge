@@ -16,6 +16,8 @@ fun ChargingFinishedEntity.toModel() = TransactionFinished(
     chargingStationId = stationId,
     accountId = account.id,
     accountName = "${account.firstName} ${account.lastName}",
+    triggeredByChipUid = triggeredByChipUid != null,
+    link = link,
 )
 
 fun ChargingToCreate.asNewEntity(accountResolver: (Long) -> AccountEntity) = ChargingFinishedEntity(

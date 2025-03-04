@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import sk.momosilabs.suac.api.common.dto.PageDTO
 import sk.momosilabs.suac.api.common.dto.PageableApiParam
 import sk.momosilabs.suac.api.common.dto.PageableDTO
-import sk.momosilabs.suac.api.transaction.finished.dto.ChargingListDTO
+import sk.momosilabs.suac.api.transaction.finished.dto.TransactionFinishedDTO
 import sk.momosilabs.suac.api.transaction.finished.dto.TransactionFilterDTO
 
 @Api("Finished Transaction")
@@ -24,6 +24,6 @@ interface TransactionFinishedApi {
         ENDPOINT_TRANSACTION_FINISHED,
         produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun getList(@RequestBody filter: TransactionFilterDTO, pageable: PageableDTO): PageDTO<ChargingListDTO>
+    fun getList(@RequestBody filter: TransactionFilterDTO, pageable: PageableDTO): PageDTO<TransactionFinishedDTO>
 
 }

@@ -1,7 +1,7 @@
 package sk.momosilabs.suac.server.dashboard.controller
 
 import org.springframework.web.bind.annotation.RestController
-import sk.momosilabs.suac.api.transaction.finished.dto.ChargingListDTO
+import sk.momosilabs.suac.api.transaction.finished.dto.TransactionFinishedDTO
 import sk.momosilabs.suac.api.common.dto.PageDTO
 import sk.momosilabs.suac.api.common.dto.PageableDTO
 import sk.momosilabs.suac.api.dashboard.DashboardApi
@@ -22,7 +22,7 @@ class DashboardController(
     private val stopCharging: StopChargingUseCase,
 ) : DashboardApi {
 
-    override fun getLastChargings(pageable: PageableDTO): PageDTO<ChargingListDTO> =
+    override fun getLastChargings(pageable: PageableDTO): PageDTO<TransactionFinishedDTO> =
         getMyChargingList.get(pageable.toModel())
             .toDto(TransactionFinished::toDto)
 

@@ -13,4 +13,6 @@ data class TransactionFinished(
     val chargingStationId: String?,
     val accountId: Long,
     val accountName: String,
+    val triggeredByChipUid: Boolean,
+    val link: String?,
 )
