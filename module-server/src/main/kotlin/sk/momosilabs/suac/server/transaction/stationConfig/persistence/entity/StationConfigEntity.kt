@@ -15,6 +15,7 @@ class StationConfigEntity(
     @field:NotNull
     var pricePerKwh: BigDecimal,
 
-    var lastSuccessDownloadTimestampUtc: LocalDateTime?,
+    @field:NotNull
+    var lastSuccessDownloadTimestampUtc: LocalDateTime,
 
 )

@@ -38,8 +38,8 @@ CREATE TABLE station_config
 (
   station_id                          VARCHAR(255) PRIMARY KEY,
   price_per_kwh                       DECIMAL(6, 3) NOT NULL,
-  last_success_download_timestamp_utc TIMESTAMP DEFAULT NULL
+  last_success_download_timestamp_utc TIMESTAMP NOT NULL
 );
 
 INSERT INTO station_config(station_id, price_per_kwh, last_success_download_timestamp_utc)
-VALUES ('ETCC:Kutlik:1', 0.29, NULL);
+VALUES ('ETCC:Kutlik:1', 0.25, TIMESTAMP '2025-05-14 00:00:00');

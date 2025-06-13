@@ -61,7 +61,7 @@ open class DownloadAndProcessTemporaryTransactionsList(
 
         val stationConfig = stationConfigRepository.findById(stationId)
             .orElseThrow { GlobalException("station not found") }
-        val lastTimestamp = stationConfig.lastSuccessDownloadTimestampUtc ?: LocalDateTime.of(2010, 1, 1, 0, 0)
+        val lastTimestamp = stationConfig.lastSuccessDownloadTimestampUtc
 
         val chargerStatus = externalChargingApi.getChargerStatus().ifSuccess?.carState
 
@@ -88,12 +88,12 @@ open class DownloadAndProcessTemporaryTransactionsList(
         }
 
         val toStore = mergeIntoEntities(toProcess, ourTemporaryTransactions, stationConfig, chipToUser)
-            .sortedByDescending { it.energyMeter }
+            .sortedBy { it.energyMeter }
 
         transactionFinishedPersistence.saveFinishedChargingBulk(toStore)
         transactionTemporaryPersistence.deleteAwaitingTransactionsForStation(stationId, meterStartMatches)
 
-        stationConfig.lastSuccessDownloadTimestampUtc = LocalDateTime.ofInstant(toStore.first().timeEnd, ZoneOffset.UTC)
+        stationConfig.lastSuccessDownloadTimestampUtc = LocalDateTime.ofInstant(toStore.last().timeEnd, ZoneOffset.UTC)
     }
 
     private fun mergeIntoEntities(
