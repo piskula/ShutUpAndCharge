@@ -129,7 +129,7 @@ open class ExternalChargingService(
             "e" to station.cloudDownloadToken,
             "from" to fromTimestampUtc.toInstant(ZoneOffset.UTC).toEpochMilli().toString(),
             "to" to Instant.now().toEpochMilli().toString(), // without TO timestamp filtering is not working
-            "timezone" to "Etc/UTC",
+            "timezone" to "Utc/UTC",
         ).entries.joinToString("&") { (key, value) -> "$key=$value" }
         return RestClient.create().get().uri("${station.cloudDownload}?$params")
     }
