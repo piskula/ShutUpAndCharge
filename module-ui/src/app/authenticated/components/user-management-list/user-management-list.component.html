@@ -27,7 +27,9 @@
       <mat-cell *matCellDef="let user">
         {{ user.firstName }} {{ user.lastName }}
         <ng-container *ifScreen="'mobile'">
-          <app-table-badge *ngIf="user.assignedChipUid" class="pl-2 ml-2">RFID</app-table-badge>
+          @if (user.assignedChipUid) {
+            <app-table-badge class="pl-2 ml-2">RFID</app-table-badge>
+          }
         </ng-container>
         <!--      <mat-chip-set *ngIf="user.isAdmin"><mat-chip><mat-icon matChipAvatar>shield_person</mat-icon>Admin</mat-chip></mat-chip-set>-->
       </mat-cell>
@@ -36,7 +38,9 @@
     <ng-container matColumnDef="assignedChipUid">
       <mat-header-cell *matHeaderCellDef mat-sort-header>RFID</mat-header-cell>
       <mat-cell *matCellDef="let user">
-        <app-table-badge *ngIf="user.assignedChipUid" icon="nfc">RFID</app-table-badge>
+        @if (user.assignedChipUid) {
+          <app-table-badge icon="nfc">RFID</app-table-badge>
+        }
       </mat-cell>
     </ng-container>
 
@@ -45,14 +49,14 @@
         <ng-container *ifScreen="'desktop'">Can Charge</ng-container>
       </mat-header-cell>
       <mat-cell *matCellDef="let user">
-        <ng-container *ngIf="user.verifiedForCharging">
+        @if (user.verifiedForCharging) {
           <mat-icon class="color-accent fill-icon">power</mat-icon>
           <span *ifScreen="'desktop'" class="ml-1">Yes</span>
-        </ng-container>
-        <ng-container *ngIf="!user.verifiedForCharging">
+        }
+        @if (!user.verifiedForCharging) {
           <mat-icon class="color-error">power_off</mat-icon>
           <span *ifScreen="'desktop'" class="ml-1">No</span>
-        </ng-container>
+        }
       </mat-cell>
     </ng-container>
 
@@ -62,8 +66,12 @@
       </mat-header-cell>
       <mat-cell *matCellDef="let user">
         <button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="isLoadingAccountId() === user.id">
-          <mat-icon *ngIf="isLoadingAccountId() !== user.id">more_vert</mat-icon>
-          <mat-spinner *ngIf="isLoadingAccountId() === user.id" diameter="24"></mat-spinner>
+          @if (isLoadingAccountId() !== user.id) {
+            <mat-icon>more_vert</mat-icon>
+          }
+          @if (isLoadingAccountId() === user.id) {
+            <mat-spinner diameter="24"></mat-spinner>
+          }
         </button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="topUp(user.id, user.firstName + ' ' + user.lastName)">

@@ -11,7 +11,7 @@ import {
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-import { CurrencyPipe, DecimalPipe, NgForOf } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 
 export interface PriceDialogData {
   accountName: string;
@@ -32,7 +32,6 @@ export interface PriceDialogData {
     MatFormField,
     MatInput,
     MatLabel,
-    NgForOf,
     CurrencyPipe,
   ],
 })

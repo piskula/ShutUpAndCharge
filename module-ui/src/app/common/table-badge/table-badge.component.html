@@ -1,6 +1,8 @@
 <mat-chip-set>
   <mat-chip class="ml-0" [style.background-color]="'var(' + varBackground() + ')'" [style.color]="'var(' + varColor() + ')'">
-    <mat-icon matChipAvatar *ngIf="icon()" class="inherit-color fill-icon">{{ icon() }}</mat-icon>
+    @if (icon()) {
+      <mat-icon matChipAvatar class="inherit-color fill-icon">{{ icon() }}</mat-icon>
+    }
     <ng-content></ng-content>
   </mat-chip>
 </mat-chip-set>

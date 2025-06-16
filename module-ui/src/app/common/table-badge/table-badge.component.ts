@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
-import { NgIf } from '@angular/common';
 import { MatChip, MatChipAvatar, MatChipSet } from '@angular/material/chips';
 
 @Component({
@@ -9,7 +8,6 @@ import { MatChip, MatChipAvatar, MatChipSet } from '@angular/material/chips';
   styleUrl: './table-badge.component.scss',
   imports: [
     MatIcon,
-    NgIf,
     MatChip,
     MatChipSet,
     MatChipAvatar,

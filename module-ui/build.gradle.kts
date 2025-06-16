@@ -9,7 +9,7 @@ plugins {
 // to make build on non-dev machines easier, use bundled Node
 node {
     download.set(true)
-    version = "18.20.4"
+    version = "22.16.0"
 }
 
 val buildFrontendBundle = configurations.create("build-frontend-bundle")

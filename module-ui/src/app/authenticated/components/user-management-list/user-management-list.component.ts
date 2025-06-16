@@ -13,7 +13,7 @@ import {
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { NgIf, SlicePipe } from '@angular/common';
+import { SlicePipe } from '@angular/common';
 import { MatIconButton } from '@angular/material/button';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
@@ -53,7 +53,6 @@ import { MatDivider } from '@angular/material/divider';
     MatCellDef,
     MatIconButton,
     CdkCopyToClipboard,
-    NgIf,
     MatMenu,
     MatMenuItem,
     MatMenuTrigger,

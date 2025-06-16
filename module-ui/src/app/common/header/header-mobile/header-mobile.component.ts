@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatIcon } from '@angular/material/icon';
-import { NgForOf, NgIf } from '@angular/common';
 import { MatAnchor, MatButton, MatIconButton } from '@angular/material/button';
 import { MatChip, MatChipSet } from '@angular/material/chips';
 import { tap } from 'rxjs';
@@ -23,8 +22,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     MatChipSet,
     MatChip,
     MatAnchor,
-    NgForOf,
-    NgIf,
     MatTooltip,
     MatMenu,
     MatMenuTrigger,
