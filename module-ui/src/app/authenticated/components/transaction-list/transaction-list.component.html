@@ -44,7 +44,12 @@
 
     <ng-container matColumnDef="account">
       <mat-header-cell *matHeaderCellDef mat-sort-header="account.lastName">User</mat-header-cell>
-      <mat-cell *matCellDef="let chrg">{{ chrg.accountName }}</mat-cell>
+      <mat-cell *matCellDef="let chrg">
+        {{ chrg.accountName }}
+        @if (chrg.triggeredByChipUid) {
+          <mat-icon class="ml-1" matTooltip="Started with RFID chip" matTooltipPosition="right">nfc</mat-icon>
+        }
+      </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="stationId">
@@ -56,9 +61,6 @@
           <mat-icon class="mr-1">savings</mat-icon>Credit
         } @else {
           <mat-icon class="fill-icon mr-1">power</mat-icon>{{ chrg.chargingStationId }}
-        }
-        @if (chrg.triggeredByChipUid) {
-          <mat-icon class="ml-1">nfc</mat-icon>
         }
       </mat-cell>
     </ng-container>

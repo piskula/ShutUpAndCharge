@@ -121,7 +121,9 @@ export class UserManagementListComponent {
     assignedChipUid?: String,
   ): void {
     const dialogRef = this.dialog.open(AssignRfidDialogComponent, {
-      data: { accountName: name, assignedChipUid: assignedChipUid } as AssignRfidDialogData });
+      data: { accountName: name, assignedChipUid: assignedChipUid } as AssignRfidDialogData,
+      disableClose: true,
+    } );
     dialogRef.afterClosed().pipe(
       take(1),
       filter((newChipUid) => newChipUid != assignedChipUid),
