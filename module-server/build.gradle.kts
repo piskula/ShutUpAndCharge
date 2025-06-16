@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot") version "3.4.2"
+    id("org.springframework.boot") version "3.5.0"
     kotlin("plugin.jpa") version "2.1.10"
     kotlin("plugin.serialization") version "2.1.10"
     kotlin("kapt")
@@ -37,7 +37,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
 
     // make swagger documentation available
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
