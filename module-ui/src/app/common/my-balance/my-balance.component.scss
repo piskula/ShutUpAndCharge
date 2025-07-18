@@ -1,0 +1,11 @@
+@use '../../../styling/custom-colors' as colors;
+
+:host {
+  display: block;
+  overflow-y: hidden;
+}
+
+.spinner-center {
+  display: inline-flex;
+  vertical-align: middle;
+}

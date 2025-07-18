@@ -1,0 +1,6 @@
+<span [class.color-error]="value() < 0" [class.color-accent]="value() >= 0" [class.bold]="bold()">
+  @if (value() > 0) {
+    <span>+</span>
+  }
+  {{ value() | currency }}
+</span>

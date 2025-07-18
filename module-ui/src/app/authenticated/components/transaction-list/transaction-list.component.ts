@@ -12,6 +12,7 @@ import { ResponsiveService } from '../../../common/responsive.service';
 import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
 import { ResponsiveDirective } from '../../../common/responsive.directive';
+import { PriceColoredComponent } from '../../../common/price-colored/price-colored.component';
 
 export interface TransactionFilter {
   id: string;
@@ -39,6 +40,7 @@ export interface TransactionFilter {
     DecimalPipe,
     CurrencyPipe,
     ResponsiveDirective,
+    PriceColoredComponent,
   ],
 })
 export class TransactionListComponent implements OnInit {

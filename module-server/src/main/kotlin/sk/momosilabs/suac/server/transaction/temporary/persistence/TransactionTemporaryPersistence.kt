@@ -10,6 +10,8 @@ interface TransactionTemporaryPersistence {
 
     fun getAll(pageable: Pageable): Page<TransactionTemporary>
 
+    fun getById(trxIdentifier: String): TransactionTemporary?
+
     fun getLastNotProcessedTrxNumber(): Int?
 
     fun addOngoingTransaction(timestamp: Instant, accountId: Long, trxNumber: Int, trxIdentifier: String, energyMeter: Long)

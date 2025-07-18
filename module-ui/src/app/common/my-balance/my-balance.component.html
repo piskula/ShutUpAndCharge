@@ -1,0 +1,7 @@
+<div>
+  Your balance: @if (refreshLoading()) {
+    <mat-spinner diameter="20" class="spinner-center ml-1"></mat-spinner>
+  } @else {
+    <app-price-colored [value]="balance()" [bold]="true" />
+  }
+</div>

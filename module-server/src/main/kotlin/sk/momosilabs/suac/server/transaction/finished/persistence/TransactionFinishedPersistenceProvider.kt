@@ -44,6 +44,10 @@ open class TransactionFinishedPersistenceProvider(
     override fun getNegativeByUserId(userId: Long, pageable: Pageable): Page<TransactionFinished> =
         chargingRepository.findAllByAccountIdAndPriceLessThan(userId, BigDecimal.ZERO, pageable).map { it.toModel() }
 
+    @Transactional(readOnly = true)
+    override fun sumUpForUsers(userIds: Set<Long>): Map<Long, BigDecimal> =
+        chargingRepository.sumUpForUsers(userIds).toMap()
+
     @Transactional
     override fun saveFinishedCharging(charging: ChargingToCreate): TransactionFinished {
         val account = accountRepository.getReferenceById(charging.userId)

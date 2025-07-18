@@ -5,6 +5,7 @@ import { ChargingStatusComponent } from '../../common/charging-status/charging-s
 import { DashboardChargingListComponent } from '../components/dashboard-charging-list/dashboard-charging-list.component';
 import { AuthenticationService } from '../../security/authentication.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MyBalanceComponent } from '../../common/my-balance/my-balance.component';
 
 @Component({
   selector: 'app-home-dashboard',
@@ -13,6 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   imports: [
     ChargingStatusComponent,
     DashboardChargingListComponent,
+    MyBalanceComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -20,8 +22,8 @@ export class HomeDashboardComponent implements OnInit {
   public headerData = signal<HeaderData>({ user: '', roles: []});
 
   constructor(
-    private authenticationService: AuthenticationService,
-    private destroyRef: DestroyRef,
+    private readonly authenticationService: AuthenticationService,
+    private readonly destroyRef: DestroyRef,
   ) {
   }
 
@@ -31,10 +33,10 @@ export class HomeDashboardComponent implements OnInit {
         if (user == null)
           return null;
         else
-          return ({
+          return {
             user: user.name,
             roles: user.roles,
-          } as HeaderData);
+          };
       }),
       tap((headerData: HeaderData | null) => {
         if (headerData != null) {

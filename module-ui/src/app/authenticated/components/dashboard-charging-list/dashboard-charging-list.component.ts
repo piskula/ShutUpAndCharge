@@ -16,6 +16,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { ResponsiveService } from '../../../common/responsive.service';
 import { Page, PaginatedTableComponent } from '../../../common/paginated-table/paginated-table.component';
+import { PriceColoredComponent } from '../../../common/price-colored/price-colored.component';
 
 @Component({
   selector: 'app-dashboard-charging-list',
@@ -41,6 +42,7 @@ import { Page, PaginatedTableComponent } from '../../../common/paginated-table/p
     DecimalPipe,
     PaginatedTableComponent,
     CurrencyPipe,
+    PriceColoredComponent,
   ],
 })
 export class DashboardChargingListComponent {

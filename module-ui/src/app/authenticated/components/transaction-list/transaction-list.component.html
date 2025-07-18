@@ -81,11 +81,8 @@
       <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">
         Price
       </mat-header-cell>
-      <mat-cell *matCellDef="let chrg" class="table-column-right" style="font-weight: 600"
-                [class.color-error]="chrg.price < 0" [class.color-accent]="chrg.price > 0">
-        @if (chrg.price > 0) {
-          <span>+</span>
-        }{{ chrg.price | currency }}
+      <mat-cell *matCellDef="let chrg" class="table-column-right">
+        <app-price-colored [value]="chrg.price" [bold]="true" />
       </mat-cell>
     </ng-container>
 

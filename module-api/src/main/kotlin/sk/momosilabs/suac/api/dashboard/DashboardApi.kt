@@ -10,6 +10,7 @@ import sk.momosilabs.suac.api.common.dto.PageDTO
 import sk.momosilabs.suac.api.common.dto.PageableApiParam
 import sk.momosilabs.suac.api.common.dto.PageableDTO
 import sk.momosilabs.suac.api.publicInfo.dto.ChargerStatusDTO
+import java.math.BigDecimal
 
 @Api("Dashboard")
 interface DashboardApi {
@@ -22,6 +23,10 @@ interface DashboardApi {
     @PageableApiParam
     @GetMapping("$ENDPOINT_DASHBOARD/lastTransactions", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getLastChargings(pageable: PageableDTO): PageDTO<TransactionFinishedDTO>
+
+    @ApiOperation("Get My Account Balance")
+    @GetMapping("$ENDPOINT_DASHBOARD/balance", produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun getMyBalance(): BigDecimal
 
     @ApiOperation("Start Charging")
     @PostMapping("$ENDPOINT_DASHBOARD/start", produces = [MediaType.APPLICATION_JSON_VALUE])

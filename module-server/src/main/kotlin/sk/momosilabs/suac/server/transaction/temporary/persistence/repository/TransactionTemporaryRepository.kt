@@ -7,6 +7,8 @@ import sk.momosilabs.suac.server.transaction.temporary.persistence.entity.Chargi
 @Repository
 interface TransactionTemporaryRepository: JpaRepository<ChargingOngoingEntity, Long> {
 
+    fun getByTrxIdentifier(trxIdentifier: String): ChargingOngoingEntity?
+
     fun findTopTrxNumberByOrderByIdDesc(): ChargingOngoingEntity?
 
     fun existsByTrxIdentifierAndAccountId(trxIdentifier: String, accountId: Long): Boolean

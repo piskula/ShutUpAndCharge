@@ -24,6 +24,10 @@ open class TransactionTemporaryPersistenceProvider(
         transactionRepository.findAll(pageable).map(ChargingOngoingEntity::toModel)
 
     @Transactional(readOnly = true)
+    override fun getById(trxIdentifier: String): TransactionTemporary? =
+        transactionRepository.getByTrxIdentifier(trxIdentifier)?.toModel()
+
+    @Transactional(readOnly = true)
     override fun getLastNotProcessedTrxNumber(): Int? =
         transactionRepository.findTopTrxNumberByOrderByIdDesc()?.trxNumber
 
