@@ -44,6 +44,13 @@
       </mat-cell>
     </ng-container>
 
+    <ng-container matColumnDef="balance">
+      <mat-header-cell *matHeaderCellDef class="table-column-right">Balance</mat-header-cell>
+      <mat-cell *matCellDef="let user" class="table-column-right">
+        <app-price-colored [value]="user.balance" />
+      </mat-cell>
+    </ng-container>
+
     <ng-container matColumnDef="verifiedForCharging">
       <mat-header-cell *matHeaderCellDef mat-sort-header>
         <ng-container *ifScreen="'desktop'">Can Charge</ng-container>

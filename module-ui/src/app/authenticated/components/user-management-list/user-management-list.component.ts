@@ -30,6 +30,7 @@ import { TableBadgeComponent } from '../../../common/table-badge/table-badge.com
 import { AssignRfidDialogComponent, AssignRfidDialogData } from './assign-rfid-dialog/assign-rfid-dialog.component';
 import { AccountDetailDialogComponent } from './account-detail-dialog/account-detail-dialog.component';
 import { MatDivider } from '@angular/material/divider';
+import { PriceColoredComponent } from '../../../common/price-colored/price-colored.component';
 
 @Component({
   selector: 'app-user-management-list',
@@ -62,11 +63,12 @@ import { MatDivider } from '@angular/material/divider';
     SlicePipe,
     TableBadgeComponent,
     MatDivider,
+    PriceColoredComponent,
   ],
 })
 export class UserManagementListComponent {
-  private allColumns = ['id', 'idKeycloak', 'firstName', 'assignedChipUid', 'verifiedForCharging', 'action'];
-  private smallColumns = ['id', 'firstName', 'verifiedForCharging', 'action'];
+  private allColumns = ['id', 'idKeycloak', 'firstName', 'assignedChipUid', 'balance', 'verifiedForCharging', 'action'];
+  private smallColumns = ['id', 'firstName', 'balance', 'verifiedForCharging', 'action'];
 
   #responsiveService = inject(ResponsiveService);
   private readonly pagination = viewChild(PaginatedTableComponent);

@@ -8,6 +8,7 @@ fun Account.toDto() = AccountDTO(
     idKeycloak = idKeycloak,
     firstName = firstName,
     lastName = lastName,
+    balance = balance,
     verifiedForCharging = verifiedForCharging,
     assignedChipUid = assignedChipUid,
 )
