@@ -1,38 +1,36 @@
 package sk.momosilabs.suac.api.dashboard
 
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import sk.momosilabs.suac.api.transaction.finished.dto.TransactionFinishedDTO
 import sk.momosilabs.suac.api.common.dto.PageDTO
-import sk.momosilabs.suac.api.common.dto.PageableApiParam
 import sk.momosilabs.suac.api.common.dto.PageableDTO
 import sk.momosilabs.suac.api.publicInfo.dto.ChargerStatusDTO
 import java.math.BigDecimal
 
-@Api("Dashboard")
+@Tag(name = "Dashboard")
 interface DashboardApi {
 
     companion object {
         private const val ENDPOINT_DASHBOARD = "/api/dashboard"
     }
 
-    @ApiOperation("Get Last Chargings")
-    @PageableApiParam
+    @Operation(summary = "Get My Last Chargings")
     @GetMapping("$ENDPOINT_DASHBOARD/lastTransactions", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getLastChargings(pageable: PageableDTO): PageDTO<TransactionFinishedDTO>
 
-    @ApiOperation("Get My Account Balance")
+    @Operation(summary = "Get My Account Balance")
     @GetMapping("$ENDPOINT_DASHBOARD/balance", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getMyBalance(): BigDecimal
 
-    @ApiOperation("Start Charging")
+    @Operation(summary = "Start Charging")
     @PostMapping("$ENDPOINT_DASHBOARD/start", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun startCharging(): ChargerStatusDTO
 
-    @ApiOperation("Stop Charging")
+    @Operation(summary = "Stop Charging")
     @PostMapping("$ENDPOINT_DASHBOARD/stop", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun stopCharging(): ChargerStatusDTO
 

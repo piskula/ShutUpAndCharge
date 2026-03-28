@@ -1,19 +1,19 @@
 package sk.momosilabs.suac.api.security
 
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import sk.momosilabs.suac.api.security.dto.CurrentUserDTO
 
-@Api("Current User")
+@Tag(name = "Current User")
 interface CurrentUserApi {
 
     companion object {
         const val ENDPOINT_CURRENT_USER = "/currentUser"
     }
 
-    @ApiOperation("Check version")
+    @Operation(summary = "Get info about currently logged in user (if logged in)")
     @GetMapping(ENDPOINT_CURRENT_USER)
     fun getCurrentUser(): ResponseEntity<CurrentUserDTO>
 

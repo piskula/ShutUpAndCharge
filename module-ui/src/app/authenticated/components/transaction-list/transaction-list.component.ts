@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, viewChild } from '@angular/core';
-import { FinishedTransactionService, TransactionFinishedDTO } from '@suac/api';
+import { FinishedTransactionService, TransactionFilterDTO, TransactionFinishedDTO } from '@suac/api';
 import { map, Observable } from 'rxjs';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSortModule, Sort } from '@angular/material/sort';
@@ -73,7 +73,8 @@ export class TransactionListComponent implements OnInit {
   }
 
   protected fetchFn = (page: number, size: number, sort: string): Observable<Page<TransactionFinishedDTO>> => {
-    return this.#transactionService.getList({ accountIds: this.activeFilters().find(f => f.field === 'accountIds')?.values }, page, size, sort)
+    const filter: TransactionFilterDTO = { accountIds: new Set(this.activeFilters().find(f => f.field === 'accountIds')?.values) };
+    return this.#transactionService.getList1({ page, size, sort }, filter)
       .pipe(map(page => page as Page<TransactionFinishedDTO>));
   }
 

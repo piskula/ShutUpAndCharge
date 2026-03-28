@@ -66,7 +66,7 @@ export class DashboardChargingListComponent {
   }
 
   protected fetchFn = (page: number, size: number, sort: string): Observable<Page<TransactionFinishedDTO>> => {
-    return this.dashboardService.getLastChargings(page, size, sort)
+    return this.dashboardService.getLastChargings({ page, size, sort })
       .pipe(map(page => page as Page<TransactionFinishedDTO>));
   }
 

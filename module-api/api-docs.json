@@ -1,0 +1,741 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/api/transaction/temporary": {
+      "post": {
+        "tags": [
+          "Temporary Transaction"
+        ],
+        "summary": "Get list of transactions",
+        "operationId": "getList",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PageableDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDTOTransactionTemporaryDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/transaction/temporary/sync": {
+      "post": {
+        "tags": [
+          "Temporary Transaction"
+        ],
+        "summary": "Eforce download and sync",
+        "operationId": "enforceDownloadAndSync",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/transaction/finished": {
+      "post": {
+        "tags": [
+          "Finished Transaction"
+        ],
+        "summary": "Get list of transactions",
+        "operationId": "getList_1",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PageableDTO"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionFilterDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDTOTransactionFinishedDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/stop": {
+      "post": {
+        "tags": [
+          "Dashboard"
+        ],
+        "summary": "Stop Charging",
+        "operationId": "stopCharging",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChargerStatusDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/start": {
+      "post": {
+        "tags": [
+          "Dashboard"
+        ],
+        "summary": "Start Charging",
+        "operationId": "startCharging",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChargerStatusDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/{accountId}/verified/{verified}": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Set or unset verified flag for user",
+        "operationId": "updateVerifiedFlag",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "verified",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/{accountId}/topUp": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Top up credit to user account",
+        "operationId": "topUpAccount",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "number"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/{accountId}/chipUid": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Set or unset charging chip for user",
+        "operationId": "updateAssignedChipUid",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/info/version": {
+      "get": {
+        "tags": [
+          "Public Info"
+        ],
+        "summary": "Check version",
+        "operationId": "getVersion",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/BuildInfoDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/info/chargerStatus": {
+      "get": {
+        "tags": [
+          "Public Info"
+        ],
+        "summary": "Get Charging Status",
+        "operationId": "getChargerStatus",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChargerStatusDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/currentUser": {
+      "get": {
+        "tags": [
+          "Current User"
+        ],
+        "summary": "Get info about currently logged in user (if logged in)",
+        "operationId": "getCurrentUser",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentUserDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/lastTransactions": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "summary": "Get My Last Chargings",
+        "operationId": "getLastChargings",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PageableDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDTOTransactionFinishedDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/balance": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "summary": "Get My Account Balance",
+        "operationId": "getMyBalance",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "List users in system",
+        "operationId": "getUserList",
+        "parameters": [
+          {
+            "name": "pageable",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PageableDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDTOAccountDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PageableDTO": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "type": "string"
+          }
+        }
+      },
+      "PageDTOTransactionTemporaryDTO": {
+        "type": "object",
+        "properties": {
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransactionTemporaryDTO"
+            }
+          }
+        }
+      },
+      "TransactionTemporaryDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "trxNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "trxIdentifier": {
+            "type": "string"
+          },
+          "energyMeter": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "timeStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "accountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "accountName": {
+            "type": "string"
+          }
+        }
+      },
+      "TransactionFilterDTO": {
+        "type": "object",
+        "properties": {
+          "timeFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timeTo": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "kwhFrom": {
+            "type": "number"
+          },
+          "kwhTo": {
+            "type": "number"
+          },
+          "priceFrom": {
+            "type": "number"
+          },
+          "priceTo": {
+            "type": "number"
+          },
+          "onlyCredit": {
+            "type": "boolean"
+          },
+          "chargingStationIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "accountIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "uniqueItems": true
+          }
+        }
+      },
+      "PageDTOTransactionFinishedDTO": {
+        "type": "object",
+        "properties": {
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransactionFinishedDTO"
+            }
+          }
+        }
+      },
+      "TransactionFinishedDTO": {
+        "type": "object",
+        "properties": {
+          "guid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "kwh": {
+            "type": "number"
+          },
+          "price": {
+            "type": "number"
+          },
+          "chargingStationId": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "accountName": {
+            "type": "string"
+          },
+          "triggeredByChipUid": {
+            "type": "boolean"
+          },
+          "link": {
+            "type": "string"
+          }
+        }
+      },
+      "ChargerStatusDTO": {
+        "type": "object",
+        "properties": {
+          "carState": {
+            "type": "string",
+            "enum": [
+              "UnknownOrError",
+              "Idle",
+              "Charging",
+              "WaitCar",
+              "Complete",
+              "Error"
+            ]
+          },
+          "connectorStatusOcpp": {
+            "type": "string",
+            "enum": [
+              "Available",
+              "Preparing",
+              "Charging",
+              "SuspendedEVSE",
+              "SuspendedEV",
+              "Finishing",
+              "Reserved",
+              "Unavailable",
+              "Faulted"
+            ]
+          },
+          "occupiedFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "chargedKwh": {
+            "type": "number"
+          }
+        }
+      },
+      "BuildInfoDTO": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "CurrentUserDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "idKeycloak": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "User",
+                "Admin"
+              ]
+            },
+            "uniqueItems": true
+          }
+        }
+      },
+      "AccountDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "idKeycloak": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "balance": {
+            "type": "number"
+          },
+          "verifiedForCharging": {
+            "type": "boolean"
+          },
+          "assignedChipUid": {
+            "type": "string"
+          }
+        }
+      },
+      "PageDTOAccountDTO": {
+        "type": "object",
+        "properties": {
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountDTO"
+            }
+          }
+        }
+      }
+    }
+  }
+}

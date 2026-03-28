@@ -1,9 +1,8 @@
 import com.github.gradle.node.npm.task.NpmTask
-import org.hidetake.gradle.swagger.generator.GenerateSwaggerCode
 
 plugins {
   id("com.github.node-gradle.node") version "7.1.0"
-  id("org.hidetake.swagger.generator") version "2.19.2"
+  id("org.openapi.generator") version "7.21.0"
 }
 
 // to make build on non-dev machines easier, use bundled Node
@@ -18,31 +17,31 @@ val apiProject = project(":module-api")
 
 dependencies {
   compileOnly(apiProject)
-  swaggerCodegen("io.swagger.codegen.v3:swagger-codegen-cli:3.0.67")
 
   buildFrontendBundle(files(npmBuild))
 }
 
-swaggerSources {
-  create("frontendFromApi").apply {
-    setInputFile(file("${apiProject.layout.buildDirectory.asFile.get()}/swagger/${apiProject.name}.json"))
-    code(closureOf<GenerateSwaggerCode> {
-      language = "typescript-angular"
-      outputDir = file("${layout.buildDirectory.asFile.get()}/${apiProject.name}")
-      templateDir = file("customSwaggerTemplate")
-    })
-  }
+openApiGenerate {
+    generatorName.set("typescript-angular")
+    typeMappings.set(mapOf("DateTime" to "Date"))
+    inputSpec.set("${apiProject.layout.projectDirectory}/api-docs.json")
+    outputDir.set(layout.buildDirectory.dir("generated-sources/${apiProject.name}").map { it.asFile.absolutePath })
+    apiPackage.set("api")
+    modelPackage.set("model")
+    configOptions.put("npmName", "my-api-client") // Optional: Name for the npm package
+    configOptions.put("npmVersion", "1.0.0")     // Optional: Version for the npm package
 }
 
-val generationTask = tasks.findByPath("generateSwaggerCodeFrontendFromApi")!!
+val generationTask = tasks.findByPath("openApiGenerate")!!
 
-generationTask.dependsOn += apiProject.tasks.findByPath("generateSwaggerDocumentation")
+// TODO module-api is currently not generating OpenAPI
+//generationTask.dependsOn(apiProject.tasks.findByPath("generateOpenApiDocs")!!)
 
 tasks.yarn {
   dependsOn(generationTask)
 }
 
-val npmBuild = tasks.create("npmBuild", NpmTask::class) {
+val npmBuild = tasks.register<NpmTask>("npmBuild") {
     args.set(listOf("run", "build"))
     dependsOn(tasks.yarn)
 }

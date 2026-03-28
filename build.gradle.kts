@@ -21,7 +21,7 @@ allprojects {
 
 subprojects {
     group = "sk.momosilabs.suac"
-    version = "1.1.5-SNAPSHOT"
+    version = "1.2.0-SNAPSHOT"
 
     apply {
         plugin("io.spring.dependency-management")
@@ -37,5 +37,5 @@ repositories {
 }
 
 dependencies {
-    platform("org.springframework.boot:spring-boot-dependencies:3.4.2.RELEASE")
+    platform("org.springframework.boot:spring-boot-dependencies:3.5.0")
 }

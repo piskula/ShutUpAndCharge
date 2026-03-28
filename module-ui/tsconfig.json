@@ -19,7 +19,7 @@
     "module": "ES2022",
     "paths": {
       "@suac/api": [
-        "./build/module-api/index.ts"
+        "./build/generated-sources/module-api/index.ts"
       ]
     }
   },

@@ -88,7 +88,7 @@ export class UserManagementListComponent {
   }
 
   protected fetchFn = (page: number, size: number, sort: string): Observable<Page<AccountDTO>> => {
-    return this.accountService.getUserList(page, size, sort)
+    return this.accountService.getUserList({ page, size, sort })
       .pipe(map(page => page as Page<AccountDTO>));
   }
 

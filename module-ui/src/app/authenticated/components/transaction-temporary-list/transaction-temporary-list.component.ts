@@ -33,7 +33,7 @@ export class TransactionTemporaryListComponent {
   }
 
   protected fetchFn = (page: number, size: number, sort: string): Observable<Page<TransactionTemporaryDTO>> => {
-    return this.transactionService.getList(page, size, sort)
+    return this.transactionService.getList({ page, size, sort })
       .pipe(map(page => page as Page<TransactionTemporaryDTO>));
   }
 
