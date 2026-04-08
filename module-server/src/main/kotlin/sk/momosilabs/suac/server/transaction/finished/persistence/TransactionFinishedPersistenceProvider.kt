@@ -70,7 +70,7 @@ open class TransactionFinishedPersistenceProvider(
             .limit(pageable.pageSize.toLong())
             .orderBy(pageable.sort.toQueryDslOrderBy())
 
-    private fun <T, U> QueryResults<T>.toPageResult(pageable: Pageable, mapper: (T) -> U): Page<U> = PageImpl(
+    private fun <T, U : Any> QueryResults<T>.toPageResult(pageable: Pageable, mapper: (T) -> U): Page<U> = PageImpl(
         results.map { mapper.invoke(it) },
         pageable,
         total,

@@ -17,9 +17,9 @@ class InfoController(
 ) : PublicInfoApi {
 
     override fun getVersion(request: HttpServletRequest): BuildInfoDTO = BuildInfoDTO(
-        name = buildProperties.name,
-        version = buildProperties.version,
-        time = buildProperties.time.atOffset(ZoneOffset.UTC).toZonedDateTime(),
+        name = buildProperties.name ?: "?",
+        version = buildProperties.version ?: "?",
+        time = buildProperties.time?.atOffset(ZoneOffset.UTC)?.toZonedDateTime(),
         url = request.requestURL.toString(),
     )
 

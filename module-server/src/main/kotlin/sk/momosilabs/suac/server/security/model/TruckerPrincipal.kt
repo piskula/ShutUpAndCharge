@@ -27,7 +27,7 @@ data class TruckerPrincipal(
     override fun getIdToken(): OidcIdToken = defaultUser.idToken
 
     fun momoRoles(): Set<CurrentUserRoleDTO> = authorities
-        .filter { it.authority.startsWith("ROLE_MOMO_") }
-        .mapTo(HashSet()) { fromKeycloakRole(it.authority.removePrefix("ROLE_")) }
+        .filter { it.authority!!.startsWith("ROLE_MOMO_") }
+        .mapTo(HashSet()) { fromKeycloakRole(it.authority!!.removePrefix("ROLE_")) }
 
 }

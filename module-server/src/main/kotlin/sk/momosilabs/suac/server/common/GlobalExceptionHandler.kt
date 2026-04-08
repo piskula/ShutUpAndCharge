@@ -20,7 +20,7 @@ import java.util.UUID
 internal class NoResourceFoundExceptionHandler {
     @ExceptionHandler(NoResourceFoundException::class)
     @Throws(Exception::class)
-    fun handleResourceNotFound(ex: Exception): ResponseEntity<Any?>? {
+    fun handleResourceNotFound(ex: Exception): ResponseEntity<Any>? {
         throw ex
     }
 }

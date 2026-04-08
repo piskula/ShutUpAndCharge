@@ -1,19 +1,22 @@
+import org.gradle.api.tasks.Copy
+import org.gradle.jvm.tasks.Jar
+
 plugins {
-    id("org.springframework.boot") version "3.5.0"
-    kotlin("plugin.jpa") version "2.1.10"
-    kotlin("plugin.serialization") version "2.1.10"
-    kotlin("kapt")
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
+    kotlin("plugin.jpa")
+    kotlin("plugin.serialization")
+    id("org.jetbrains.kotlin.kapt")
 }
 
 val uiProject = project(":module-ui")
 
 springBoot {
-  // enable versioning and build info to be injected
   buildInfo()
 }
 
 // do not build *plain.jar, only fat jar
-tasks.getByName<Jar>("jar") {
+tasks.named<Jar>("jar") {
     enabled = false
 }
 
@@ -37,30 +40,28 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
 
     // make swagger documentation available
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 //    testImplementation("io.mockk:mockk:1.13.4")
 }
 
-val frontendDestination = "src/main/resources/public"
+val frontendDestination = layout.projectDirectory.dir("src/main/resources/public")
 // extend cleanup also to angular build directory
 tasks.clean {
     doFirst { delete(frontendDestination) }
 }
 
-val copyFrontend = tasks.create("copyFrontend", Copy::class) {
-  from("${uiProject.layout.buildDirectory.asFile.get()}/../dist/shut-up-and-charge/browser")
-  into(frontendDestination)
+// Copy Angular build output into Spring Boot static resources
+val copyFrontend = tasks.register<Copy>("copyFrontend") {
+    dependsOn(":module-ui:npmBuild")
+
+    from(uiProject.layout.buildDirectory.dir("frontend-dist/browser"))
+    into(frontendDestination)
 }
 
-copyFrontend.dependsOn += tasks.getByPath(":module-ui:npmBuild")
-
+// Ensure frontend is included in jar
 tasks.processResources {
-  dependsOn(copyFrontend)
+    dependsOn(copyFrontend)
 }
-
-//tasks.test {
-//    useJUnitPlatform()
-//}

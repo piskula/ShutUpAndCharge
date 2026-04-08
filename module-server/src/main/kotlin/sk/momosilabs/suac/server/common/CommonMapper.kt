@@ -8,7 +8,7 @@ import org.springframework.data.domain.Sort.Order
 import sk.momosilabs.suac.api.common.dto.PageDTO
 import sk.momosilabs.suac.api.common.dto.PageableDTO
 
-inline fun <T, U> Page<T>.toDto(transform: (T) -> U): PageDTO<U> =
+inline fun <T : Any, U> Page<T>.toDto(transform: (T) -> U): PageDTO<U> =
     PageDTO(
         totalElements = totalElements,
         totalPages = totalPages,

@@ -1,6 +1,6 @@
 package sk.momosilabs.suac.server.security.service
 
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest
+import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.Customizer
@@ -18,7 +18,6 @@ import org.springframework.security.web.header.writers.XContentTypeOptionsHeader
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter
 import org.springframework.security.web.session.HttpSessionEventPublisher
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 
 @Configuration
@@ -43,8 +42,16 @@ open class SecurityConfiguration(
             .csrf { it.disable() }
 //            .csrf { it.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) }
             .authorizeHttpRequests { auth -> auth
+                .requestMatchers(
+                    "/",
+                    "/index.html",
+//                    "/favicon.ico",
+                    "/assets/**",
+                    "/**/*.js",
+                    "/**/*.css",
+                ).permitAll()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                .requestMatchers(AntPathRequestMatcher("/api/**")).hasRole("MOMO_USER")
+                .requestMatchers("/api/**").hasRole("MOMO_USER")
                 .anyRequest().permitAll()
             }
             .oauth2Login(Customizer.withDefaults())
@@ -56,7 +63,6 @@ open class SecurityConfiguration(
                 it.addHeaderWriter(XXssProtectionHeaderWriter())
                 it.addHeaderWriter(HstsHeaderWriter())
             }
-            .anonymous { it.disable() } // do not allow anonymous user in SecurityContext
 
         return http.build()
     }

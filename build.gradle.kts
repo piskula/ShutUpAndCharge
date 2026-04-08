@@ -1,41 +1,35 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("io.spring.dependency-management") version "1.1.7"
-    kotlin("jvm") version "2.1.10"
+    id("org.springframework.boot") version "4.0.5" apply false
+    id("io.spring.dependency-management") version "1.1.7" apply false
+
+    kotlin("jvm") version "2.2.0" apply false
+    kotlin("plugin.jpa") version "2.2.0" apply false
+    kotlin("plugin.serialization") version "2.2.0" apply false
+    id("org.jetbrains.kotlin.kapt") version "2.2.0" apply false
 }
 
 allprojects {
+    group = "sk.momosilabs.suac"
+    version = "1.2.0-SNAPSHOT"
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+
     tasks.withType<JavaCompile> {
         sourceCompatibility = JavaVersion.VERSION_21.toString()
         targetCompatibility = JavaVersion.VERSION_21.toString()
     }
 
     tasks.withType<KotlinCompile> {
-        kotlinOptions {
-            freeCompilerArgs = listOf("-Xjsr305=strict")
-            jvmTarget = JavaVersion.VERSION_21.toString()
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
         }
     }
-}
-
-subprojects {
-    group = "sk.momosilabs.suac"
-    version = "1.2.0-SNAPSHOT"
-
-    apply {
-        plugin("io.spring.dependency-management")
-        plugin("org.jetbrains.kotlin.jvm")
-    }
-
-    repositories {
-        mavenCentral()
-    }
-}
-repositories {
-  mavenCentral()
-}
-
-dependencies {
-    platform("org.springframework.boot:spring-boot-dependencies:3.5.0")
 }
