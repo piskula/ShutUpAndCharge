@@ -4,6 +4,8 @@ import org.gradle.jvm.tasks.Jar
 plugins {
     id("org.springframework.boot")
     id("io.spring.dependency-management")
+    kotlin("jvm")
+    kotlin("plugin.spring")
     kotlin("plugin.jpa")
     kotlin("plugin.serialization")
     id("org.jetbrains.kotlin.kapt")
@@ -25,7 +27,8 @@ dependencies {
     implementation(uiProject) /* because of putting static sources into jar, can be removed */
 
     // controller
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-webmvc")
+    implementation("tools.jackson.module:jackson-module-kotlin")
 
     // JSON serialization for external rest client calls
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")

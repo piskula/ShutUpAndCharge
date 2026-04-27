@@ -65,11 +65,37 @@
         "operationId": "getList_1",
         "parameters": [
           {
-            "name": "pageable",
+            "name": "page",
             "in": "query",
-            "required": true,
+            "description": "Page number",
+            "required": false,
             "schema": {
-              "$ref": "#/components/schemas/PageableDTO"
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "description": "Page number"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20,
+              "description": "Page size"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort string (e.g. time,desc)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Sort string (e.g. time,desc)"
             }
           }
         ],
@@ -409,14 +435,19 @@
         "properties": {
           "page": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "default": 0,
+            "description": "Page number"
           },
           "size": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "default": 20,
+            "description": "Page size"
           },
           "sort": {
-            "type": "string"
+            "type": "string",
+            "description": "Sort string (e.g. time,desc)"
           }
         }
       },

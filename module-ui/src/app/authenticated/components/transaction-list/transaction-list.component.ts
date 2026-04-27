@@ -73,8 +73,7 @@ export class TransactionListComponent implements OnInit {
   }
 
   protected fetchFn = (page: number, size: number, sort: string): Observable<Page<TransactionFinishedDTO>> => {
-    const filter: TransactionFilterDTO = { accountIds: new Set(this.activeFilters().find(f => f.field === 'accountIds')?.values) };
-    return this.#transactionService.getList1({ page, size, sort }, filter)
+    return this.#transactionService.getList1({ accountIds: this.activeFilters().find(f => f.field === 'accountIds')?.values }, page, size, sort)
       .pipe(map(page => page as Page<TransactionFinishedDTO>));
   }
 

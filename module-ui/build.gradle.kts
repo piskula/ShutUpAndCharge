@@ -1,6 +1,7 @@
 import com.github.gradle.node.npm.task.NpmTask
 
 plugins {
+  id("base")
   id("com.github.node-gradle.node") version "7.1.0"
   id("org.openapi.generator") version "7.21.0"
 }
@@ -14,7 +15,12 @@ val apiProject = project(":module-api")
 
 openApiGenerate {
     generatorName.set("typescript-angular")
-    typeMappings.set(mapOf("DateTime" to "Date"))
+    typeMappings.set(
+        mapOf(
+            "DateTime" to "Date",
+            "set" to "Array",
+        )
+    )
     inputSpec.set("${apiProject.layout.projectDirectory}/api-docs.json")
     outputDir.set(
         layout.buildDirectory
@@ -37,6 +43,6 @@ val npmBuild = tasks.register<NpmTask>("npmBuild") {
     outputs.dir(layout.buildDirectory.dir("frontend-dist"))
 }
 
-tasks.build {
+tasks.named("build") {
     dependsOn(npmBuild)
 }

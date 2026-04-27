@@ -2,6 +2,7 @@ package sk.momosilabs.suac.api.account
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -21,7 +22,7 @@ interface AccountApi {
 
     @Operation(summary = "List users in system")
     @GetMapping(ENDPOINT_ACCOUNT, produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getUserList(pageable: PageableDTO): PageDTO<AccountDTO>
+    fun getUserList(@ParameterObject pageable: PageableDTO): PageDTO<AccountDTO>
 
     @Operation(summary = "Set or unset verified flag for user")
     @PostMapping("$ENDPOINT_ACCOUNT/{accountId}/verified/{verified}", produces = [MediaType.APPLICATION_JSON_VALUE])

@@ -2,6 +2,7 @@ package sk.momosilabs.suac.api.transaction.finished
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -22,6 +23,9 @@ interface TransactionFinishedApi {
         ENDPOINT_TRANSACTION_FINISHED,
         produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun getList(@RequestBody filter: TransactionFilterDTO, pageable: PageableDTO): PageDTO<TransactionFinishedDTO>
+    fun getList(
+        @RequestBody filter: TransactionFilterDTO,
+        @ParameterObject pageable: PageableDTO,
+    ): PageDTO<TransactionFinishedDTO>
 
 }

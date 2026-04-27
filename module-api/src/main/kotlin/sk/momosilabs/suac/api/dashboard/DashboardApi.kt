@@ -2,6 +2,7 @@ package sk.momosilabs.suac.api.dashboard
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -20,7 +21,7 @@ interface DashboardApi {
 
     @Operation(summary = "Get My Last Chargings")
     @GetMapping("$ENDPOINT_DASHBOARD/lastTransactions", produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun getLastChargings(pageable: PageableDTO): PageDTO<TransactionFinishedDTO>
+    fun getLastChargings(@ParameterObject pageable: PageableDTO): PageDTO<TransactionFinishedDTO>
 
     @Operation(summary = "Get My Account Balance")
     @GetMapping("$ENDPOINT_DASHBOARD/balance", produces = [MediaType.APPLICATION_JSON_VALUE])

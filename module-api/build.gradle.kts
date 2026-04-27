@@ -1,12 +1,11 @@
 plugins {
-    id("org.springframework.boot") version "4.0.5" apply false
-    kotlin("jvm") version "2.2.0"
+    kotlin("jvm")
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web:4.0.5")
-
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.16")
+    implementation("org.springframework.boot:spring-boot-starter-web:4.0.6")
+    implementation("io.swagger.core.v3:swagger-annotations:2.2.22")
+    implementation("org.springdoc:springdoc-openapi-starter-common:3.0.2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

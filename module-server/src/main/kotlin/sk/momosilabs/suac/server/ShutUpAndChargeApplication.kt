@@ -11,7 +11,7 @@ import sk.momosilabs.suac.server.common.ApplicationProperties
 @EnableConfigurationProperties(ApplicationProperties::class)
 @EnableAsync
 @EnableScheduling
-open class ShutUpAndChargeApplication
+class ShutUpAndChargeApplication
 
 fun main(args: Array<String>) {
     runApplication<ShutUpAndChargeApplication>(*args)

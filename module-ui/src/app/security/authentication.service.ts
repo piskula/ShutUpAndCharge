@@ -21,11 +21,11 @@ export class AuthenticationService {
     if (user == null)
       return null
 
-    const rolesEnum: Set<CurrentUserDTO.RolesEnum> = user.roles ?? new Set<CurrentUserDTO.RolesEnum>();
+    const rolesEnum: CurrentUserDTO.RolesEnum[] = user.roles ?? [];
     return {
       id: user.id,
       name: `${user.firstName} ${user.lastName}`,
-      roles: Array.from(rolesEnum).map((r: CurrentUserDTO.RolesEnum) => r.toString()),
+      roles: rolesEnum.map((r: CurrentUserDTO.RolesEnum) => r.toString()),
     } as CurrentUser;
   });
   readonly currentUserValue = computed(() => this._currentUser());
