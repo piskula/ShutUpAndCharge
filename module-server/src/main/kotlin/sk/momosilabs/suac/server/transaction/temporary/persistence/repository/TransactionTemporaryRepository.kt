@@ -11,7 +11,7 @@ interface TransactionTemporaryRepository: JpaRepository<ChargingOngoingEntity, L
 
     fun findTopTrxNumberByOrderByIdDesc(): ChargingOngoingEntity?
 
-    fun existsByTrxIdentifierAndAccountId(trxIdentifier: String, accountId: Long): Boolean
+    fun existsByTrxIdentifierAndAccountIdKeycloak(trxIdentifier: String, accountId: String): Boolean
 
     fun findAllByOrderByIdAsc(): List<ChargingOngoingEntity>
 

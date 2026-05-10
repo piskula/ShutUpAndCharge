@@ -15,6 +15,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 // locale
 import { registerLocaleData } from '@angular/common';
 import localeSk from '@angular/common/locales/sk';
+import { authInterceptor } from './common/auth.interceptor';
 import { errorInterceptor } from './common/error.interceptor';
 import { BlobFixConfiguration } from './common/blob-fix.config';
 registerLocaleData(localeSk);
@@ -25,7 +26,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
 
     provideHttpClient(  // make generated services working
-      withInterceptors([errorInterceptor])
+      withInterceptors([authInterceptor, errorInterceptor])
     ),
     provideAnimationsAsync(), // needed for material table sort header arrows
     // default sizing for modals

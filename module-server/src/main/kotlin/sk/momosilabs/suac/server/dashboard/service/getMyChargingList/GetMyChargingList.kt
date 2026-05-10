@@ -18,6 +18,6 @@ open class GetMyChargingList(
     @IsUser
     @Transactional(readOnly = true)
     override fun get(pageable: Pageable): Page<TransactionFinished> =
-        transactionPersistence.getNegativeByUserId(currentUserService.userId(), pageable)
+        transactionPersistence.getNegativeByUserId(currentUserService.keycloakId(), pageable)
 
 }

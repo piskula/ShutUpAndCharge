@@ -1,15 +1,13 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { MatToolbar } from '@angular/material/toolbar';
 import { MatIcon } from '@angular/material/icon';
 import { MatAnchor, MatButton, MatIconButton } from '@angular/material/button';
 import { MatChip, MatChipSet } from '@angular/material/chips';
-import { tap } from 'rxjs';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import { MatDivider } from '@angular/material/divider';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthenticationService, CurrentUser } from '../../../security/authentication.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AuthenticationService } from '../../../security/authentication.service';
 
 @Component({
   selector: 'app-header-mobile',
@@ -32,21 +30,17 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderMobileComponent implements OnInit {
+export class HeaderMobileComponent {
 
-  public currentUser = signal<CurrentUser | null>(null);
+  public readonly currentUser = computed(() => this.authenticationService.currentUserValue());
 
   constructor(
     private readonly authenticationService: AuthenticationService,
-    private readonly destroyRef: DestroyRef,
   ) {
   }
 
-  ngOnInit(): void {
-    this.authenticationService.currentUser().pipe(
-      tap(currentUser => this.currentUser.set(currentUser)),
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe();
+  logout() {
+    this.authenticationService.logout();
   }
 
 }

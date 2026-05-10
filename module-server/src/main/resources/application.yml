@@ -14,21 +14,9 @@ spring:
 
   security:
     oauth2:
-      client:
-        registration:
-          keycloak:
-            client-id: "YOUR_VALUE"
-            client-secret: "YOUR_VALUE"
-            client-authentication-method: "client_secret_post"
-            scope:
-              - openid
-              - profile
-              - email
-              - roles
-            authorization-grant-type: authorization_code # needs manual session invalidation on logout, check refresh_token
-        provider:
-          keycloak:
-            issuer-uri: "https://sso.momosi.org/realms/momosi"
+      resourceserver:
+        jwt:
+          issuer-uri: "https://sso.momosi.org/realms/momosi"
 
 # to allow swagger-ui to perform requests against HTTPS
 server:

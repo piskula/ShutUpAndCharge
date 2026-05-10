@@ -43,6 +43,6 @@
 
   @if (currentUser()) {
     <span style="flex: 1 1 auto"></span>
-    <a mat-stroked-button href="/logout" class="logout-icon-link"><mat-icon>logout</mat-icon></a>
+    <button mat-stroked-button (click)="logout()" class="logout-icon-link"><mat-icon>logout</mat-icon>Logout</button>
   }
 </mat-toolbar>

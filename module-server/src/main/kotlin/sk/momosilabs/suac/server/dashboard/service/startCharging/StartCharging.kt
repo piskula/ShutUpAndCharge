@@ -24,7 +24,8 @@ open class StartCharging(
     @IsUser
     @Transactional
     override fun startCharging(): ChargerStatus {
-        val canCharge = accountPersistence.canCharge(accountId = currentUserService.userId())
+        val userId = currentUserService.keycloakId()
+        val canCharge = accountPersistence.canCharge(accountId = userId)
         if (!canCharge)
             throw UserNotAllowedToChargeException()
 
@@ -38,7 +39,7 @@ open class StartCharging(
         val startingResult = externalChargingApi.startCharging(trxNumber, identifier).ifSuccess ?: unknownStatus
         transactionPersistence.addOngoingTransaction(
             timestamp = Instant.now(),
-            accountId = currentUserService.userId(),
+            accountId = userId,
             trxNumber = startingResult.trxNumber!!,
             trxIdentifier = startingResult.customIdentifier,
             energyMeter = startingResult.meterEnergyTotal,

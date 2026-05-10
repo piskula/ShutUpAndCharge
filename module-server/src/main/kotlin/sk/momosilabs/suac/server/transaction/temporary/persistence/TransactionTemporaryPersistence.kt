@@ -14,9 +14,9 @@ interface TransactionTemporaryPersistence {
 
     fun getLastNotProcessedTrxNumber(): Int?
 
-    fun addOngoingTransaction(timestamp: Instant, accountId: Long, trxNumber: Int, trxIdentifier: String, energyMeter: Long)
+    fun addOngoingTransaction(timestamp: Instant, accountId: String, trxNumber: Int, trxIdentifier: String, energyMeter: Long)
 
-    fun isChargingOfUserOngoing(trxIdentifier: String, accountId: Long): Boolean
+    fun isChargingOfUserOngoing(trxIdentifier: String, accountId: String): Boolean
 
     fun fetchAwaitingTransactionsForStation(stationId: String): List<TransactionTemporaryToMatch>
 

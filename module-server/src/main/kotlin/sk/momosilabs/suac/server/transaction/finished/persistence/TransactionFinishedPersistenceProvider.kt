@@ -41,11 +41,12 @@ open class TransactionFinishedPersistenceProvider(
             .toPageResult(pageable, ChargingFinishedEntity::toModel)
 
     @Transactional(readOnly = true)
-    override fun getNegativeByUserId(userId: Long, pageable: Pageable): Page<TransactionFinished> =
-        chargingRepository.findAllByAccountIdAndPriceLessThan(userId, BigDecimal.ZERO, pageable).map { it.toModel() }
+    override fun getNegativeByUserId(userId: String, pageable: Pageable): Page<TransactionFinished> =
+        chargingRepository.findAllByAccountIdKeycloakAndPriceLessThan(userId, BigDecimal.ZERO, pageable)
+            .map { it.toModel() }
 
     @Transactional(readOnly = true)
-    override fun sumUpForUsers(userIds: Set<Long>): Map<Long, BigDecimal> =
+    override fun sumUpForUsers(userIds: Set<String>): Map<String, BigDecimal> =
         chargingRepository.sumUpForUsers(userIds).toMap()
 
     @Transactional

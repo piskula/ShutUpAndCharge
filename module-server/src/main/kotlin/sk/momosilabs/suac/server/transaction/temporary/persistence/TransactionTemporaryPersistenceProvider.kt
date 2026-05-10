@@ -34,7 +34,7 @@ open class TransactionTemporaryPersistenceProvider(
     @Transactional
     override fun addOngoingTransaction(
         timestamp: Instant,
-        accountId: Long,
+        accountId: String,
         trxNumber: Int,
         trxIdentifier: String,
         energyMeter: Long
@@ -46,14 +46,14 @@ open class TransactionTemporaryPersistenceProvider(
                 trxIdentifier = trxIdentifier,
                 energyMeter = energyMeter,
                 timeStartUtc = LocalDateTime.ofInstant(timestamp, ZoneOffset.UTC),
-                account = accountRepository.getReferenceById(accountId),
+                account = accountRepository.findByIdKeycloak(accountId)!!,
             )
         )
     }
 
     @Transactional(readOnly = true)
-    override fun isChargingOfUserOngoing(trxIdentifier: String, accountId: Long): Boolean =
-        transactionRepository.existsByTrxIdentifierAndAccountId(trxIdentifier, accountId)
+    override fun isChargingOfUserOngoing(trxIdentifier: String, accountId: String): Boolean =
+        transactionRepository.existsByTrxIdentifierAndAccountIdKeycloak(trxIdentifier, accountId)
 
     @Transactional(readOnly = true)
     override fun fetchAwaitingTransactionsForStation(stationId: String): List<TransactionTemporaryToMatch> =

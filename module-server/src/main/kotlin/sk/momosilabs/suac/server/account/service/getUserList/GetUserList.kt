@@ -21,12 +21,12 @@ open class GetUserList(
     @Transactional(readOnly = true)
     override fun get(pageable: Pageable): Page<Account> {
         val users = accountPersistence.findAll(pageable)
-        val userIds = users.content.mapToSet { it.id }
+        val userIds = users.content.mapToSet { it.idKeycloak }
 
         val balancePerUser = transactionFinishedPersistence.sumUpForUsers(userIds)
 
         return users.onEach { user ->
-            user.balance = balancePerUser[user.id] ?: BigDecimal.ZERO
+            user.balance = balancePerUser[user.idKeycloak] ?: BigDecimal.ZERO
         }
     }
 

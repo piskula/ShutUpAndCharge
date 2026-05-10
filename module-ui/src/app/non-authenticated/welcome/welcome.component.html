@@ -11,7 +11,7 @@
     <app-charging-status></app-charging-status>
 
     <p>You are not logged in. To continue, please, login</p>
-    <a mat-flat-button href="/oauth2/authorization/keycloak"><mat-icon>login</mat-icon>Login</a>
+    <button mat-flat-button (click)="login()"><mat-icon>login</mat-icon>Login</button>
 
   </div>
   <app-footer></app-footer>

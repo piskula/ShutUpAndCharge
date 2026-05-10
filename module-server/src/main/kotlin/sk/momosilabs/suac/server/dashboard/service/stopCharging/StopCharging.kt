@@ -29,7 +29,7 @@ open class StopCharging(
         if (currentUserService.isAdmin())
             return stopChargingAndReturnStatus()
 
-        val userId = currentUserService.userId()
+        val userId = currentUserService.keycloakId()
         val canThisUserStop = if (status.rfidUid == null)
             transactionPersistence.isChargingOfUserOngoing(trxIdentifier = status.customIdentifier, accountId = userId)
         else

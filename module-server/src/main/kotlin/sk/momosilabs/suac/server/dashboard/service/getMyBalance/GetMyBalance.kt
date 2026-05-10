@@ -16,7 +16,7 @@ open class GetMyBalance(
     @IsUser
     @Transactional(readOnly = true)
     override fun getCurrentBalance(): BigDecimal {
-        val userId = currentUserService.userId()
+        val userId = currentUserService.keycloakId()
         return transactionPersistence.sumUpForUsers(setOf(userId)).getOrDefault(userId, BigDecimal.ZERO)
     }
 

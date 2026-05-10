@@ -353,11 +353,37 @@
         "operationId": "getLastChargings",
         "parameters": [
           {
-            "name": "pageable",
+            "name": "page",
             "in": "query",
-            "required": true,
+            "description": "Page number",
+            "required": false,
             "schema": {
-              "$ref": "#/components/schemas/PageableDTO"
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "description": "Page number"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20,
+              "description": "Page size"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort string (e.g. time,desc)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Sort string (e.g. time,desc)"
             }
           }
         ],
@@ -405,11 +431,37 @@
         "operationId": "getUserList",
         "parameters": [
           {
-            "name": "pageable",
+            "name": "page",
             "in": "query",
-            "required": true,
+            "description": "Page number",
+            "required": false,
             "schema": {
-              "$ref": "#/components/schemas/PageableDTO"
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "description": "Page number"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20,
+              "description": "Page size"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort string (e.g. time,desc)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Sort string (e.g. time,desc)"
             }
           }
         ],
@@ -549,8 +601,7 @@
           "accountIds": {
             "type": "array",
             "items": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             },
             "uniqueItems": true
           }

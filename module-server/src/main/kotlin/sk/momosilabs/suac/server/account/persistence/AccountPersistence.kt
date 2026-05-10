@@ -12,9 +12,9 @@ interface AccountPersistence {
 
     fun setAssignedChipUid(accountId: Long, chipUid: String?): String?
 
-    fun canCharge(accountId: Long): Boolean
+    fun canCharge(accountId: String): Boolean
 
-    fun findUserIdByChipUid(chipUid: String): Long?
+    fun findUserIdByChipUid(chipUid: String): String?
 
     fun getChipUidToUserIdMap(chipUids: Set<String>): Map<String, Long>
 

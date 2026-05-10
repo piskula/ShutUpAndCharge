@@ -37,7 +37,7 @@ fun TransactionFinishedFilter.transformToWhereClause(
         expressions.add(qTransaction.stationId.`in`(chargingStationIds))
 
     if (accountIds.isNotEmpty())
-        expressions.add(qTransaction.account.id.`in`(accountIds))
+        expressions.add(qTransaction.account.idKeycloak.`in`(accountIds))
 
     return expressions.joinWithAnd()
 }

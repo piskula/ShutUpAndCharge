@@ -12,5 +12,5 @@ data class TransactionFinishedFilter(
     val priceTo: BigDecimal? = null,
     val onlyCredit: Boolean? = null,
     val chargingStationIds: Set<String> = emptySet(),
-    val accountIds: Set<Long> = emptySet(),
+    val accountIds: Set<String> = emptySet(),
 )

@@ -1,15 +1,16 @@
 import { computed, Injectable, Signal, signal } from '@angular/core';
 import { CurrentUserService, CurrentUserDTO } from '@suac/api';
-import { catchError, combineLatest, filter, map, Observable, of, take, tap } from 'rxjs';
+import { catchError, filter, map, of, take, tap } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { keycloakService } from './keycloak.service';
 
 export interface CurrentUser {
-  id: number;
+  id: string;
   name: string;
   roles: string[];
 }
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class AuthenticationService {
 
   private readonly isServiceInitiated = signal(false);
@@ -18,57 +19,67 @@ export class AuthenticationService {
   private readonly _loggedIn = computed(() => (this.state()?.id ?? 0) > 0);
   private readonly _currentUser: Signal<CurrentUser | null> = computed(() => {
     const user = this.state();
-    if (user == null)
-      return null
+    if (!user) return null;
 
-    const rolesEnum: CurrentUserDTO.RolesEnum[] = user.roles ?? [];
     return {
-      id: user.id,
+      id: user.idKeycloak,
       name: `${user.firstName} ${user.lastName}`,
-      roles: rolesEnum.map((r: CurrentUserDTO.RolesEnum) => r.toString()),
+      roles: (user.roles ?? []).map(r => r.toString()),
     } as CurrentUser;
   });
-  readonly currentUserValue = computed(() => this._currentUser());
-  private readonly currentUser$ = toObservable(this._currentUser);
 
-  readonly isAdmin = computed(() => this.currentUserValue()?.roles?.includes('Admin') ?? false);
+  readonly currentUserValue: Signal<CurrentUser | null> = computed(() => this._currentUser());
+  readonly isAdmin = computed(() =>
+    this.currentUserValue()?.roles?.includes('Admin') ?? false
+  );
 
   constructor(
     private currentUserService: CurrentUserService,
   ) {
-    this.refreshStore();
+    this.init();
   }
 
-  isLoggedIn(): Observable<boolean> {
-    return combineLatest([
-      toObservable(this.isServiceInitiated),
-      toObservable(this._loggedIn),
-    ]).pipe(
-      filter(([isServiceInitiated, _]) => isServiceInitiated),
-      map(([_, loggedIn]) => loggedIn),
+  private async init() {
+    // wait for keycloak init
+    while (!keycloakService.isInitialized()) {
+      await new Promise(r => setTimeout(r, 10));
+    }
+
+    if (keycloakService.isLoggedIn()) {
+      this.refreshStore();
+    } else {
+      this.setUser(null);
+    }
+  }
+
+  isLoggedIn() {
+    return toObservable(this.isServiceInitiated).pipe(
+      filter(v => v),
+      map(() => this._loggedIn())
     );
   }
 
-  currentUser(): Observable<CurrentUser | null> {
-    return this.currentUser$;
+  login() {
+    return keycloakService.login();
+  }
+
+  logout() {
+    return keycloakService.logout();
   }
 
   private refreshStore(): void {
     this.currentUserService.getCurrentUser().pipe(
       take(1),
-      tap((currentUser: CurrentUserDTO) => {
-        this.setUser(currentUser);
-      }),
+      tap(user => this.setUser(user)),
       catchError(() => {
         this.setUser(null);
-        return of({});
+        return of(null);
       }),
     ).subscribe();
   }
 
-  private setUser(currentUser: CurrentUserDTO | null) {
-    this.state.set(currentUser);
+  private setUser(user: CurrentUserDTO | null) {
+    this.state.set(user);
     this.isServiceInitiated.set(true);
   }
-
 }

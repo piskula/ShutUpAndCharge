@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import sk.momosilabs.suac.server.account.model.Account
 import sk.momosilabs.suac.server.account.persistence.repository.AccountRepository
+import sk.momosilabs.suac.server.common.GlobalNotFoundException
 
 @Repository
 open class AccountPersistenceProvider(
@@ -34,12 +35,13 @@ open class AccountPersistenceProvider(
     }
 
     @Transactional(readOnly = true)
-    override fun canCharge(accountId: Long): Boolean =
-        accountRepository.getReferenceById(accountId).verifiedForCharging
+    override fun canCharge(accountId: String): Boolean =
+        accountRepository.findByIdKeycloak(accountId)?.verifiedForCharging
+            ?: throw GlobalNotFoundException("accountId=$accountId not found")
 
     @Transactional(readOnly = true)
-    override fun findUserIdByChipUid(chipUid: String): Long? =
-        accountRepository.findByAssignedChipUid(assignedChipUid = chipUid)?.id
+    override fun findUserIdByChipUid(chipUid: String): String? =
+        accountRepository.findByAssignedChipUid(assignedChipUid = chipUid)?.idKeycloak
 
     @Transactional(readOnly = true)
     override fun getChipUidToUserIdMap(chipUids: Set<String>): Map<String, Long> =

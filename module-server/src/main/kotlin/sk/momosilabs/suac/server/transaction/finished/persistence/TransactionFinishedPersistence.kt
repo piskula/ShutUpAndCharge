@@ -11,9 +11,9 @@ interface TransactionFinishedPersistence {
 
     fun getAll(filter: TransactionFinishedFilter, pageable: Pageable): Page<TransactionFinished>
 
-    fun getNegativeByUserId(userId: Long, pageable: Pageable): Page<TransactionFinished>
+    fun getNegativeByUserId(userId: String, pageable: Pageable): Page<TransactionFinished>
 
-    fun sumUpForUsers(userIds: Set<Long>): Map<Long, BigDecimal>
+    fun sumUpForUsers(userIds: Set<String>): Map<String, BigDecimal>
 
     fun saveFinishedCharging(charging: ChargingToCreate): TransactionFinished
 

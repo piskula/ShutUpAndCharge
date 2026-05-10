@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal, viewChild } from '@angular/core';
-import { FinishedTransactionService, TransactionFilterDTO, TransactionFinishedDTO } from '@suac/api';
+import { FinishedTransactionService, TransactionFinishedDTO } from '@suac/api';
 import { map, Observable } from 'rxjs';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { Page, PaginatedTableComponent } from '../../../common/paginated-table/paginated-table.component';
 import { AuthenticationService, CurrentUser } from '../../../security/authentication.service';
 import { ResponsiveService } from '../../../common/responsive.service';
@@ -17,7 +17,7 @@ import { PriceColoredComponent } from '../../../common/price-colored/price-color
 export interface TransactionFilter {
   id: string;
   field: string;
-  values: number[];
+  values: string[];
   title: string;
   icon: string;
 }
@@ -38,7 +38,6 @@ export interface TransactionFilter {
     MatTooltipModule,
     DatePipe,
     DecimalPipe,
-    CurrencyPipe,
     ResponsiveDirective,
     PriceColoredComponent,
   ],
@@ -87,7 +86,7 @@ export class TransactionListComponent implements OnInit {
       return;
     }
 
-    const currentUserFilter = {
+    const currentUserFilter: TransactionFilter = {
         id: `current-user-${this.currentUser?.id}`,
         field: 'accountIds',
         values: [this.currentUser.id],
