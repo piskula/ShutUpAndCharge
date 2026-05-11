@@ -8,6 +8,8 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter
 
 
 @Configuration
@@ -39,6 +41,15 @@ class SecurityConfiguration {
                 it.jwt { jwtConf ->
                     jwtConf.jwtAuthenticationConverter(jwtAuthenticationConverter())
                 }
+            }
+            .headers {
+                it.frameOptions { frame ->
+                    frame.sameOrigin()
+                }
+                it.referrerPolicy { ref ->
+                    ref.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)
+                }
+                it.xssProtection { }
             }
 
         return http.build()
