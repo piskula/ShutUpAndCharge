@@ -13,7 +13,7 @@ import {
 import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
 import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { ResponsiveService } from '../../../common/responsive.service';
 import { Page, PaginatedTableComponent } from '../../../common/paginated-table/paginated-table.component';
 import { PriceColoredComponent } from '../../../common/price-colored/price-colored.component';
@@ -41,7 +41,6 @@ import { PriceColoredComponent } from '../../../common/price-colored/price-color
     DatePipe,
     DecimalPipe,
     PaginatedTableComponent,
-    CurrencyPipe,
     PriceColoredComponent,
   ],
 })

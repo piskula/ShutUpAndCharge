@@ -3,6 +3,7 @@ import { ChargingStatusComponent } from '../../common/charging-status/charging-s
 import {
   DashboardChargingListComponent
 } from '../components/dashboard-charging-list/dashboard-charging-list.component';
+import { MonthlyOverviewComponent } from '../components/monthly-overview/monthly-overview.component';
 import { AuthenticationService } from '../../security/authentication.service';
 import { MyBalanceComponent } from '../../common/my-balance/my-balance.component';
 
@@ -13,6 +14,7 @@ import { MyBalanceComponent } from '../../common/my-balance/my-balance.component
   imports: [
     ChargingStatusComponent,
     DashboardChargingListComponent,
+    MonthlyOverviewComponent,
     MyBalanceComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

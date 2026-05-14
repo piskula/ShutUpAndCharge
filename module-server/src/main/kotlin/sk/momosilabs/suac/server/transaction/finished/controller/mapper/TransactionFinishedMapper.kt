@@ -1,7 +1,9 @@
 package sk.momosilabs.suac.server.transaction.finished.controller.mapper
 
+import sk.momosilabs.suac.api.dashboard.dto.MonthlyTransactionSummaryDTO
 import sk.momosilabs.suac.api.transaction.finished.dto.TransactionFinishedDTO
 import sk.momosilabs.suac.api.transaction.finished.dto.TransactionFilterDTO
+import sk.momosilabs.suac.server.transaction.finished.model.MonthlyTransactionSummary
 import sk.momosilabs.suac.server.transaction.finished.model.TransactionFinished
 import sk.momosilabs.suac.server.transaction.finished.model.TransactionFinishedFilter
 import java.time.ZoneOffset
@@ -16,6 +18,17 @@ fun TransactionFinished.toDto() = TransactionFinishedDTO(
     accountName = accountName,
     triggeredByChipUid = triggeredByChipUid,
     link = link,
+)
+
+fun MonthlyTransactionSummary.toDto() = MonthlyTransactionSummaryDTO(
+    year = year,
+    month = month,
+    monthStart = monthStart.atOffset(ZoneOffset.UTC),
+    negativeCount = negativeCount,
+    positiveCount = positiveCount,
+    negativeSum = negativeSum,
+    positiveSum = positiveSum,
+    totalSum = totalSum,
 )
 
 fun TransactionFilterDTO.toModel() = TransactionFinishedFilter(

@@ -20,11 +20,37 @@
         "operationId": "getList",
         "parameters": [
           {
-            "name": "pageable",
+            "name": "page",
             "in": "query",
-            "required": true,
+            "description": "Page number",
+            "required": false,
             "schema": {
-              "$ref": "#/components/schemas/PageableDTO"
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "description": "Page number"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20,
+              "description": "Page size"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort string (e.g. time,desc)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Sort string (e.g. time,desc)"
             }
           }
         ],
@@ -344,6 +370,63 @@
         }
       }
     },
+    "/api/dashboard/monthlySummary": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "summary": "Get My Monthly Transaction Summary",
+        "operationId": "getMonthlySummary",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "description": "Page number"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20,
+              "description": "Page size"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort string (e.g. time,desc)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Sort string (e.g. time,desc)"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDTOMonthlyTransactionSummaryDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/dashboard/lastTransactions": {
       "get": {
         "tags": [
@@ -482,27 +565,6 @@
   },
   "components": {
     "schemas": {
-      "PageableDTO": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "type": "integer",
-            "format": "int32",
-            "default": 0,
-            "description": "Page number"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32",
-            "default": 20,
-            "description": "Page size"
-          },
-          "sort": {
-            "type": "string",
-            "description": "Sort string (e.g. time,desc)"
-          }
-        }
-      },
       "PageDTOTransactionTemporaryDTO": {
         "type": "object",
         "properties": {
@@ -757,6 +819,71 @@
               ]
             },
             "uniqueItems": true
+          }
+        }
+      },
+      "MonthlyTransactionSummaryDTO": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "month": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "monthStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "negativeCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "positiveCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "negativeSum": {
+            "type": "number"
+          },
+          "positiveSum": {
+            "type": "number"
+          },
+          "totalSum": {
+            "type": "number"
+          }
+        }
+      },
+      "PageDTOMonthlyTransactionSummaryDTO": {
+        "type": "object",
+        "properties": {
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MonthlyTransactionSummaryDTO"
+            }
           }
         }
       },

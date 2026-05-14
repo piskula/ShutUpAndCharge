@@ -6,10 +6,11 @@ import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import sk.momosilabs.suac.api.transaction.finished.dto.TransactionFinishedDTO
 import sk.momosilabs.suac.api.common.dto.PageDTO
 import sk.momosilabs.suac.api.common.dto.PageableDTO
+import sk.momosilabs.suac.api.dashboard.dto.MonthlyTransactionSummaryDTO
 import sk.momosilabs.suac.api.publicInfo.dto.ChargerStatusDTO
+import sk.momosilabs.suac.api.transaction.finished.dto.TransactionFinishedDTO
 import java.math.BigDecimal
 
 @Tag(name = "Dashboard")
@@ -22,6 +23,10 @@ interface DashboardApi {
     @Operation(summary = "Get My Last Chargings")
     @GetMapping("$ENDPOINT_DASHBOARD/lastTransactions", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getLastChargings(@ParameterObject pageable: PageableDTO): PageDTO<TransactionFinishedDTO>
+
+    @Operation(summary = "Get My Monthly Transaction Summary")
+    @GetMapping("$ENDPOINT_DASHBOARD/monthlySummary", produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun getMonthlySummary(@ParameterObject pageable: PageableDTO): PageDTO<MonthlyTransactionSummaryDTO>
 
     @Operation(summary = "Get My Account Balance")
     @GetMapping("$ENDPOINT_DASHBOARD/balance", produces = [MediaType.APPLICATION_JSON_VALUE])

@@ -39,12 +39,7 @@ export class AuthenticationService {
     this.init();
   }
 
-  private async init() {
-    // wait for keycloak init
-    while (!keycloakService.isInitialized()) {
-      await new Promise(r => setTimeout(r, 10));
-    }
-
+  private init() {
     if (keycloakService.isLoggedIn()) {
       this.refreshStore();
     } else {

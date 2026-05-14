@@ -39,7 +39,7 @@ open class StopCharging(
             throw ChargingDoesNotBelongToUserException()
         }
 
-        return externalChargingApi.stopCharging().ifSuccess ?: unknownStatus
+        return stopChargingAndReturnStatus()
         // TODO schedule download event
     }
 

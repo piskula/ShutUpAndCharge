@@ -6,7 +6,7 @@
     [matSortDirection]="pagination.sortDirection()">
 
     <ng-container matColumnDef="timeStartUtc">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>Time</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header start="desc">Time</mat-header-cell>
       <mat-cell *matCellDef="let group">
         <span matTooltip="{{ group.time | date: 'shortTime' }}" matTooltipPosition="right">{{ group.time | date }}</span>
       </mat-cell>

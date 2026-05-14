@@ -1,0 +1,48 @@
+<app-paginated-table #pagination [fetchFn]="fetchFn" (dataSource)="dataSource.data = $event" [defaultSort]="defaultSort" [defaultPageSize]="5">
+  <mat-table
+    [dataSource]="dataSource" matSort
+    (matSortChange)="pagination.sortChanged($event)"
+    [matSortActive]="pagination.sortActive()"
+    [matSortDirection]="pagination.sortDirection()">
+
+    <ng-container matColumnDef="month">
+      <mat-header-cell *matHeaderCellDef mat-sort-header start="desc">Month</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{ row.monthStart | date: 'MMMM yyyy' }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="negativeCount">
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">Chargings</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="table-column-right">{{ row.negativeCount }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="negativeSum">
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">Total charged</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="table-column-right">
+        <app-price-colored [value]="row.negativeSum" />
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="positiveCount">
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">Top-ups</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="table-column-right">{{ row.positiveCount }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="positiveSum">
+      <mat-header-cell *matHeaderCellDef mat-sort-header start="desc" class="table-column-right" arrowPosition="before">Total top-up</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="table-column-right">
+        <app-price-colored [value]="row.positiveSum" />
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="totalSum">
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">Total</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="table-column-right">
+        <app-price-colored [value]="row.totalSum" [bold]="true" />
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns()"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns()"></mat-row>
+
+  </mat-table>
+</app-paginated-table>
