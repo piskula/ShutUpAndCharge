@@ -6,10 +6,22 @@
 
 @if (total() !== 0) {
   <ng-content></ng-content>
-  <mat-paginator
-    (page)="pageChanged($event)" [pageSizeOptions]="pageSizeOptions" [disabled]="isLoading()"
-    [pageIndex]="pageIndex()" [pageSize]="pageSize()" [length]="total()">
-  </mat-paginator>
+  <div class="bottom-bar">
+    @if (exportFn()) {
+      <button mat-stroked-button (click)="onExport()" [disabled]="isExporting()">
+        @if (isExporting()) {
+          <mat-spinner diameter="16" style="display: inline-flex" class="mr-1"></mat-spinner>
+        } @else {
+          <mat-icon>download</mat-icon>
+        }
+        Export
+      </button>
+    }
+    <mat-paginator
+      (page)="pageChanged($event)" [pageSizeOptions]="pageSizeOptions" [disabled]="isLoading()"
+      [pageIndex]="pageIndex()" [pageSize]="pageSize()" [length]="total()">
+    </mat-paginator>
+  </div>
 } @else {
   <div>Unfortunately, there is no data here yet to be shown</div>
 }

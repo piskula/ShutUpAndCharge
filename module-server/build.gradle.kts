@@ -45,6 +45,8 @@ dependencies {
     // make swagger documentation available
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2")
 
+    implementation("org.apache.poi:poi-ooxml:5.3.0")
+
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 //    testImplementation("io.mockk:mockk:1.13.4")

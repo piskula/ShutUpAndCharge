@@ -28,7 +28,12 @@
     </mat-expansion-panel>
   </mat-accordion>
 }
-<app-paginated-table #pagination [fetchFn]="fetchFn" (dataSource)="dataSource.data = $event" [defaultSort]="defaultSort">
+<app-paginated-table
+  #pagination
+  [fetchFn]="fetchFn"
+  [exportFn]="exportFn"
+  (dataSource)="dataSource.data = $event"
+  [defaultSort]="defaultSort">
   <mat-table
     [dataSource]="dataSource" matSort
     (matSortChange)="pagination.sortChanged($event)"

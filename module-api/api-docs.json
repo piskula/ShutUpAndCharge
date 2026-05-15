@@ -149,6 +149,74 @@
         }
       }
     },
+    "/api/transaction/finished/export": {
+      "post": {
+        "tags": [
+          "Finished Transaction"
+        ],
+        "summary": "Export transactions to Excel",
+        "operationId": "exportTransactions",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "description": "Page number"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20,
+              "description": "Page size"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort string (e.g. time,desc)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Sort string (e.g. time,desc)"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionFilterDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/dashboard/stop": {
       "post": {
         "tags": [

@@ -6,6 +6,7 @@ import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DatePipe, DecimalPipe } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Page, PaginatedTableComponent } from '../../../common/paginated-table/paginated-table.component';
 import { AuthenticationService, CurrentUser } from '../../../security/authentication.service';
 import { ResponsiveService } from '../../../common/responsive.service';
@@ -48,6 +49,7 @@ export class TransactionListComponent implements OnInit {
 
   #responsiveService = inject(ResponsiveService);
   #transactionService = inject(FinishedTransactionService);
+  #http = inject(HttpClient);
   protected authService = inject(AuthenticationService);
   private readonly pagination = viewChild(PaginatedTableComponent);
 
@@ -71,10 +73,16 @@ export class TransactionListComponent implements OnInit {
     this.addCurrentUserFilter();
   }
 
-  protected fetchFn = (page: number, size: number, sort: string): Observable<Page<TransactionFinishedDTO>> => {
-    return this.#transactionService.getList1({ accountIds: this.activeFilters().find(f => f.field === 'accountIds')?.values }, page, size, sort)
+  protected fetchFn = (page: number, size: number, sort: string): Observable<Page<TransactionFinishedDTO>> =>
+    this.#transactionService.getList1({ accountIds: this.activeFilters().find(f => f.field === 'accountIds')?.values }, page, size, sort)
       .pipe(map(page => page as Page<TransactionFinishedDTO>));
-  }
+
+  // TODO use more generic way and handle file name from response
+  protected exportFn = (page: number, size: number, sort: string): Observable<Blob> =>
+    this.#http.post('/api/transaction/finished/export',
+      { accountIds: this.activeFilters().find(f => f.field === 'accountIds')?.values },
+      { params: { page, size, sort }, responseType: 'blob' },
+    );
 
   removeFilter(filterId: string): void {
     this.activeFilters.update(filters => filters.filter(filter => filter.id !== filterId));
@@ -96,9 +104,9 @@ export class TransactionListComponent implements OnInit {
 
     this.activeFilters.update(filters => {
       if (filters.every(filter => filter.field !== 'accountIds')) {
-        return [...filters, currentUserFilter]
+        return [...filters, currentUserFilter];
       } else {
-        return filters
+        return filters;
       }
     });
     this.pagination()?.forceRefresh();

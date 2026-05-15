@@ -11,9 +11,12 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, catchError, combineLatest, debounceTime, Observable, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, debounceTime, finalize, Observable, switchMap, tap } from 'rxjs';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { Sort } from '@angular/material/sort';
 
 export interface Page<T> {
@@ -32,12 +35,15 @@ export interface Page<T> {
   imports: [
     MatPaginatorModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatButtonModule,
+    MatIconModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginatedTableComponent implements OnInit, OnChanges {
 
-  public readonly fetchFn = input.required<(page: number, size: number, sort: string) => Observable<Page<any>>>()
+  public readonly fetchFn = input.required<(page: number, size: number, sort: string) => Observable<Page<any>>>();
   public readonly dataSource = output<any[]>();
 
 
@@ -48,6 +54,7 @@ export class PaginatedTableComponent implements OnInit, OnChanges {
 
   protected readonly pageSizeOptions = [5, 10, 25, 100];
   public readonly defaultPageSize = input<number>(this.pageSizeOptions[1]);
+  public readonly exportFn = input<((page: number, size: number, sort: string) => Observable<Blob>) | undefined>(undefined);
 
   private readonly sort = signal(this.defaultSort());
   public readonly sortActive = computed(() => this.sort().active);
@@ -57,6 +64,7 @@ export class PaginatedTableComponent implements OnInit, OnChanges {
   protected readonly pageIndex = signal(0);
   protected readonly pageSize = signal(this.defaultPageSize());
   protected readonly isLoading = signal(false);
+  protected readonly isExporting = signal(false);
   private forceRefresh$ = new BehaviorSubject(true);
 
   private readonly sortString = computed(() => `${this.sort().active},${this.sort().direction}`);
@@ -111,4 +119,21 @@ export class PaginatedTableComponent implements OnInit, OnChanges {
     this.forceRefresh$.next(true);
   }
 
+  protected onExport(): void {
+    const fn = this.exportFn();
+    if (!fn) return;
+
+    this.isExporting.set(true);
+    fn(this.pageIndex(), this.pageSize(), this.sortString()).pipe(
+      finalize(() => this.isExporting.set(false)),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = "export.xlsx";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }
 }
