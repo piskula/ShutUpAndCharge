@@ -18,4 +18,6 @@ data class ChargerStatus(
     val meterEnergyTotal: Long,
     val customIdentifier: String,
     val rfidUid: String?,
+    val currentList: List<Int>,
+    val current: Int,
 )

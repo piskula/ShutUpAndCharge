@@ -12,6 +12,8 @@ interface ExternalChargingApi {
 
     fun stopCharging(): ExternalChargerDataWrapper
 
+    fun setChargingParams(current: Int): Int
+
     fun downloadTransactionsFromCloud(fromTimestampUtc: LocalDateTime): List<ExternalChargingLog>
 
 }

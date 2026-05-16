@@ -33,6 +33,8 @@ open class GetChargingStatus(
             meterEnergyTotal = 0L,
             customIdentifier = "",
             rfidUid = null,
+            currentList = emptyList(),
+            current = 0,
         )
     }
 

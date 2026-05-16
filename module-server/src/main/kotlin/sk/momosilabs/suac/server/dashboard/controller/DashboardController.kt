@@ -12,6 +12,7 @@ import sk.momosilabs.suac.server.common.toModel
 import sk.momosilabs.suac.server.dashboard.service.getMonthlySummary.GetMonthlySummaryUseCase
 import sk.momosilabs.suac.server.dashboard.service.getMyBalance.GetMyBalanceUseCase
 import sk.momosilabs.suac.server.dashboard.service.getMyChargingList.GetMyChargingListUseCase
+import sk.momosilabs.suac.server.dashboard.service.setChargingParams.SetChargingParamsUseCase
 import sk.momosilabs.suac.server.dashboard.service.startCharging.StartChargingUseCase
 import sk.momosilabs.suac.server.dashboard.service.stopCharging.StopChargingUseCase
 import sk.momosilabs.suac.server.info.controller.mapper.toDto
@@ -26,6 +27,7 @@ class DashboardController(
     private val getMonthlySummary: GetMonthlySummaryUseCase,
     private val getMyBalance: GetMyBalanceUseCase,
     private val startCharging: StartChargingUseCase,
+    private val setChargingParams: SetChargingParamsUseCase,
     private val stopCharging: StopChargingUseCase,
 ) : DashboardApi {
 
@@ -42,6 +44,9 @@ class DashboardController(
 
     override fun startCharging(): ChargerStatusDTO =
         startCharging.startCharging().toDto()
+
+    override fun setChargingParams(current: Int): Int =
+        setChargingParams.setChargingParams(current)
 
     override fun stopCharging(): ChargerStatusDTO =
         stopCharging.stopCharging().toDto()

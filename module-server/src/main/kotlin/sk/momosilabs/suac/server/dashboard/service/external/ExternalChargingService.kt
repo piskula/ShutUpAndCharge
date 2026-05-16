@@ -9,6 +9,7 @@ import sk.momosilabs.suac.server.common.ApplicationPropertiesStation
 import sk.momosilabs.suac.server.dashboard.model.charging.external.ExternalChargerDataWrapper
 import kotlinx.serialization.json.Json
 import org.springframework.http.HttpStatus
+import sk.momosilabs.suac.server.common.GlobalException
 import sk.momosilabs.suac.server.dashboard.model.charging.ChargerStatus
 import sk.momosilabs.suac.server.dashboard.model.charging.external.CarStateEnum
 import sk.momosilabs.suac.server.dashboard.model.charging.external.ExternalChargerDataError
@@ -49,8 +50,14 @@ open class ExternalChargingService(
     }
 
     override fun startCharging(trxNumber: Int, identifier: String): ExternalChargerDataWrapper {
-        val started = connectionWriteToStation(applicationProperties.station, "lrn" to trxNumber, "trx" to trxNumber, "ct" to identifier)
-            .exchange { _, response -> response.statusCode.is2xxSuccessful }!!
+        val started = connectionWriteToStation(
+            applicationProperties.station,
+            "lrn" to trxNumber,
+            "trx" to trxNumber,
+            "ct" to identifier,
+            "amp" to 16,
+        ).exchange { _, response -> response.statusCode.is2xxSuccessful }!!
+
         if (!started) {
             return getChargerStatus()
         }
@@ -69,6 +76,18 @@ open class ExternalChargingService(
 
         logger.debug("Waiting for stopping to propagate...")
         return waitForStatusChangeToPropagate { it.ifSuccess?.carState == CarStateEnum.Complete }
+    }
+
+    override fun setChargingParams(current: Int): Int {
+        val updated = connectionWriteToStation(
+            applicationProperties.station,
+            "amp" to current,
+        ).exchange { _, response -> response.statusCode.is2xxSuccessful }!!
+
+        if (updated)
+            return current
+
+        throw GlobalException("There was an unexpected issue with updating charging parameters.")
     }
 
     override fun downloadTransactionsFromCloud(fromTimestampUtc: LocalDateTime): List<ExternalChargingLog> =
@@ -103,6 +122,8 @@ open class ExternalChargingService(
         meterEnergyTotal = etop,
         customIdentifier = ct,
         rfidUid = tsi,
+        currentList = clp,
+        current = amp,
     )
 
     private fun ExternalChargerErrorResponse.toModel() = ExternalChargerDataError(

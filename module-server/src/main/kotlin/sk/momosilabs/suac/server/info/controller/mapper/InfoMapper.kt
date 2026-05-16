@@ -11,4 +11,6 @@ fun ChargerStatus.toDto() = ChargerStatusDTO(
     connectorStatusOcpp = OcppConnectorStatusDTO.valueOf(connectorStatusOcpp.name),
     occupiedFrom = occupiedFrom?.atOffset(ZoneOffset.UTC),
     chargedKwh = chargedKwh,
+    currentList = currentList,
+    current = current,
 )

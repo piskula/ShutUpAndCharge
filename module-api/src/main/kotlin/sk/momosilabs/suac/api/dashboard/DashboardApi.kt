@@ -6,6 +6,7 @@ import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
 import sk.momosilabs.suac.api.common.dto.PageDTO
 import sk.momosilabs.suac.api.common.dto.PageableDTO
 import sk.momosilabs.suac.api.dashboard.dto.MonthlyTransactionSummaryDTO
@@ -35,6 +36,10 @@ interface DashboardApi {
     @Operation(summary = "Start Charging")
     @PostMapping("$ENDPOINT_DASHBOARD/start", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun startCharging(): ChargerStatusDTO
+
+    @Operation(summary = "Set charging current")
+    @PostMapping("$ENDPOINT_DASHBOARD/setChargingParams", produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun setChargingParams(@RequestParam current: Int): Int
 
     @Operation(summary = "Stop Charging")
     @PostMapping("$ENDPOINT_DASHBOARD/stop", produces = [MediaType.APPLICATION_JSON_VALUE])

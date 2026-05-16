@@ -31,8 +31,9 @@ data class ExternalChargerSuccessResponse(
     val ocppcs: OcppConnectorStatusEnum,
     val wh: Double,
     val etop: Long,
+    val clp: List<Int>,
 //    val fna: String,
-//    val amp: Int,
+    val amp: Int,
 //    val tma: List<Double>,
 //    val lri: String?,
 )

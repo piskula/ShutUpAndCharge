@@ -8,6 +8,8 @@ data class ChargerStatusDTO(
     val connectorStatusOcpp: OcppConnectorStatusDTO,
     val occupiedFrom: OffsetDateTime? = null,
     val chargedKwh: BigDecimal,
+    val currentList: List<Int>,
+    val current: Int,
 )
 
 enum class CarStateDTO {

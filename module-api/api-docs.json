@@ -259,6 +259,39 @@
         }
       }
     },
+    "/api/dashboard/setChargingParams": {
+      "post": {
+        "tags": [
+          "Dashboard"
+        ],
+        "summary": "Set charging current",
+        "operationId": "setChargingParams",
+        "parameters": [
+          {
+            "name": "current",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/account/{accountId}/verified/{verified}": {
       "post": {
         "tags": [
@@ -837,6 +870,17 @@
           },
           "chargedKwh": {
             "type": "number"
+          },
+          "currentList": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "current": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },

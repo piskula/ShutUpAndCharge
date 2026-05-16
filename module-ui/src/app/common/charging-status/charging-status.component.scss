@@ -24,3 +24,14 @@
   background-color: var(--mat-sys-error-container) !important;
   color: var(--mat-sys-on-error-container) !important;
 }
+
+.current-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .mat-button-toggle-group {
+    height: 1.75rem;
+    align-items: center;
+  }
+}

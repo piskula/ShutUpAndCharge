@@ -39,6 +39,22 @@
   </button>
 </div>
 
+@if (isLoggedIn() && carState() === CarStateEnum.Charging) {
+  <div class="current-row mt-2">
+    <mat-button-toggle-group
+      [value]="statusModel().current"
+      [disabled]="currentChangeLoading() || refreshLoading()"
+      (change)="setCurrent($event.value)">
+      @for (amp of (statusModel().currentList ?? []); track amp) {
+        <mat-button-toggle [value]="amp">{{ amp }} A</mat-button-toggle>
+      }
+    </mat-button-toggle-group>
+    @if (currentChangeLoading()) {
+      <mat-spinner diameter="20" class="d-inline-flex"></mat-spinner>
+    }
+  </div>
+}
+
 @switch (carState()) {
   @case (CarStateEnum.UnknownOrError) {
     <div class="mt-2">We are sorry, but station seems out of service (we are not able to connect to it)</div>
