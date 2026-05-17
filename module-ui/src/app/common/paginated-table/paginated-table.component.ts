@@ -14,10 +14,8 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, catchError, combineLatest, debounceTime, finalize, Observable, switchMap, tap } from 'rxjs';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { Sort } from '@angular/material/sort';
+import { PendingButtonComponent } from '../pending-button/pending-button.component';
 
 export interface Page<T> {
   content: Array<T>;
@@ -35,9 +33,7 @@ export interface Page<T> {
   imports: [
     MatPaginatorModule,
     MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatButtonModule,
-    MatIconModule,
+    PendingButtonComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

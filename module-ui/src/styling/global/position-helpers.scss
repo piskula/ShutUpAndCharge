@@ -66,9 +66,12 @@
 .v-middle {
   vertical-align: middle;
 }
+.v-text {
+  vertical-align: text-bottom;
+}
 .w-100 {
   width: 100%;
 }
 .d-inline-flex {
-  display: inline-flex;
+  display: inline-flex !important;
 }

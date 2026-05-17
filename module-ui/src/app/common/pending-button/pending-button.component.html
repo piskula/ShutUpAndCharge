@@ -1,0 +1,8 @@
+<button [matButton]="type()" [disabled]="isLoading()" (click)="onClick.emit($event)">
+  @if (isLoading()) {
+    <mat-spinner diameter="18" class="d-inline-flex v-text" style="left: -.5rem"></mat-spinner>
+  } @else if (icon()) {
+    <mat-icon>{{ icon() }}</mat-icon>
+  }
+  <span>{{ label() }}</span>
+</button>

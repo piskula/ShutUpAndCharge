@@ -1,0 +1,74 @@
+<app-paginated-table
+  #pagination
+  [fetchFn]="fetchFn()"
+  [exportFn]="exportFn()"
+  [defaultPageSize]="defaultPageSize()"
+  [defaultSort]="defaultSort"
+  (dataSource)="dataSource.data = $event">
+  <mat-table
+    [dataSource]="dataSource" matSort
+    (matSortChange)="pagination.sortChanged($event)"
+    [matSortActive]="pagination.sortActive()"
+    [matSortDirection]="pagination.sortDirection()">
+
+    <ng-container matColumnDef="timeStartUtc">
+      <mat-header-cell *matHeaderCellDef mat-sort-header start="desc">Time</mat-header-cell>
+      <mat-cell *matCellDef="let chrg">
+        <span matTooltip="{{ chrg.time | date: 'shortTime' }}" matTooltipPosition="right">{{ chrg.time | date }}</span>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="account">
+      <mat-header-cell *matHeaderCellDef mat-sort-header="account.lastName">User</mat-header-cell>
+      <mat-cell *matCellDef="let chrg">
+        {{ chrg.accountName }}
+        @if (chrg.triggeredByChipUid) {
+          <mat-icon class="ml-1" matTooltip="Started with RFID chip" matTooltipPosition="right">nfc</mat-icon>
+        }
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="stationId">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Station Id</mat-header-cell>
+      <mat-cell *matCellDef="let chrg">
+        @if (chrg.price > 0) {
+          <mat-icon class="mr-1">savings</mat-icon>Credit
+        } @else {
+          <mat-icon class="fill-icon mr-1">power</mat-icon>{{ chrg.chargingStationId }}
+        }
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="kwh">
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">kWh</mat-header-cell>
+      <mat-cell *matCellDef="let chrg" class="table-column-right">
+        @if (chrg.price <= 0) {
+          <ng-container *ifScreen="'desktop'">{{ chrg.kwh | number: '1.3-3' }}&nbsp;kWh</ng-container>
+          <ng-container *ifScreen="'mobile'">{{ chrg.kwh | number: '1.1-1' }}</ng-container>
+        }
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+      <mat-header-cell *matHeaderCellDef mat-sort-header class="table-column-right" arrowPosition="before">Price</mat-header-cell>
+      <mat-cell *matCellDef="let chrg" class="table-column-right">
+        <app-price-colored [value]="chrg.price" [bold]="true" />
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="stats">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let chrg">
+        @if (chrg.link) {
+          <a [href]="chrg.link" target="_blank">
+            <mat-icon class="color-accent fill-icon">query_stats</mat-icon>
+          </a>
+        }
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns()"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns()"></mat-row>
+
+  </mat-table>
+</app-paginated-table>

@@ -6,9 +6,7 @@ import {
 import { AuthenticationService } from '../../security/authentication.service';
 import { TemporaryTransactionService } from '@suac/api';
 import { finalize, take } from 'rxjs';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { PendingButtonComponent } from '../../common/pending-button/pending-button.component';
 
 @Component({
   selector: 'app-home-transaction',
@@ -17,9 +15,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   imports: [
     TransactionListComponent,
     TransactionTemporaryListComponent,
-    MatButtonModule,
-    MatIcon,
-    MatProgressSpinner,
+    PendingButtonComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

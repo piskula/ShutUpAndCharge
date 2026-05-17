@@ -8,14 +8,8 @@
   <ng-content></ng-content>
   <div class="bottom-bar">
     @if (exportFn()) {
-      <button mat-stroked-button (click)="onExport()" [disabled]="isExporting()">
-        @if (isExporting()) {
-          <mat-spinner diameter="16" style="display: inline-flex" class="mr-1"></mat-spinner>
-        } @else {
-          <mat-icon>download</mat-icon>
-        }
-        Export
-      </button>
+      <app-pending-button type="tonal" icon="download" label="Export" (onClick)="onExport()" [isLoading]="isExporting()">
+      </app-pending-button>
     }
     <mat-paginator
       (page)="pageChanged($event)" [pageSizeOptions]="pageSizeOptions" [disabled]="isLoading()"

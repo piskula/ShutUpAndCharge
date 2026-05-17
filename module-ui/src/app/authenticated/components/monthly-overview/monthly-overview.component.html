@@ -7,7 +7,7 @@
 
     <ng-container matColumnDef="month">
       <mat-header-cell *matHeaderCellDef mat-sort-header start="desc">Month</mat-header-cell>
-      <mat-cell *matCellDef="let row">{{ row.monthStart | date: 'MMMM yyyy' }}</mat-cell>
+      <mat-cell *matCellDef="let row">{{ row.monthStart | date: 'y LLLL' }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="negativeCount">

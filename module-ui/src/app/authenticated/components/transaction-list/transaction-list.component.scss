@@ -2,19 +2,3 @@
   display: block;
   overflow-y: hidden;
 }
-
-.mat-column-stats {
-  min-width: var(--mat-icon-button-state-layer-size, 48px);
-  max-width: var(--mat-icon-button-state-layer-size, 48px);
-  padding: 0;
-}
-
-.mat-column-timeStartUtc {
-  max-width: 8rem;
-}
-.mat-column-kwh {
-  max-width: 8rem;
-}
-.mat-column-price {
-  min-width: 5rem;
-}
