@@ -23,7 +23,6 @@ import sk.momosilabs.suac.server.transaction.finished.persistence.entity.QChargi
 import sk.momosilabs.suac.server.transaction.finished.persistence.repository.ChargingFinishedRepository
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.time.ZoneOffset
 
 @Repository
 open class TransactionFinishedPersistenceProvider(
@@ -44,6 +43,7 @@ open class TransactionFinishedPersistenceProvider(
         .`when`(transaction.price.lt(BigDecimal.ZERO)).then(transaction.price).otherwise(BigDecimal.ZERO).sum()
     private val positiveSum = CaseBuilder()
         .`when`(transaction.price.gt(BigDecimal.ZERO)).then(transaction.price).otherwise(BigDecimal.ZERO).sum()
+    private val totalSum = transaction.price.sum()
 
     @Transactional(readOnly = true)
     override fun getAll(filter: TransactionFinishedFilter, pageable: Pageable): Page<TransactionFinished> =
@@ -84,12 +84,7 @@ open class TransactionFinishedPersistenceProvider(
     private fun <T> JPQLQuery<T>.applyPagination(pageable: Pageable) =
         offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
-            .orderBy(pageable.sort.toQueryDslOrderBy())
-
-    private fun <T> JPQLQuery<T>.applyMonthlyPagination(pageable: Pageable) =
-        offset(pageable.offset)
-            .limit(pageable.pageSize.toLong())
-            .orderBy(*pageable.sort.toMonthlySummaryOrderBy())
+            .orderBy(*pageable.sort.toQueryDslOrderBy())
 
     private fun <T, U : Any> QueryResults<T>.toPageResult(pageable: Pageable, mapper: (T) -> U): Page<U> = PageImpl(
         results.map { mapper.invoke(it) },
@@ -104,24 +99,22 @@ open class TransactionFinishedPersistenceProvider(
             .where(transaction.account.idKeycloak.eq(userId))
 
         val content = baseQuery.clone()
-            .select(year, month, negativeCount, positiveCount, negativeSum, positiveSum)
+            .select(year, month, negativeCount, positiveCount, negativeSum, positiveSum, totalSum)
             .groupBy(year, month)
-            .applyMonthlyPagination(pageable)
+            .applyPagination(pageable)
             .fetch()
             .map { tuple ->
-                val y = tuple.get(year)!!
-                val m = tuple.get(month)!!
-                val neg = tuple.get(negativeSum) ?: BigDecimal.ZERO
-                val pos = tuple.get(positiveSum) ?: BigDecimal.ZERO
+                val year = tuple.get(year)!!
+                val month = tuple.get(month)!!
                 MonthlyTransactionSummary(
-                    year = y,
-                    month = m,
-                    monthStart = LocalDate.of(y, m, 1).atStartOfDay().toInstant(ZoneOffset.UTC),
+                    year = year,
+                    month = month,
+                    monthStart = LocalDate.of(year, month, 1),
                     negativeCount = tuple.get(negativeCount) ?: 0L,
                     positiveCount = tuple.get(positiveCount) ?: 0L,
-                    negativeSum = neg,
-                    positiveSum = pos,
-                    totalSum = neg + pos,
+                    negativeSum = tuple.get(negativeSum) ?: BigDecimal.ZERO,
+                    positiveSum = tuple.get(positiveSum) ?: BigDecimal.ZERO,
+                    totalSum = tuple.get(totalSum) ?: BigDecimal.ZERO,
                 )
             }
 
@@ -134,30 +127,28 @@ open class TransactionFinishedPersistenceProvider(
         return PageImpl(content, pageable, total)
     }
 
-    private fun Sort.toMonthlySummaryOrderBy(): Array<OrderSpecifier<*>> {
-        val orderBy = if (isSorted) this.get().findFirst().get() else Sort.Order.desc("month")
-        val dir = if (orderBy.isAscending) Order.ASC else Order.DESC
-        return when (orderBy.property) {
-            "negativeCount" -> arrayOf(OrderSpecifier(dir, negativeCount))
-            "positiveCount" -> arrayOf(OrderSpecifier(dir, positiveCount))
-            "negativeSum"   -> arrayOf(OrderSpecifier(dir, negativeSum))
-            "positiveSum"   -> arrayOf(OrderSpecifier(dir, positiveSum))
-            "totalSum"      -> arrayOf(OrderSpecifier(dir, negativeSum.add(positiveSum)))
-            else            -> arrayOf(OrderSpecifier(dir, year), OrderSpecifier(dir, month))
-        }
-    }
+    private fun Sort.toQueryDslOrderBy(): Array<OrderSpecifier<*>> {
+        val orders = if (isSorted) toList() else listOf(Sort.Order.desc("id"))
+        return orders.flatMap { orderBy ->
+            val orderDir = if (orderBy.isAscending) Order.ASC else Order.DESC
+            val fields = when (orderBy.property) {
+                "timeStartUtc" -> listOf(transaction.timeStartUtc)
+                "account.lastName" -> listOf(transaction.account.lastName, transaction.account.firstName)
+                "stationId" -> listOf(transaction.stationId)
+                "kwh" -> listOf(transaction.kwh)
+                "price" -> listOf(transaction.price)
+                // aggregation functions:
+                "month" -> listOf(year, month)
+                "negativeCount" -> listOf(negativeCount)
+                "positiveCount" -> listOf(positiveCount)
+                "negativeSum" -> listOf(negativeSum)
+                "positiveSum" -> listOf(positiveSum)
+                "totalSum" -> listOf(totalSum)
+                else -> listOf(transaction.id)
+            }
 
-    private fun Sort.toQueryDslOrderBy(): OrderSpecifier<*> {
-        val orderBy = if (isSorted) this.get().findFirst().get() else Sort.Order.desc("id")
-        val expression = when (orderBy.property) {
-            "timeStartUtc" -> transaction.timeStartUtc
-            "account.lastName" -> transaction.account.lastName
-            "stationId" -> transaction.stationId
-            "kwh" -> transaction.kwh
-            "price" -> transaction.price
-            else -> transaction.id
-        }
-        return OrderSpecifier(if (orderBy.isAscending) Order.ASC else Order.DESC, expression)
+            return@flatMap fields.map { OrderSpecifier(orderDir, it) }
+        }.toTypedArray()
     }
 
 }
