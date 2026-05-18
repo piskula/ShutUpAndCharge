@@ -10,6 +10,7 @@ import { Page, PaginatedTableComponent } from '../../../common/paginated-table/p
 import { ResponsiveService } from '../../../common/responsive.service';
 import { PriceColoredComponent } from '../../../common/price-colored/price-colored.component';
 import { ResponsiveDirective } from '../../../common/responsive.directive';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-transaction-finished-table',
@@ -30,7 +31,7 @@ import { ResponsiveDirective } from '../../../common/responsive.directive';
 })
 export class TransactionFinishedTableComponent {
   readonly fetchFn = input.required<(page: number, size: number, sort: string) => Observable<Page<TransactionFinishedDTO>>>();
-  readonly exportFn = input<((page: number, size: number, sort: string) => Observable<Blob>) | undefined>(undefined);
+  readonly exportFn = input<((page: number, size: number, sort: string) => Observable<HttpResponse<Blob>>) | undefined>(undefined);
   readonly defaultPageSize = input<number>(10);
   readonly hideAccountColumn = input<boolean>(false);
   readonly hideStatsColumn = input<boolean>(false);

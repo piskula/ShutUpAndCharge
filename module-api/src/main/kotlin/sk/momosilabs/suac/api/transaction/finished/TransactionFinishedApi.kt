@@ -3,6 +3,7 @@ package sk.momosilabs.suac.api.transaction.finished
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springdoc.core.annotations.ParameterObject
+import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -38,6 +39,6 @@ interface TransactionFinishedApi {
     fun exportTransactions(
         @RequestBody filter: TransactionFilterDTO,
         @ParameterObject pageable: PageableDTO,
-    ): ResponseEntity<ByteArray>
+    ): ResponseEntity<ByteArrayResource>
 
 }

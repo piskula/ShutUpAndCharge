@@ -16,6 +16,8 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Sort } from '@angular/material/sort';
 import { PendingButtonComponent } from '../pending-button/pending-button.component';
+import { HttpResponse } from '@angular/common/http';
+import { downloadFile } from '../download.util';
 
 export interface Page<T> {
   content: Array<T>;
@@ -50,7 +52,7 @@ export class PaginatedTableComponent implements OnInit, OnChanges {
 
   protected readonly pageSizeOptions = [5, 10, 25, 100];
   public readonly defaultPageSize = input<number>(this.pageSizeOptions[1]);
-  public readonly exportFn = input<((page: number, size: number, sort: string) => Observable<Blob>) | undefined>(undefined);
+  public readonly exportFn = input<((page: number, size: number, sort: string) => Observable<HttpResponse<Blob>>) | undefined>(undefined);
 
   private readonly sort = signal(this.defaultSort());
   public readonly sortActive = computed(() => this.sort().active);
@@ -121,15 +123,9 @@ export class PaginatedTableComponent implements OnInit, OnChanges {
 
     this.isExporting.set(true);
     fn(this.pageIndex(), this.pageSize(), this.sortString()).pipe(
+      tap(file => downloadFile(file)),
       finalize(() => this.isExporting.set(false)),
       takeUntilDestroyed(this.destroyRef),
-    ).subscribe(blob => {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "export.xlsx";
-      a.click();
-      URL.revokeObjectURL(url);
-    });
+    ).subscribe();
   }
 }

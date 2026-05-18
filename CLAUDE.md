@@ -43,7 +43,7 @@ The Gradle build auto-generates TypeScript Angular API client from `module-api/a
 - `info/` — public (non-auth) endpoints for providing version and charger status
 - `common/` — shared config and utilities
 
-**`module-ui`** — Angular 20 SPA. Uses Keycloak JS 26.2.4 for browser-side OIDC login. API calls use the generated TypeScript client. Angular Material for UI components. Organized into `authenticated/`, `non-authenticated/`, and `common/` directories.
+**`module-ui`** — Angular 21 SPA. Uses Keycloak JS 26.2.4 for browser-side OIDC login. API calls use the generated TypeScript client. Angular Material for UI components. Organized into `authenticated/`, `non-authenticated/`, and `common/` directories.
 
 ## Backend Layering Rules
 
@@ -60,6 +60,18 @@ Controller → UseCase → Persistence (or shared Service)
 Each use case lives in its own package under `.service.<useCaseName>/` with two files:
 - `<UseCaseName>UseCase.kt` — interface
 - `<UseCaseName>.kt` — `@Service open class` implementing the interface, with `@IsUser`/`@IsAdmin` and `@Transactional` on the override method
+
+## File Download Pattern
+
+**Backend:** All file responses use `GenericFile` (in `common/model/`) with factory methods (`asExcelFile`, `asPdfFile`, `asPngFile`, `asZipFile`). Controllers return `ResponseEntity<ByteArrayResource>` via the `GenericFile.mapToResponseEntity()` extension in `common/controller/mapper/FileMapper.kt`. Use cases return `GenericFile`, not `ByteArrayResource` directly.
+
+**OpenAPI spec:** File download endpoints must use `format: "binary"` (not `"byte"`) — `"byte"` means a Base64 string in JSON body, `"binary"` means raw binary. The generated Angular client will produce `Observable<Blob>` for `"binary"` responses.
+
+**Frontend:** `exportFn` passed to `PaginatedTableComponent` must return `Observable<HttpResponse<Blob>>` (with `'response'` observe option so headers are accessible). `PaginatedTableComponent.onExport()` owns the download and reads the filename from the `Content-Disposition` header via `downloadFile()` in `common/download.util.ts`. The `exportFn` itself should be a pure data function with no download side effects.
+
+## ExcelExportService Notes
+
+`ExcelExportService.exportEntityToStream()` is the shared service for all Excel exports.
 
 ## QueryDSL Notes
 
@@ -112,7 +124,7 @@ Currently, application, when deployed on PROD, uses Docker on Ubuntu VM. In Dock
 | DB | PostgreSQL + Flyway migrations |
 | Auth | Keycloak (OAuth2/OIDC), Spring Security OAuth2 Resource Server |
 | API spec | OpenAPI 3.1.0 (handwritten `api-docs.json`) |
-| Frontend | Angular 20, Angular Material, RxJS |
+| Frontend | Angular 21, Angular Material, RxJS |
 | Frontend auth | Keycloak JS 26.2.4 |
 | Build | Gradle 9.4.0, Gradle Node Plugin (frontend builds via Gradle) |
 | CI/CD | GitHub Actions → artifact upload → GCP VM |

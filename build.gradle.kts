@@ -10,7 +10,7 @@ plugins {
 
 allprojects {
     group = "sk.momosilabs.suac"
-    version = "1.2.5-SNAPSHOT"
+    version = "1.2.6-SNAPSHOT"
 
     repositories {
         mavenCentral()

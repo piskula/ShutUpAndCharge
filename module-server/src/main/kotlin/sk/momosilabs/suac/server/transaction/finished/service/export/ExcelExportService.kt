@@ -2,22 +2,26 @@ package sk.momosilabs.suac.server.transaction.finished.service.export
 
 import org.apache.poi.ss.usermodel.FillPatternType
 import org.apache.poi.ss.usermodel.IndexedColors
+import org.apache.poi.ss.usermodel.Workbook
+import org.apache.poi.xssf.usermodel.XSSFCell
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.springframework.stereotype.Service
-import sk.momosilabs.suac.server.transaction.finished.model.TransactionFinished
 import java.io.ByteArrayOutputStream
 import java.math.BigDecimal
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
+import java.util.SequencedMap
+import java.util.stream.Stream
+import java.time.Instant
+import java.util.Date
 
 @Service
 class ExcelExportService {
 
-    private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withZone(ZoneOffset.UTC)
-
-    fun exportTransactions(transactions: List<TransactionFinished>): ByteArray {
+    fun <T> exportEntityToStream(
+        entities: Stream<T>,
+        fieldMappingDefinition: SequencedMap<String, (T) -> Any?>,
+    ): ByteArrayOutputStream {
         val workbook = XSSFWorkbook()
-        val sheet = workbook.createSheet("Transactions")
+        val sheet = workbook.createSheet("Sheet1")
 
         val headerStyle = workbook.createCellStyle().apply {
             fillForegroundColor = IndexedColors.GREY_25_PERCENT.index
@@ -25,28 +29,50 @@ class ExcelExportService {
             setFont(workbook.createFont().apply { bold = true })
         }
 
-        val headers = listOf("Time (UTC)", "User", "Station", "kWh", "Price")
         val headerRow = sheet.createRow(0)
-        headers.forEachIndexed { i, title ->
+        fieldMappingDefinition.keys.forEachIndexed { i, title ->
             headerRow.createCell(i).apply {
                 setCellValue(title)
                 cellStyle = headerStyle
             }
         }
 
-        transactions.forEachIndexed { idx, tx ->
-            val row = sheet.createRow(idx + 1)
-            row.createCell(0).setCellValue(dateFormatter.format(tx.time))
-            row.createCell(1).setCellValue(tx.accountName)
-            row.createCell(2).setCellValue(if (tx.price > BigDecimal.ZERO) "Credit" else tx.chargingStationId ?: "")
-            row.createCell(3).setCellValue(if (tx.price <= BigDecimal.ZERO) tx.kwh.toDouble() else 0.0)
-            row.createCell(4).setCellValue(tx.price.toDouble())
+        entities.toList().forEachIndexed { rowIndex, entity ->
+            val row = sheet.createRow(rowIndex + 1)
+            fieldMappingDefinition.entries.forEachIndexed { cellIndex, (_, resolver) ->
+                val value = resolver.invoke(entity)
+                val cell = row.createCell(cellIndex)
+                setValueToCell(cell, value)
+            }
         }
 
-        headers.indices.forEach { sheet.autoSizeColumn(it) }
-
-        val out = ByteArrayOutputStream()
-        workbook.use { it.write(out) }
-        return out.toByteArray()
+        fieldMappingDefinition.onEachIndexed { index, _ -> sheet.autoSizeColumn(index) }
+        return writeWorkbookAsStream(workbook)
     }
+
+    private fun writeWorkbookAsStream(workbook: Workbook): ByteArrayOutputStream {
+        val outputStream = ByteArrayOutputStream()
+        outputStream.use {
+            workbook.write(it)
+        }
+        return outputStream
+    }
+
+    private fun setValueToCell(cell: XSSFCell, value: Any?) {
+        when (value) {
+            is String -> cell.setCellValue(value)
+            is Instant -> {
+                val workbook = cell.sheet.workbook
+                val style = workbook.createCellStyle()
+                style.dataFormat = workbook.creationHelper
+                    .createDataFormat()
+                    .getFormat("yyyy-mm-dd hh:mm:ss")
+                cell.setCellValue(Date.from(value))
+                cell.cellStyle = style
+            }
+            is BigDecimal -> cell.setCellValue(value.toDouble())
+            else -> cell.setCellValue(value.toString())
+        }
+    }
+
 }
