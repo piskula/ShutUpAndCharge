@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
+import java.util.stream.Stream
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import sk.momosilabs.suac.server.account.persistence.repository.AccountRepository
@@ -54,6 +55,16 @@ open class TransactionFinishedPersistenceProvider(
             .applyPagination(pageable)
             .fetchResults()
             .toPageResult(pageable, ChargingFinishedEntity::toModel)
+
+    @Transactional(readOnly = true)
+    override fun getAllAsStream(filter: TransactionFinishedFilter, sort: Sort): Stream<TransactionFinished> =
+        JPAQueryFactory(entityManager)
+            .select(transaction)
+            .from(transaction)
+            .where(filter.transformToWhereClause(transaction))
+            .orderBy(*sort.toQueryDslOrderBy())
+            .stream()
+            .map(ChargingFinishedEntity::toModel)
 
     @Transactional(readOnly = true)
     override fun getNegativeByUserId(userId: String, pageable: Pageable): Page<TransactionFinished> =

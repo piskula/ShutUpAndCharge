@@ -21,10 +21,13 @@ inline fun <T : Any, U> Page<T>.toDto(transform: (T) -> U): PageDTO<U> =
 fun PageableDTO.toModel(): Pageable {
     if (sort.isNullOrBlank())
         return PageRequest.of(page, size)
+    return PageRequest.of(page, size, sort.toSortModel())
+}
 
-    val sortByColumns = sort!!.split(";").map { col ->
+fun String?.toSortModel(): Sort {
+    if (isNullOrBlank()) return Sort.by(Order.desc("id"))
+    val sortByColumns = this!!.split(";").map { col ->
         col.split(",").let { if (it[1] == "desc") Order.desc(it[0]) else Order.asc(it[0]) }
     }
-
-    return PageRequest.of(page, size, Sort.by(sortByColumns))
+    return Sort.by(sortByColumns)
 }

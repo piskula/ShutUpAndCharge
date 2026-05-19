@@ -2,9 +2,8 @@ package sk.momosilabs.suac.server.transaction.finished.service.export
 
 import org.apache.poi.ss.usermodel.FillPatternType
 import org.apache.poi.ss.usermodel.IndexedColors
-import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.xssf.usermodel.XSSFCell
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.apache.poi.xssf.streaming.SXSSFCell
+import org.apache.poi.xssf.streaming.SXSSFWorkbook
 import org.springframework.stereotype.Service
 import java.io.ByteArrayOutputStream
 import java.math.BigDecimal
@@ -20,7 +19,7 @@ class ExcelExportService {
         entities: Stream<T>,
         fieldMappingDefinition: SequencedMap<String, (T) -> Any?>,
     ): ByteArrayOutputStream {
-        val workbook = XSSFWorkbook()
+        val workbook = SXSSFWorkbook()
         val sheet = workbook.createSheet("Sheet1")
 
         val headerStyle = workbook.createCellStyle().apply {
@@ -37,38 +36,37 @@ class ExcelExportService {
             }
         }
 
-        entities.toList().forEachIndexed { rowIndex, entity ->
-            val row = sheet.createRow(rowIndex + 1)
+        val dateStyle = workbook.createCellStyle().apply {
+            dataFormat = workbook.creationHelper.createDataFormat().getFormat("yyyy-mm-dd hh:mm:ss")
+        }
+
+        var rowIndex = 0
+        entities.forEach { entity ->
+            val row = sheet.createRow(++rowIndex)
             fieldMappingDefinition.entries.forEachIndexed { cellIndex, (_, resolver) ->
-                val value = resolver.invoke(entity)
-                val cell = row.createCell(cellIndex)
-                setValueToCell(cell, value)
+                setValueToCell(row.createCell(cellIndex), resolver(entity), dateStyle)
             }
         }
 
-        fieldMappingDefinition.onEachIndexed { index, _ -> sheet.autoSizeColumn(index) }
+        fieldMappingDefinition.keys.forEachIndexed { index, _ -> sheet.setColumnWidth(index, 6000) }
         return writeWorkbookAsStream(workbook)
     }
 
-    private fun writeWorkbookAsStream(workbook: Workbook): ByteArrayOutputStream {
+    private fun writeWorkbookAsStream(workbook: SXSSFWorkbook): ByteArrayOutputStream {
         val outputStream = ByteArrayOutputStream()
         outputStream.use {
             workbook.write(it)
         }
+        workbook.dispose()
         return outputStream
     }
 
-    private fun setValueToCell(cell: XSSFCell, value: Any?) {
+    private fun setValueToCell(cell: SXSSFCell, value: Any?, dateStyle: org.apache.poi.ss.usermodel.CellStyle) {
         when (value) {
             is String -> cell.setCellValue(value)
             is Instant -> {
-                val workbook = cell.sheet.workbook
-                val style = workbook.createCellStyle()
-                style.dataFormat = workbook.creationHelper
-                    .createDataFormat()
-                    .getFormat("yyyy-mm-dd hh:mm:ss")
                 cell.setCellValue(Date.from(value))
-                cell.cellStyle = style
+                cell.cellStyle = dateStyle
             }
             is BigDecimal -> cell.setCellValue(value.toDouble())
             else -> cell.setCellValue(value.toString())

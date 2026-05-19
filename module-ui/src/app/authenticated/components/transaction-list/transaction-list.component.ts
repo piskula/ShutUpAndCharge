@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal, viewChild } from '@angular/core';
 import { FinishedTransactionService, TransactionFinishedDTO } from '@suac/api';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Page } from '../../../common/paginated-table/paginated-table.component';
 import { AuthenticationService, CurrentUser } from '../../../security/authentication.service';
 import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
@@ -8,7 +8,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { TransactionFinishedTableComponent } from '../transaction-finished-table/transaction-finished-table.component';
-import { downloadFile } from '../../../common/download.util';
 import { HttpResponse } from '@angular/common/http';
 
 export interface TransactionFilter {
@@ -53,8 +52,8 @@ export class TransactionListComponent implements OnInit {
     this.#transactionService.getList1({ accountIds: this.activeFilters().find(f => f.field === 'accountIds')?.values }, page, size, sort)
       .pipe(map(page => page as Page<TransactionFinishedDTO>));
 
-  protected exportFn = (page: number, size: number, sort: string): Observable<HttpResponse<Blob>> =>
-    this.#transactionService.exportTransactions({ accountIds: this.activeFilters().find(f => f.field === 'accountIds')?.values }, page, size, sort, 'response');
+  protected exportFn = (sort: string): Observable<HttpResponse<Blob>> =>
+    this.#transactionService.exportTransactions({ accountIds: this.activeFilters().find(f => f.field === 'accountIds')?.values }, sort, 'response');
 
   removeFilter(filterId: string): void {
     this.activeFilters.update(filters => filters.filter(filter => filter.id !== filterId));

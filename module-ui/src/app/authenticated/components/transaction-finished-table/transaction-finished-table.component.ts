@@ -31,7 +31,7 @@ import { HttpResponse } from '@angular/common/http';
 })
 export class TransactionFinishedTableComponent {
   readonly fetchFn = input.required<(page: number, size: number, sort: string) => Observable<Page<TransactionFinishedDTO>>>();
-  readonly exportFn = input<((page: number, size: number, sort: string) => Observable<HttpResponse<Blob>>) | undefined>(undefined);
+  readonly exportFn = input<((sort: string) => Observable<HttpResponse<Blob>>) | undefined>(undefined);
   readonly defaultPageSize = input<number>(10);
   readonly hideAccountColumn = input<boolean>(false);
   readonly hideStatsColumn = input<boolean>(false);

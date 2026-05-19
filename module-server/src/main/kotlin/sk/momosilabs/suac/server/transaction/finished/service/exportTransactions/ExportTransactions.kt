@@ -1,6 +1,6 @@
 package sk.momosilabs.suac.server.transaction.finished.service.exportTransactions
 
-import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import sk.momosilabs.suac.server.common.IsUser
@@ -31,13 +31,13 @@ open class ExportTransactions(
 
     @IsUser
     @Transactional(readOnly = true)
-    override fun export(filter: TransactionFinishedFilter, pageable: Pageable): GenericFile {
+    override fun export(filter: TransactionFinishedFilter, sort: Sort): GenericFile {
         val isAdmin = currentUserService.isAdmin()
-        val transactions = transactionPersistence.getAll(
+        val transactions = transactionPersistence.getAllAsStream(
             filter = filter.addCurrentUserWhen(isNotAdmin = !isAdmin, currentUserService.keycloakId()),
-            pageable = pageable,
-        ).stream()
-        val outputStream = excelExportService.exportEntityToStream(transactions, excelMapping)
+            sort = sort,
+        )
+        val outputStream = transactions.use { excelExportService.exportEntityToStream(it, excelMapping) }
         return GenericFile.asExcelFile("transactions.xlsx", outputStream)
     }
 

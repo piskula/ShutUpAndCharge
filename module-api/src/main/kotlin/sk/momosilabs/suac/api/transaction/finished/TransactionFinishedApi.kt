@@ -8,6 +8,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import sk.momosilabs.suac.api.common.dto.PageDTO
 import sk.momosilabs.suac.api.common.dto.PageableDTO
 import sk.momosilabs.suac.api.transaction.finished.dto.TransactionFinishedDTO
@@ -38,7 +39,7 @@ interface TransactionFinishedApi {
     )
     fun exportTransactions(
         @RequestBody filter: TransactionFilterDTO,
-        @ParameterObject pageable: PageableDTO,
+        @RequestParam(required = false) sort: String?,
     ): ResponseEntity<ByteArrayResource>
 
 }

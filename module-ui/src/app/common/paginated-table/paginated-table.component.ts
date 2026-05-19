@@ -52,7 +52,7 @@ export class PaginatedTableComponent implements OnInit, OnChanges {
 
   protected readonly pageSizeOptions = [5, 10, 25, 100];
   public readonly defaultPageSize = input<number>(this.pageSizeOptions[1]);
-  public readonly exportFn = input<((page: number, size: number, sort: string) => Observable<HttpResponse<Blob>>) | undefined>(undefined);
+  public readonly exportFn = input<((sort: string) => Observable<HttpResponse<Blob>>) | undefined>(undefined);
 
   private readonly sort = signal(this.defaultSort());
   public readonly sortActive = computed(() => this.sort().active);
@@ -122,7 +122,7 @@ export class PaginatedTableComponent implements OnInit, OnChanges {
     if (!fn) return;
 
     this.isExporting.set(true);
-    fn(this.pageIndex(), this.pageSize(), this.sortString()).pipe(
+    fn(this.sortString()).pipe(
       tap(file => downloadFile(file)),
       finalize(() => this.isExporting.set(false)),
       takeUntilDestroyed(this.destroyRef),

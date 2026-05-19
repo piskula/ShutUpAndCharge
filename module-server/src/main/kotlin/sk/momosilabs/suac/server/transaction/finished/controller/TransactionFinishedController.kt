@@ -9,6 +9,7 @@ import sk.momosilabs.suac.api.transaction.finished.dto.TransactionFinishedDTO
 import sk.momosilabs.suac.server.common.controller.mapper.mapToResponseEntity
 import sk.momosilabs.suac.server.common.toDto
 import sk.momosilabs.suac.server.common.toModel
+import sk.momosilabs.suac.server.common.toSortModel
 import sk.momosilabs.suac.server.transaction.finished.controller.mapper.toDto
 import sk.momosilabs.suac.server.transaction.finished.controller.mapper.toModel
 import sk.momosilabs.suac.server.transaction.finished.model.TransactionFinished
@@ -25,7 +26,7 @@ class TransactionFinishedController(
         getTransactionList.get(filter.toModel(), pageable.toModel())
             .toDto(TransactionFinished::toDto)
 
-    override fun exportTransactions(filter: TransactionFilterDTO, pageable: PageableDTO) =
-        exportTransactions.export(filter.toModel(), pageable.toModel()).mapToResponseEntity()
+    override fun exportTransactions(filter: TransactionFilterDTO, sort: String?) =
+        exportTransactions.export(filter.toModel(), sort.toSortModel()).mapToResponseEntity()
 
 }
