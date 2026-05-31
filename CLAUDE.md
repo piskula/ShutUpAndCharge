@@ -28,65 +28,11 @@ The Gradle build auto-generates TypeScript Angular API client from `module-api/a
 
 ## Module Architecture
 
-**`module-api`** — API contract layer.
-- Defines ALL endpoint contracts: `@PostMapping`, `@Operation`, `@Tag`, produces/consumes, return types
-- `module-server` controllers implement these interfaces — they add nothing to routing or docs on their own
-- Also used to generate OpenAPI 3.1.0 spec file (`api-docs.json`)
-  - `api-docs.json` is **hand-written** — it is NOT auto-generated from annotations. Changes to endpoints/DTOs require manually updating this file and rebuilding so the Angular client regenerates.
-  - _in the future, building of api-docs.json file should also happen as part of the build_
+**`module-api`** — API contract layer. See `module-api/CLAUDE.md` for details.
 
-**`module-server`** — Spring Boot 4 backend (Kotlin, Java 21). Organized into domain packages under `sk.momosilabs.suac.server`:
-- `account/` — provides endpoints for managing user accounts
-- `dashboard/` — provides data for homepage after login, user account balance, his last transactions
-- `transaction/` — finished and temporary transaction endpoints and their scheduled pairing process
-- `security/` — Security Config and public (non-auth) current user endpoint
-- `info/` — public (non-auth) endpoints for providing version and charger status
-- `common/` — shared config and utilities
+**`module-server`** — Spring Boot 4 backend (Kotlin, Java 21). See `module-server/CLAUDE.md` for details.
 
-**`module-ui`** — Angular 21 SPA. Uses Keycloak JS 26.2.4 for browser-side OIDC login. API calls use the generated TypeScript client. Angular Material for UI components. Organized into `authenticated/`, `non-authenticated/`, and `common/` directories.
-
-## Backend Layering Rules
-
-The architecture follows a strict three-layer pattern:
-
-```
-Controller → UseCase → Persistence (or shared Service)
-```
-
-- **Controllers** implement the `module-api` interface and inject use cases only. No persistence calls, no business logic.
-- **Use cases** contain business logic. They call persistence or shared services (e.g. `CurrentUserService`, `ExcelExportService`). **Use cases never call other use cases.** If two use cases need the same query, both call persistence independently.
-- **Persistence** handles all data access.
-
-Each use case lives in its own package under `.service.<useCaseName>/` with two files:
-- `<UseCaseName>UseCase.kt` — interface
-- `<UseCaseName>.kt` — `@Service open class` implementing the interface, with `@IsUser`/`@IsAdmin` and `@Transactional` on the override method
-
-## File Download Pattern
-
-**Backend:** All file responses use `GenericFile` (in `common/model/`) with factory methods (`asExcelFile`, `asPdfFile`, `asPngFile`, `asZipFile`). Controllers return `ResponseEntity<ByteArrayResource>` via the `GenericFile.mapToResponseEntity()` extension in `common/controller/mapper/FileMapper.kt`. Use cases return `GenericFile`, not `ByteArrayResource` directly.
-
-**OpenAPI spec:** File download endpoints must use `format: "binary"` (not `"byte"`) — `"byte"` means a Base64 string in JSON body, `"binary"` means raw binary. The generated Angular client will produce `Observable<Blob>` for `"binary"` responses.
-
-**Frontend:** `exportFn` passed to `PaginatedTableComponent` must return `Observable<HttpResponse<Blob>>` (with `'response'` observe option so headers are accessible). `PaginatedTableComponent.onExport()` owns the download and reads the filename from the `Content-Disposition` header via `downloadFile()` in `common/download.util.ts`. The `exportFn` itself should be a pure data function with no download side effects.
-
-## ExcelExportService Notes
-
-`ExcelExportService.exportEntityToStream()` is the shared service for all Excel exports.
-
-## QueryDSL Notes
-
-**`when` is a reserved keyword in Kotlin** — use backtick escaping with `CaseBuilder`:
-```kotlin
-CaseBuilder().`when`(transaction.price.lt(BigDecimal.ZERO)).then(1L).otherwise(0L).sum()
-```
-
-**`fetchResults()` does not work with GROUP BY** — for grouped queries, run two separate queries: one `fetch()` for content and one for the count (`.select(keys).groupBy(keys).fetch().size.toLong()`).
-
-**Define aggregation expressions at class level** (not inside functions) so they can be referenced in ORDER BY without re-instantiation.
-
-## Security Config Note
-
-`anyRequest().permitAll()` in Spring Security is intentional — tightening it breaks Angular SPA routes (e.g. `/authenticated/home`) which are served as static files from the JAR. Actual endpoint security is enforced via `@IsUser`/`@IsAdmin` on use case methods. This will be revisited when the frontend is served from NGINX instead of the JAR.
+**`module-ui`** — Angular 21 SPA. See `module-ui/CLAUDE.md` for details.
 
 ## Key Configuration
 
