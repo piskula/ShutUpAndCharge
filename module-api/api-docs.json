@@ -160,11 +160,9 @@
           {
             "name": "sort",
             "in": "query",
-            "description": "Sort string (e.g. time,desc)",
             "required": false,
             "schema": {
-              "type": "string",
-              "description": "Sort string (e.g. time,desc)"
+              "type": "string"
             }
           }
         ],
@@ -708,27 +706,48 @@
         "type": "object",
         "properties": {
           "timeFrom": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date-time"
           },
           "timeTo": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date-time"
           },
           "kwhFrom": {
-            "type": "number"
+            "type": [
+              "number",
+              "null"
+            ]
           },
           "kwhTo": {
-            "type": "number"
+            "type": [
+              "number",
+              "null"
+            ]
           },
           "priceFrom": {
-            "type": "number"
+            "type": [
+              "number",
+              "null"
+            ]
           },
           "priceTo": {
-            "type": "number"
+            "type": [
+              "number",
+              "null"
+            ]
           },
           "onlyCredit": {
-            "type": "boolean"
+            "type": [
+              "boolean",
+              "null"
+            ]
           },
           "chargingStationIds": {
             "type": "array",
@@ -795,7 +814,10 @@
             "type": "number"
           },
           "chargingStationId": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "accountId": {
             "type": "integer",
@@ -808,7 +830,10 @@
             "type": "boolean"
           },
           "link": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },
@@ -841,7 +866,10 @@
             ]
           },
           "occupiedFrom": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date-time"
           },
           "chargedKwh": {
@@ -870,7 +898,10 @@
             "type": "string"
           },
           "time": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date-time"
           },
           "url": {
@@ -998,7 +1029,10 @@
             "type": "boolean"
           },
           "assignedChipUid": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           }
         }
       },
