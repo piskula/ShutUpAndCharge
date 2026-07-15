@@ -11,9 +11,9 @@ class CurrentUserService() {
     fun getJwt(): Jwt =
         (SecurityContextHolder.getContext().authentication as JwtAuthenticationToken).token
 
-    fun keycloakId(): String = getJwt().subject
+    fun keycloakId(): String = getJwt().subject!!
 
-    fun email(): String = getJwt().getClaim("email")
+    fun email(): String = getJwt().getClaim("email")!!
 
     fun roles(): Set<String> {
         val realmAccess = getJwt().getClaim<Map<String, Any>>("realm_access")

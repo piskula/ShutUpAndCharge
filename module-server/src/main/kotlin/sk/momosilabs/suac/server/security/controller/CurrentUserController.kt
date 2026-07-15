@@ -16,9 +16,9 @@ class CurrentUserController(
 
     override fun getCurrentUser(jwt: Jwt): CurrentUserDTO {
 
-        val sub = jwt.subject
-        val firstName = jwt.getClaim<String>("given_name")
-        val lastName = jwt.getClaim<String>("family_name")
+        val sub = jwt.subject!!
+        val firstName = jwt.getClaim<String>("given_name") ?: ""
+        val lastName = jwt.getClaim<String>("family_name") ?: ""
 
         val roles = extractMomoRoles(jwt)
 
