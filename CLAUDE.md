@@ -64,7 +64,7 @@ Currently, application, when deployed on PROD, uses Docker on Ubuntu VM. In Dock
 
 | Layer | Technology |
 |-------|-----------|
-| Backend language | Kotlin 2.2.21 + Java 21 |
+| Backend language | Kotlin 2.2.21 + Java 25 |
 | Framework | Spring Boot 4.0.6 |
 | ORM / queries | Spring Data JPA + QueryDSL 5.1.0 |
 | DB | PostgreSQL + Flyway migrations |

@@ -1,6 +1,6 @@
 # module-server
 
-Spring Boot 4 backend (Kotlin, Java 21). Organized into domain packages under `sk.momosilabs.suac.server`:
+Spring Boot 4 backend (Kotlin, Java 25). Organized into domain packages under `sk.momosilabs.suac.server`:
 - `account/` — endpoints for managing user accounts
 - `dashboard/` — homepage data after login, account balance, last transactions
 - `transaction/` — finished and temporary transaction endpoints and their scheduled pairing process
