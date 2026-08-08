@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, finalize, take, tap } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -6,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DashboardService, ChargerStatusDTO, PublicInfoService } from '@suac/api';
 import { AuthenticationService } from '../../security/authentication.service';
+import { ChargerStatusStreamService } from './charger-status-stream.service';
 
 @Component({
   selector: 'app-charging-status',
@@ -46,11 +48,17 @@ export class ChargingStatusComponent implements OnInit {
     private readonly infoService: PublicInfoService,
     private readonly dashboardService: DashboardService,
     private readonly authService: AuthenticationService,
+    private readonly chargerStatusStreamService: ChargerStatusStreamService,
+    private readonly destroyRef: DestroyRef,
   ) {
   }
 
   ngOnInit(): void {
     this.refreshStatus();
+    this.chargerStatusStreamService.connect().pipe(
+      tap(status => this.statusModel.set(status)),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe();
   }
 
   public refreshStatus() {

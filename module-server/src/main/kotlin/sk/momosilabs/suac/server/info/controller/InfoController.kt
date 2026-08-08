@@ -1,19 +1,23 @@
 package sk.momosilabs.suac.server.info.controller
 
 import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.boot.info.BuildProperties
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import sk.momosilabs.suac.api.publicInfo.dto.ChargerStatusDTO
 import sk.momosilabs.suac.api.publicInfo.PublicInfoApi
 import sk.momosilabs.suac.api.publicInfo.dto.BuildInfoDTO
 import sk.momosilabs.suac.server.info.controller.mapper.toDto
 import sk.momosilabs.suac.server.dashboard.service.getChargingStatus.GetChargingStatusUseCase
+import sk.momosilabs.suac.server.info.service.ChargerStatusBroadcastService
 import java.time.ZoneOffset
 
 @RestController
 class InfoController(
     private val buildProperties: BuildProperties,
     private val getChargingStatus: GetChargingStatusUseCase,
+    private val chargerStatusBroadcastService: ChargerStatusBroadcastService,
 ) : PublicInfoApi {
 
     override fun getVersion(request: HttpServletRequest): BuildInfoDTO = BuildInfoDTO(
@@ -25,5 +29,11 @@ class InfoController(
 
     override fun getChargerStatus(): ChargerStatusDTO =
         getChargingStatus.getChargerStatus().toDto()
+
+    override fun streamChargerStatus(response: HttpServletResponse): SseEmitter {
+        // prevents reverse proxies (e.g. NGINX) from buffering the stream and delaying delivery
+        response.setHeader("X-Accel-Buffering", "no")
+        return chargerStatusBroadcastService.subscribe()
+    }
 
 }

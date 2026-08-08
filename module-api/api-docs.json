@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "OpenAPI definition",
-    "version": "1.2.8"
+    "version": "v0"
   },
   "servers": [
     {
@@ -417,6 +417,27 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ChargerStatusDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/info/chargerStatus/stream": {
+      "get": {
+        "tags": [
+          "Public Info"
+        ],
+        "summary": "Stream Charging Status",
+        "operationId": "streamChargerStatus",
+        "responses": {
+          "200": {
+            "description": "Server-Sent Events stream; each 'status' event's data is a ChargerStatusDTO as JSON",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
