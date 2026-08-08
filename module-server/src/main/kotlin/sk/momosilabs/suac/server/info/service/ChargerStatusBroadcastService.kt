@@ -31,7 +31,7 @@ open class ChargerStatusBroadcastService(
         emitter.onError { emitters.remove(emitter) }
         emitters.add(emitter)
 
-        sendTo(emitter, getChargingStatus.getChargerStatus())
+        sendTo(emitter, getChargingStatus.getChargerStatus(), lastEventId.incrementAndGet())
         return emitter
     }
 
@@ -42,14 +42,15 @@ open class ChargerStatusBroadcastService(
         }
 
         val status = getChargingStatus.getChargerStatus()
-        emitters.forEach { emitter -> sendTo(emitter, status) }
+        val eventId = lastEventId.incrementAndGet()
+        emitters.forEach { emitter -> sendTo(emitter, status, eventId) }
     }
 
-    private fun sendTo(emitter: SseEmitter, status: ChargerStatus) {
+    private fun sendTo(emitter: SseEmitter, status: ChargerStatus, eventId: Long) {
         try {
             emitter.send(
                 SseEmitter.event()
-                    .id(lastEventId.incrementAndGet().toString())
+                    .id(eventId.toString())
                     .name("status")
                     .data(status.toDto()),
             )
