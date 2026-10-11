@@ -53,6 +53,49 @@ jobs:
     # - name: Build with Gradle 8.9
     #   run: gradle build
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+
+    steps:
+    - name: Download build artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: archive-with-jar
+        path: ./artifact
+
+    - name: Rename JAR for upload
+      run: mv $(ls ./artifact/module-server-*.jar | head -1) ./module-server-new.jar
+
+    - name: Copy JAR to server
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        key: ${{ secrets.DEPLOY_SSH_KEY }}
+        fingerprint: ${{ secrets.DEPLOY_HOST_FINGERPRINT }}
+        source: module-server-new.jar
+        target: ~/module-server/
+
+    - name: Deploy on server
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.DEPLOY_HOST }}
+        username: ${{ secrets.DEPLOY_USER }}
+        key: ${{ secrets.DEPLOY_SSH_KEY }}
+        fingerprint: ${{ secrets.DEPLOY_HOST_FINGERPRINT }}
+        script: |
+          rm -f ~/module-server/module-server.jar.bak
+          systemctl stop charging-service.service
+          mv ~/module-server/module-server.jar ~/module-server/module-server.jar.bak 2>/dev/null || true
+          mv ~/module-server/module-server-new.jar ~/module-server/module-server.jar
+          mv ~/module-server/server.log ~/module-server/server-$(date +%Y%m%d-%H%M%S).log 2>/dev/null || true
+          systemctl start charging-service.service
+
   dependency-submission:
 
     runs-on: ubuntu-latest
