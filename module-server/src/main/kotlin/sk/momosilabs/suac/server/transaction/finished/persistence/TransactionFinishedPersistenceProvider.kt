@@ -82,6 +82,11 @@ open class TransactionFinishedPersistenceProvider(
         return chargingRepository.save(chargingEntity).toModel()
     }
 
+    @Transactional(readOnly = true)
+    override fun findExistingStationSessions(stationId: String, stationSessions: Collection<Long>): Set<Long> =
+        if (stationSessions.isEmpty()) emptySet()
+        else chargingRepository.findExistingStationSessions(stationId, stationSessions).toSet()
+
     @Transactional
     override fun saveFinishedChargingBulk(chargings: Collection<ChargingToCreate>): Int {
         val accountIds = chargings.mapTo(HashSet()) { it.userId }

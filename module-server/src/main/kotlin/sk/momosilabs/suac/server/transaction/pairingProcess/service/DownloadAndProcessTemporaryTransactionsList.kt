@@ -41,7 +41,9 @@ open class DownloadAndProcessTemporaryTransactionsList(
         private val logger = LoggerFactory.getLogger(DownloadAndProcessTemporaryTransactionsList::class.java)
 
         private val timeParsePattern = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")
-        private fun ExternalChargingLog.getMeterStart() = (eto_start * 1000).toLong()
+        // via string to avoid double precision errors (e.g. 8208.407 * 1000 = 8208406.999...)
+        private fun ExternalChargingLog.getMeterStart() =
+            BigDecimal(eto_start.toString()).movePointRight(3).setScale(0, RoundingMode.HALF_UP).toLong()
     }
 
     // TODO make sure this can be triggered from outside, so if more instances deployed, only 1 is processing this
@@ -87,13 +89,21 @@ open class DownloadAndProcessTemporaryTransactionsList(
             logger.info("Following $stationId chargings will be synced: ${toProcess.map { it.getMeterStart() }}")
         }
 
-        val toStore = mergeIntoEntities(toProcess, ourTemporaryTransactions, stationConfig, chipToUser)
+        val merged = mergeIntoEntities(toProcess, ourTemporaryTransactions, stationConfig, chipToUser)
             .sortedBy { it.energyMeter }
+
+        val alreadyStoredSessions = transactionFinishedPersistence.findExistingStationSessions(
+            stationId, merged.mapNotNull { it.stationSession },
+        )
+        val toStore = merged.filter { it.stationSession !in alreadyStoredSessions }
+        if (alreadyStoredSessions.isNotEmpty()) {
+            logger.info("Skipping $stationId sessions that are already stored: $alreadyStoredSessions")
+        }
 
         transactionFinishedPersistence.saveFinishedChargingBulk(toStore)
         transactionTemporaryPersistence.deleteAwaitingTransactionsForStation(stationId, meterStartMatches)
 
-        stationConfig.lastSuccessDownloadTimestampUtc = LocalDateTime.ofInstant(toStore.last().timeEnd, ZoneOffset.UTC)
+        stationConfig.lastSuccessDownloadTimestampUtc = LocalDateTime.ofInstant(merged.last().timeEnd, ZoneOffset.UTC)
     }
 
     private fun mergeIntoEntities(

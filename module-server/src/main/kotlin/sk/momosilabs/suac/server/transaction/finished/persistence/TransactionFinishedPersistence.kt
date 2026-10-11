@@ -24,6 +24,8 @@ interface TransactionFinishedPersistence {
 
     fun saveFinishedCharging(charging: ChargingToCreate): TransactionFinished
 
+    fun findExistingStationSessions(stationId: String, stationSessions: Collection<Long>): Set<Long>
+
     fun saveFinishedChargingBulk(chargings: Collection<ChargingToCreate>): Int
 
 }

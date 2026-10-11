@@ -24,4 +24,12 @@ interface ChargingFinishedRepository: JpaRepository<ChargingFinishedEntity, Long
     """)
     fun sumUpForUsers(userIds: Set<String>): List<Pair<String, BigDecimal>>
 
+    @Query("""
+        SELECT trxFinished.stationSession
+        FROM #{#entityName} trxFinished
+        WHERE trxFinished.stationId = :stationId
+        AND trxFinished.stationSession IN :stationSessions
+    """)
+    fun findExistingStationSessions(stationId: String, stationSessions: Collection<Long>): List<Long>
+
 }
