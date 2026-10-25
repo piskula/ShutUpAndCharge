@@ -19,8 +19,11 @@ import sk.momosilabs.suac.server.dashboard.model.charging.external.ExternalCharg
 import sk.momosilabs.suac.server.dashboard.model.charging.external.ExternalDownloadDataResponse
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 
 @Service
@@ -146,13 +149,28 @@ open class ExternalChargingService(
     }
 
     private fun connectionReadCloud(station: ApplicationPropertiesStation, fromTimestampUtc: LocalDateTime): RestClient.RequestHeadersSpec<*> {
+        val targetZone = ZoneId.of("Europe/Vienna")
+
+        // Convert the UTC LocalDateTime to an Instant, then find its offset in Vienna at that moment
+        val instantUtc = fromTimestampUtc.toInstant(ZoneOffset.UTC)
+        val zoneOffset = targetZone.rules.getOffset(instantUtc)
+
+        // Subtract the offset to counteract the backend's internal +2h timezone addition - this is a hack to overcome GO-e wrong API behavior
+        val adjustedFromMillis = instantUtc.toEpochMilli() - zoneOffset.totalSeconds * 1000L
+        val adjustedToMillis = Instant.now().toEpochMilli() - zoneOffset.totalSeconds * 1000L
+
         val params = mapOf(
             "e" to station.cloudDownloadToken,
-            "from" to fromTimestampUtc.toInstant(ZoneOffset.UTC).toEpochMilli().toString(),
-            "to" to Instant.now().toEpochMilli().toString(), // without TO timestamp filtering is not working
-            "timezone" to "Utc/UTC",
-        ).entries.joinToString("&") { (key, value) -> "$key=$value" }
-        return RestClient.create().get().uri("${station.cloudDownload}?$params")
+            "from" to adjustedFromMillis.toString(),
+            "to" to adjustedToMillis.toString(),
+            "timezone" to "Europe/Vienna",
+        ).entries.joinToString("&") { (key, value) ->
+            val encodedValue = URLEncoder.encode(value, StandardCharsets.UTF_8.toString())
+            "$key=$encodedValue"
+        }
+
+        val finalUrl = "${station.cloudDownload}?$params"
+        return RestClient.create().get().uri(finalUrl)
     }
 
 }
