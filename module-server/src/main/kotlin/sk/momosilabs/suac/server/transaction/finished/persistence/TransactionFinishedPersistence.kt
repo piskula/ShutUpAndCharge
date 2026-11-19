@@ -4,10 +4,12 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import sk.momosilabs.suac.server.transaction.finished.model.ChargingToCreate
+import sk.momosilabs.suac.server.transaction.finished.model.KwhRecord
 import sk.momosilabs.suac.server.transaction.finished.model.MonthlyTransactionSummary
 import sk.momosilabs.suac.server.transaction.finished.model.TransactionFinished
 import sk.momosilabs.suac.server.transaction.finished.model.TransactionFinishedFilter
 import java.math.BigDecimal
+import java.time.LocalDateTime
 import java.util.stream.Stream
 
 interface TransactionFinishedPersistence {
@@ -19,6 +21,8 @@ interface TransactionFinishedPersistence {
     fun getNegativeByUserId(userId: String, pageable: Pageable): Page<TransactionFinished>
 
     fun getMonthlySummaryByUserId(userId: String, pageable: Pageable): Page<MonthlyTransactionSummary>
+
+    fun getKwhRecords(filter: TransactionFinishedFilter, fromUtc: LocalDateTime, toUtcExclusive: LocalDateTime): List<KwhRecord>
 
     fun sumUpForUsers(userIds: Set<String>): Map<String, BigDecimal>
 

@@ -1,0 +1,24 @@
+:host {
+  display: block;
+  padding: 8px 16px;
+}
+
+.chart-title {
+  margin: 8px 0;
+  font: var(--mat-sys-title-medium);
+}
+
+.progress-placeholder {
+  height: 4px;
+}
+
+.chart {
+  width: 100%;
+  height: 320px;
+}
+
+.chart-message {
+  padding: 32px 0;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+}

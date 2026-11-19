@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import sk.momosilabs.suac.server.account.persistence.repository.AccountRepository
 import sk.momosilabs.suac.server.transaction.finished.model.ChargingToCreate
+import sk.momosilabs.suac.server.transaction.finished.model.KwhRecord
 import sk.momosilabs.suac.server.transaction.finished.model.MonthlyTransactionSummary
 import sk.momosilabs.suac.server.transaction.finished.model.TransactionFinished
 import sk.momosilabs.suac.server.transaction.finished.model.TransactionFinishedFilter
@@ -24,6 +25,7 @@ import sk.momosilabs.suac.server.transaction.finished.persistence.entity.QChargi
 import sk.momosilabs.suac.server.transaction.finished.persistence.repository.ChargingFinishedRepository
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Repository
 open class TransactionFinishedPersistenceProvider(
@@ -70,6 +72,36 @@ open class TransactionFinishedPersistenceProvider(
     override fun getNegativeByUserId(userId: String, pageable: Pageable): Page<TransactionFinished> =
         chargingRepository.findAllByAccountIdKeycloakAndPriceLessThan(userId, BigDecimal.ZERO, pageable)
             .map { it.toModel() }
+
+    @Transactional(readOnly = true)
+    override fun getKwhRecords(
+        filter: TransactionFinishedFilter,
+        fromUtc: LocalDateTime,
+        toUtcExclusive: LocalDateTime,
+    ): List<KwhRecord> =
+        JPAQueryFactory(entityManager)
+            .select(
+                transaction.account.id,
+                transaction.account.firstName,
+                transaction.account.lastName,
+                transaction.timeStartUtc,
+                transaction.kwh,
+            )
+            .from(transaction)
+            .where(
+                filter.transformToWhereClause(transaction),
+                transaction.timeStartUtc.goe(fromUtc),
+                transaction.timeStartUtc.lt(toUtcExclusive),
+            )
+            .fetch()
+            .map { tuple ->
+                KwhRecord(
+                    accountId = tuple.get(transaction.account.id)!!,
+                    accountName = "${tuple.get(transaction.account.firstName)} ${tuple.get(transaction.account.lastName)}",
+                    timeStartUtc = tuple.get(transaction.timeStartUtc)!!,
+                    kwh = tuple.get(transaction.kwh)!!,
+                )
+            }
 
     @Transactional(readOnly = true)
     override fun sumUpForUsers(userIds: Set<String>): Map<String, BigDecimal> =

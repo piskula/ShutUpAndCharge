@@ -21,14 +21,14 @@ open class GetTransactionList(
     override fun get(filter: TransactionFinishedFilter, pageable: Pageable): Page<TransactionFinished> {
         val isAdmin = currentUserService.isAdmin()
         return transactionPersistence.getAll(
-            filter = filter.addCurrentUserWhen(isNotAdmin = !isAdmin, currentUserService.keycloakId()),
+            filter = filter.restrictToCurrentUserWhen(isNotAdmin = !isAdmin, currentUserService.keycloakId()),
             pageable = pageable,
         )
     }
 
-    private fun TransactionFinishedFilter.addCurrentUserWhen(isNotAdmin: Boolean, currentUserId: String) =
+    private fun TransactionFinishedFilter.restrictToCurrentUserWhen(isNotAdmin: Boolean, currentUserId: String) =
         if (isNotAdmin)
-            copy(accountIds = accountIds.plus(currentUserId))
+            copy(accountIds = setOf(currentUserId))
         else
             this
 

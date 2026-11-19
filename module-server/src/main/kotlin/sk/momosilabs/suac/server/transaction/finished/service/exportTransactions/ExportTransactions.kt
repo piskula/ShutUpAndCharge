@@ -34,14 +34,14 @@ open class ExportTransactions(
     override fun export(filter: TransactionFinishedFilter, sort: Sort): GenericFile {
         val isAdmin = currentUserService.isAdmin()
         val transactions = transactionPersistence.getAllAsStream(
-            filter = filter.addCurrentUserWhen(isNotAdmin = !isAdmin, currentUserService.keycloakId()),
+            filter = filter.restrictToCurrentUserWhen(isNotAdmin = !isAdmin, currentUserService.keycloakId()),
             sort = sort,
         )
         val outputStream = transactions.use { excelExportService.exportEntityToStream(it, excelMapping) }
         return GenericFile.asExcelFile("transactions.xlsx", outputStream)
     }
 
-    private fun TransactionFinishedFilter.addCurrentUserWhen(isNotAdmin: Boolean, currentUserId: String) =
-        if (isNotAdmin) copy(accountIds = accountIds.plus(currentUserId)) else this
+    private fun TransactionFinishedFilter.restrictToCurrentUserWhen(isNotAdmin: Boolean, currentUserId: String) =
+        if (isNotAdmin) copy(accountIds = setOf(currentUserId)) else this
 
 }

@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { TransactionFinishedTableComponent } from '../transaction-finished-table/transaction-finished-table.component';
+import { TransactionKwhChartComponent } from '../transaction-kwh-chart/transaction-kwh-chart.component';
 import { HttpResponse } from '@angular/common/http';
 
 export type TransactionType = 'all' | 'credit' | 'charging';
@@ -32,6 +33,7 @@ export interface ActiveFilterChip {
     MatSlideToggleModule,
     MatButtonToggleModule,
     TransactionFinishedTableComponent,
+    TransactionKwhChartComponent,
   ],
 })
 export class TransactionListComponent {
@@ -43,6 +45,9 @@ export class TransactionListComponent {
   protected readonly onlyMine = signal(false);
   protected readonly transactionType = signal<TransactionType>('all');
   protected readonly panelExpanded = signal(false);
+
+  // Same filter as used by the table; depends only on signals, so the chart reloads whenever the table is refreshed.
+  protected readonly chartFilter = computed(() => this.buildFilter());
 
   protected readonly activeFilters = computed<ActiveFilterChip[]>(() => {
     const filters: ActiveFilterChip[] = [];

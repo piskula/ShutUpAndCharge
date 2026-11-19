@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import sk.momosilabs.suac.api.common.dto.PageDTO
 import sk.momosilabs.suac.api.common.dto.PageableDTO
+import sk.momosilabs.suac.api.transaction.finished.dto.MonthlyKwhChartDTO
 import sk.momosilabs.suac.api.transaction.finished.dto.TransactionFinishedDTO
 import sk.momosilabs.suac.api.transaction.finished.dto.TransactionFilterDTO
 
@@ -41,5 +42,12 @@ interface TransactionFinishedApi {
         @RequestBody filter: TransactionFilterDTO,
         @RequestParam(required = false) sort: String?,
     ): ResponseEntity<ByteArrayResource>
+
+    @Operation(summary = "Monthly charged kWh per user (stacked chart data, max 12 months, top 5 users + Other)")
+    @PostMapping(
+        "$ENDPOINT_TRANSACTION_FINISHED/monthlyKwh",
+        produces = [MediaType.APPLICATION_JSON_VALUE], consumes = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun getMonthlyKwh(@RequestBody filter: TransactionFilterDTO): MonthlyKwhChartDTO
 
 }

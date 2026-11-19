@@ -63,4 +63,7 @@
     [fetchFn]="fetchFn"
     [exportFn]="exportFn">
   </app-transaction-finished-table>
+  @if (authService.isAdmin()) {
+    <app-transaction-kwh-chart [filter]="chartFilter()"></app-transaction-kwh-chart>
+  }
 }

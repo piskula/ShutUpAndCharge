@@ -1,0 +1,15 @@
+<h3 class="chart-title">Charged kWh per month</h3>
+
+@if (isLoading()) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+} @else {
+  <div class="progress-placeholder"></div>
+}
+
+@if (hasError()) {
+  <div class="chart-message">Failed to load chart data</div>
+} @else if (!isLoading() && isEmpty()) {
+  <div class="chart-message">No data for selected filters</div>
+} @else if (!isEmpty()) {
+  <div echarts class="chart" [options]="options()" [autoResize]="true"></div>
+}

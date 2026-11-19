@@ -191,6 +191,37 @@
         }
       }
     },
+    "/api/transaction/finished/monthlyKwh": {
+      "post": {
+        "tags": [
+          "Finished Transaction"
+        ],
+        "summary": "Monthly charged kWh per user (stacked chart data, max 12 months, top 5 users + Other)",
+        "operationId": "getMonthlyKwh",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionFilterDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonthlyKwhChartDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/dashboard/stop": {
       "post": {
         "tags": [
@@ -783,6 +814,56 @@
               "type": "string"
             },
             "uniqueItems": true
+          }
+        }
+      },
+      "MonthlyKwhSeriesDTO": {
+        "type": "object",
+        "required": [
+          "kwh",
+          "name",
+          "other"
+        ],
+        "properties": {
+          "accountId": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "other": {
+            "type": "boolean"
+          },
+          "kwh": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "MonthlyKwhChartDTO": {
+        "type": "object",
+        "required": [
+          "months",
+          "series"
+        ],
+        "properties": {
+          "months": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MonthlyKwhSeriesDTO"
+            }
           }
         }
       },
