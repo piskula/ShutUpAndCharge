@@ -5,8 +5,8 @@ plugins {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("io.swagger.core.v3:swagger-annotations:2.2.55")
-    implementation("org.springdoc:springdoc-openapi-starter-common:3.0.3")
+    implementation("io.swagger.core.v3:swagger-annotations:2.2.56")
+    implementation("org.springdoc:springdoc-openapi-starter-common:3.2.0")
     // to inject jwt into endpoint function
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.security:spring-security-oauth2-jose")
@@ -16,6 +16,6 @@ dependencies {
 
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.boot:spring-boot-dependencies:4.1.1")
+        mavenBom("org.springframework.boot:spring-boot-dependencies:4.1.2")
     }
 }

@@ -3,7 +3,7 @@ import com.github.gradle.node.npm.task.NpmTask
 plugins {
   id("base")
   id("com.github.node-gradle.node") version "7.1.0"
-  id("org.openapi.generator") version "7.21.0"
+  id("org.openapi.generator") version "7.27.0"
 }
 
 node {
@@ -22,11 +22,7 @@ openApiGenerate {
         )
     )
     inputSpec.set("${apiProject.layout.projectDirectory}/api-docs.json")
-    outputDir.set(
-        layout.buildDirectory
-            .dir("generated-sources/${apiProject.name}")
-            .map { it.asFile.absolutePath }
-    )
+    outputDir.set(layout.buildDirectory.dir("generated-sources/${apiProject.name}"))
 
     apiPackage.set("api")
     modelPackage.set("model")

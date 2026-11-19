@@ -12,6 +12,12 @@ plugins {
 }
 
 val uiProject = project(":module-ui")
+val querydslVersion = "7.7"
+
+// prevent the legacy com.querydsl group (replaced by io.github.openfeign.querydsl) from sneaking in
+configurations.all {
+    exclude(group = "com.querydsl")
+}
 
 springBoot {
   buildInfo()
@@ -24,27 +30,27 @@ tasks.named<Jar>("jar") {
 
 dependencies {
     implementation(project(":module-api"))
-    implementation(uiProject) /* because of putting static sources into jar, can be removed */
+    implementation(project(":module-ui")) /* because of putting static sources into jar, can be removed */
 
     // controller
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("tools.jackson.module:jackson-module-kotlin")
 
     // JSON serialization for external rest client calls
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    runtimeOnly("org.postgresql:postgresql:42.7.14")
+    runtimeOnly("org.postgresql:postgresql")
     implementation("org.springframework.boot:spring-boot-starter-flyway")
     implementation("org.flywaydb:flyway-database-postgresql")
-    implementation("com.querydsl:querydsl-jpa:5.1.0:jakarta")
-    kapt("com.querydsl:querydsl-apt:5.1.0:jakarta")
+    implementation("io.github.openfeign.querydsl:querydsl-jpa:$querydslVersion")
+    kapt("io.github.openfeign.querydsl:querydsl-apt:$querydslVersion:jpa")
 
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-starter-security")
 
     // make swagger documentation available
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.2.0")
 
     implementation("org.apache.poi:poi-ooxml:5.5.1")
 
