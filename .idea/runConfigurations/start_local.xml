@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="start local" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/module-ui/package.json" />
+    <command value="run" />
+    <scripts>
+      <script value="start" />
+    </scripts>
+    <node-interpreter value="$PROJECT_DIR$/module-ui/.gradle/nodejs/node-v26.13.1-win-x64/node" />
+    <package-manager value="$PROJECT_DIR$/module-ui/.gradle/nodejs/node-v26.13.1-win-x64/npm.cmd" />
+    <envs />
+    <method v="2" />
+  </configuration>
+</component>

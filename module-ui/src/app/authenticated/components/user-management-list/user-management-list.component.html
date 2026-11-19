@@ -82,7 +82,7 @@
         </button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="topUp(user.id, user.firstName + ' ' + user.lastName)">
-            <mat-icon>euro</mat-icon>Add credit
+            <mat-icon>money_bag</mat-icon>Add credit
           </button>
           <button mat-menu-item (click)="setVerifiedFlag(user.id, user.firstName + ' ' + user.lastName, !user.verifiedForCharging)">
             <mat-icon [class.fill-icon]="!user.verifiedForCharging">{{ user.verifiedForCharging ? 'power_off' : 'power' }}</mat-icon>

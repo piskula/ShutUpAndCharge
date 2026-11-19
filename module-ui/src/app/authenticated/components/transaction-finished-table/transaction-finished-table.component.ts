@@ -55,4 +55,8 @@ export class TransactionFinishedTableComponent {
   public forceRefresh(): void {
     this.paginatedTable().forceRefresh();
   }
+
+  public resetAndRefresh(): void {
+    this.paginatedTable().resetAndRefresh();
+  }
 }

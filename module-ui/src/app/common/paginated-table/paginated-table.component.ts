@@ -11,7 +11,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, catchError, combineLatest, debounceTime, finalize, Observable, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, debounceTime, finalize, Observable, of, switchMap, tap } from 'rxjs';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Sort } from '@angular/material/sort';
@@ -89,15 +89,15 @@ export class PaginatedTableComponent implements OnInit, OnChanges {
     this.onPageChange$.pipe(
       debounceTime(1), // changing sort and switching to first page would still emit value twice
       tap(() => this.isLoading.set(true)),
-      switchMap(([page, size, sortString]) => this.fetchFn()(page, size, sortString)),
+      switchMap(([page, size, sortString]) => this.fetchFn()(page, size, sortString).pipe(
+        // Handle errors per request, so a failed fetch doesn't terminate the stream and later refreshes still work.
+        // The user is already notified by the HTTP error interceptor.
+        catchError(() => of(this.emptyPage(size))),
+      )),
       tap(page => {
         this.total.set(page.totalElements);
         this.dataSource.emit(page.content);
         this.isLoading.set(false);
-      }),
-      catchError((e) => {
-        this.isLoading.set(false);
-        throw e;
       }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe();
@@ -113,8 +113,23 @@ export class PaginatedTableComponent implements OnInit, OnChanges {
     this.pageIndex.set(0);
   }
 
+  /** Re-fetches the current page, keeping page index, page size and sort. */
   forceRefresh() {
     this.forceRefresh$.next(true);
+  }
+
+  /** Goes back to the first page and re-fetches (e.g. after filters changed). Results in exactly one fetch. */
+  resetAndRefresh() {
+    if (this.pageIndex() !== 0) {
+      // Changing the page index already triggers a fetch via onPageChange$ (also resets the bound paginator).
+      this.pageIndex.set(0);
+    } else {
+      this.forceRefresh$.next(true);
+    }
+  }
+
+  private emptyPage(size: number): Page<any> {
+    return { content: [], number: 0, numberOfElements: 0, size, totalElements: 0, totalPages: 0 };
   }
 
   protected onExport(): void {

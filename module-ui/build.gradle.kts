@@ -8,7 +8,7 @@ plugins {
 
 node {
     download.set(true)
-    version = "24.18.0"
+    version = "26.13.1"
 }
 
 val apiProject = project(":module-api")

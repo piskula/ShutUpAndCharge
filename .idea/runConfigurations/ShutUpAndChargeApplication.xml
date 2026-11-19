@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ShutUpAndChargeApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <module name="ShutUpAndCharge.module-server.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="sk.momosilabs.suac.server.ShutUpAndChargeApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

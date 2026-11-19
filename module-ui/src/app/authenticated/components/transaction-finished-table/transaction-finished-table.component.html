@@ -32,7 +32,7 @@
       <mat-header-cell *matHeaderCellDef mat-sort-header>Station Id</mat-header-cell>
       <mat-cell *matCellDef="let chrg">
         @if (chrg.price > 0) {
-          <mat-icon class="mr-1">savings</mat-icon>Credit
+          <mat-icon class="mr-1">money_bag</mat-icon>Credit
         } @else {
           <mat-icon class="fill-icon mr-1">power</mat-icon>{{ chrg.chargingStationId }}
         }

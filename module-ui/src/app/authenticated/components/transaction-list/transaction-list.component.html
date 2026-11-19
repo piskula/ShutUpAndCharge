@@ -1,34 +1,66 @@
 @if (authService.isAdmin()) {
-  <mat-accordion>
-    <mat-expansion-panel class="my-1 mx-1">
-      <mat-expansion-panel-header>
+  <mat-expansion-panel
+    class="my-1 mx-1"
+    [(expanded)]="panelExpanded">
+    <mat-expansion-panel-header>
 
-        <mat-panel-title style="flex-grow: unset">
-          @if (activeFilters().length > 0) {
-            <mat-icon class="mr-1">filter_alt</mat-icon>
-          } @else {
-            <mat-icon class="mr-1">filter_alt_off</mat-icon>
-          }
-        </mat-panel-title>
+      <mat-panel-title class="filter-title">
+        <mat-icon class="mr-1">{{ activeFilters().length > 0 ? 'filter_alt' : 'filter_alt_off' }}</mat-icon>
+        <!-- Always present so the header has an accessible name; only visible while the panel is expanded. -->
+        <span [class.visually-hidden]="!panelExpanded()">Filters</span>
+      </mat-panel-title>
 
-        <mat-panel-description>
-          <mat-chip-set>
+      @if (!panelExpanded()) {
+        <mat-panel-description class="filter-chips">
+          <mat-chip-set
+            (click)="$event.stopPropagation()"
+            (keydown)="$event.stopPropagation()">
             @for (activeFilter of activeFilters(); track activeFilter.id) {
-              <mat-chip-row [editable]="false" (removed)="removeFilter(activeFilter.id)">
-                <mat-icon matChipAvatar>{{ activeFilter.icon }}</mat-icon>
+              <mat-chip (removed)="removeFilter(activeFilter.id)">
+                <mat-icon matChipAvatar [class.fill-icon]="activeFilter.filled">{{ activeFilter.icon }}</mat-icon>
                 {{ activeFilter.title }}
-                <mat-icon matChipRemove>cancel</mat-icon>
-              </mat-chip-row>
+                <button matChipRemove [attr.aria-label]="'Remove ' + activeFilter.title + ' filter'">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip>
             }
           </mat-chip-set>
         </mat-panel-description>
+      }
 
-      </mat-expansion-panel-header>
-      <button mat-stroked-button (click)="addCurrentUserFilter()">Only mine</button>
-    </mat-expansion-panel>
-  </mat-accordion>
+    </mat-expansion-panel-header>
+
+    <div class="filter-controls">
+      <mat-slide-toggle
+        [checked]="onlyMine()"
+        (change)="setOnlyMine($event.checked)">
+        Only mine
+      </mat-slide-toggle>
+
+      <mat-button-toggle-group
+        aria-label="Transaction type"
+        [value]="transactionType()"
+        (change)="setTransactionType($event.value)">
+        <mat-button-toggle value="all">
+          <mat-icon>list</mat-icon>
+          All
+        </mat-button-toggle>
+        <mat-button-toggle value="credit">
+          <mat-icon>money_bag</mat-icon>
+          Top-ups
+        </mat-button-toggle>
+        <mat-button-toggle value="charging">
+          <mat-icon class="fill-icon">power</mat-icon>
+          Charging
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </mat-expansion-panel>
 }
-<app-transaction-finished-table
-  [fetchFn]="fetchFn"
-  [exportFn]="exportFn">
-</app-transaction-finished-table>
+@if (authService.currentUserValue()) {
+  <!-- Rendered once the current user is known, so the first fetch already carries the default filter. -->
+  <app-transaction-finished-table
+    [fetchFn]="fetchFn"
+    [exportFn]="exportFn">
+  </app-transaction-finished-table>
+}
