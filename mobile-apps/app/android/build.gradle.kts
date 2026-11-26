@@ -31,6 +31,7 @@ android {
         buildConfigField("String", "REALM_URL", "\"https://sso.momosi.org/realms/momosi/\"")
         buildConfigField("String", "OAUTH_CLIENT_ID", "\"mobile-client\"")
         buildConfigField("String", "APP_SCHEME", "\"$appScheme\"")
+        buildConfigField("boolean", "USE_MOCK_DATA", "false")
         manifestPlaceholders["oidcRedirectScheme"] = appScheme
     }
 
@@ -42,6 +43,13 @@ android {
         debug {
             isMinifyEnabled = false
             isShrinkResources = false
+        }
+        // Demo build on in-memory data (no Keycloak, no backend). Same applicationId as prod because
+        // google-services.json only knows that one, so it replaces an installed debug/release app.
+        create("mock") {
+            initWith(getByName("debug"))
+            matchingFallbacks += "debug"
+            buildConfigField("boolean", "USE_MOCK_DATA", "true")
         }
     }
 

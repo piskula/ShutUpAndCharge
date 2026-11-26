@@ -25,7 +25,7 @@ import org.momosi.shutupandcharge.user.di.userModule
 val appModule = module {
     single { CoroutineScope(SupervisorJob()) }
     single(createdAtStart = true) { CrashReportingSync(get(), get(), get()) }
-    viewModel { SuacViewModel(get(), get(), get()) }
+    viewModel { SuacViewModel(get(), get(), get(), get()) }
 }
 
 val allModules: List<Module> = listOf(

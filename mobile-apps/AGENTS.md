@@ -29,7 +29,8 @@ Root package: `org.momosi.shutupandcharge`. Gradle paths below are relative to `
 * **`feature/*`** — one product feature each, split into `api` (navigation key only) and `impl`
   (ViewModel, Composables, State/Action). Today: `welcome`, `dashboard`, `transactions`, `profile`, `admin`.
 * **`core/*`** — shared domain logic and infrastructure: `common`, `dto`, `network`, `user`, `charger`,
-  `transaction`, `account`, `navigation`, `ui-library`.
+  `transaction`, `account`, `navigation`, `ui-library`, and `mock` (in-memory demo backend, see
+  [Demo mode](#demo-mode)).
 
 Every module has its own `AGENTS.md` describing its responsibilities — read it before changing that
 module and record module-specific rules there.
@@ -104,7 +105,14 @@ Useful backend facts:
 
 * ViewModels: `viewModel { XxxViewModel(get(), …) }`, injected with `koinViewModel()`.
 * One Koin module per core/feature module, aggregated only in `app:shared`'s `allModules`.
+  `:core:mock`'s `mockModule` is the exception: `initKoin` loads it on top of `allModules` only in demo mode.
 * Platform bindings use `expect fun platformXxxModule(): Module` (see `core:transaction`'s `FileSharer`).
+
+### Demo mode
+
+`AppConfig.useMockData` (Android `mock` build type, iOS `APP_ENVIRONMENT = demo`) replaces Keycloak and
+the backend with `:core:mock`'s in-memory fakes and shows a "Demo data" badge. When you add a method to a
+repository interface that `:core:mock` overrides, implement it in the matching `Mock*Repository` too.
 
 ### UI Library
 

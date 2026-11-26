@@ -19,5 +19,6 @@ class SuacApplication : Application() {
         realmUrl = BuildConfig.REALM_URL,
         oauthClientId = BuildConfig.OAUTH_CLIENT_ID,
         appScheme = BuildConfig.APP_SCHEME,
+        useMockData = BuildConfig.USE_MOCK_DATA,
     )
 }

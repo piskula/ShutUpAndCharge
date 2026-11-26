@@ -30,6 +30,8 @@
 	<string>$(SUAC_OAUTH_CLIENT_ID)</string>
 	<key>SuacRealmUrl</key>
 	<string>$(SUAC_REALM_URL)</string>
+	<key>SuacUseMockData</key>
+	<string>$(SUAC_USE_MOCK_DATA)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>

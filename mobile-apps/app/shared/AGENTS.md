@@ -9,5 +9,6 @@ Wiring point of the app; produces the iOS `Shared.framework`.
   switches root destinations.
 * `MainTabs.kt` — Dashboard, Transactions, Admin (admins only), Profile.
 * `AppNavKeySerializers.kt` — register every `NavKey` that can be in the back stack.
-* `di/AppModule.kt` — `allModules`, the only Koin aggregation.
+* `di/AppModule.kt` — `allModules`, the only Koin aggregation. `initKoin` adds `:core:mock`'s
+  `mockModule` on top when `AppConfig.useMockData` is on; `DemoModeBadge` then marks every screen.
 * iosMain: `bootstrapIosApp(...)` and `MainViewController()` for Swift.

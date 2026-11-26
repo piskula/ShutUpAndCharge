@@ -8,6 +8,7 @@ fun bootstrapIosApp(
     realmUrl: String,
     oauthClientId: String,
     appScheme: String,
+    useMockData: Boolean,
 ) {
     initKoin(
         AppConfig(
@@ -15,6 +16,7 @@ fun bootstrapIosApp(
             realmUrl = realmUrl,
             oauthClientId = oauthClientId,
             appScheme = appScheme,
+            useMockData = useMockData,
         ),
     )
     initApp(isDebug = isDebug)

@@ -8,12 +8,17 @@ import org.momosi.shutupandcharge.core.common.config.AppConfig
 import org.momosi.shutupandcharge.core.common.crashreporting.CrashReporting
 import org.momosi.shutupandcharge.core.common.environment.AppEnvironment
 import org.momosi.shutupandcharge.core.common.logger.Logger
+import org.momosi.shutupandcharge.core.mock.di.mockModule
 
 fun initKoin(appConfig: AppConfig, platformConfig: KoinApplication.() -> Unit = {}) {
     startKoin {
         platformConfig()
         modules(module { single { appConfig } })
         modules(allModules)
+        if (appConfig.useMockData) {
+            allowOverride(true)
+            modules(mockModule)
+        }
     }
 }
 

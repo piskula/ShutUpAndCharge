@@ -1,6 +1,7 @@
 package org.momosi.shutupandcharge.core.common.config
 
-data class AppConfig(val apiBaseUrl: String, val realmUrl: String, val oauthClientId: String, val appScheme: String) {
+/** [useMockData] swaps Keycloak and the backend for in-memory demo data (`:core:mock`). */
+data class AppConfig(val apiBaseUrl: String, val realmUrl: String, val oauthClientId: String, val appScheme: String, val useMockData: Boolean = false) {
     init {
         requireBaseUrl("apiBaseUrl", apiBaseUrl)
         requireBaseUrl("realmUrl", realmUrl)

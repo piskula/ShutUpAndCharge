@@ -35,6 +35,7 @@ include(
     ":core:charger",
     ":core:transaction",
     ":core:account",
+    ":core:mock",
     ":feature:welcome:api",
     ":feature:welcome:impl",
     ":feature:dashboard:api",
