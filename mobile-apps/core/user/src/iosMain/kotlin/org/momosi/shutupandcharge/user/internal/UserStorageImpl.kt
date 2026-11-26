@@ -15,14 +15,23 @@ private const val USER_NAME = "user_name"
 private const val USER_EMAIL = "user_email"
 private const val USER_USERNAME = "user_username"
 private const val USER_ROLES = "user_roles"
+private const val KEYCHAIN_INITIALIZED = "keychain_initialized"
 
-class UserStorageImpl(private val defaults: NSUserDefaults) : UserStorage {
+internal class UserStorageImpl(private val defaults: NSUserDefaults, private val keychain: KeychainStore) : UserStorage {
+
+    init {
+        // Keychain items survive uninstall while defaults do not; drop tokens left by a previous install.
+        if (!defaults.boolForKey(KEYCHAIN_INITIALIZED)) {
+            keychain.remove(TOKENS)
+            defaults.setBool(true, KEYCHAIN_INITIALIZED)
+        }
+    }
 
     override var tokens: StoredTokens?
         set(value) {
-            if (value != null) defaults.setObject(Json.encodeToString(value), TOKENS) else defaults.removeObjectForKey(TOKENS)
+            if (value != null) keychain.set(TOKENS, Json.encodeToString(value)) else keychain.remove(TOKENS)
         }
-        get() = (defaults.stringForKey(TOKENS))?.let { runCatching { Json.decodeFromString<StoredTokens>(it) }.getOrNull() }
+        get() = keychain.get(TOKENS)?.let { runCatching { Json.decodeFromString<StoredTokens>(it) }.getOrNull() }
 
     override var serverPublicKey: String?
         set(value) {

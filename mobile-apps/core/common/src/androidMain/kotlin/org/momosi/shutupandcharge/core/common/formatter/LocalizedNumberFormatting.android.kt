@@ -8,7 +8,12 @@ internal actual fun createPlatformNumberFormatter(): PlatformNumberFormatter = A
 private class AndroidPlatformNumberFormatter : PlatformNumberFormatter {
 
     override fun formatCurrency(amount: Double, currencyCode: String): String = java.text.NumberFormat.getCurrencyInstance(Locale.getDefault())
-        .apply { currency = Currency.getInstance(currencyCode) }
+        .apply {
+            val selected = Currency.getInstance(currencyCode)
+            currency = selected
+            minimumFractionDigits = selected.defaultFractionDigits
+            maximumFractionDigits = selected.defaultFractionDigits
+        }
         .format(amount)
 
     override fun formatDecimal(value: Double, fractionDigits: Int): String = java.text.NumberFormat.getNumberInstance(Locale.getDefault())
