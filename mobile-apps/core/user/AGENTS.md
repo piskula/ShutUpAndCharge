@@ -1,7 +1,9 @@
 # core:user
 
-Keycloak OIDC authentication via kotlin-multiplatform-oidc (authorization code + PKCE, scopes
-`openid offline_access`), JWT verification against the realm public key, token storage and refresh.
+Keycloak OIDC authentication via kotlin-multiplatform-oidc (authorization code + PKCE, scope `openid`
+only, no `offline_access`), JWT verification against the realm public key, token storage and refresh.
+The refresh token lives as long as the Keycloak SSO session; when it expires, the next refresh fails
+and the user is sent back to sign in.
 
 * `AuthManager` — `authenticationState`, `signIn()`, `signOut()` (needs a connection), `token()`,
   `invalidateSession()`.

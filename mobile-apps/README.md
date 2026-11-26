@@ -42,8 +42,10 @@ Create a client in the `momosi` realm (the backend only validates the issuer, no
 * Client ID `suac-mobile`, **public** client (client authentication off), standard flow on, PKCE `S256`.
 * Valid redirect URIs: `org.momosi.shutupandcharge://auth/callback`.
 * Valid post logout redirect URIs: `org.momosi.shutupandcharge://auth/logout`.
-* Make sure the `offline_access` client scope is allowed (the app requests `openid offline_access`) and
-  realm roles (`MOMO_USER`, `MOMO_ADMIN`) are included in the access token (`realm_access.roles`).
+* Realm roles (`MOMO_USER`, `MOMO_ADMIN`) must be included in the access token (`realm_access.roles`,
+  the default `roles` client scope).
+* The app requests only the `openid` scope (no `offline_access`), so its refresh token is tied to the
+  Keycloak SSO session: users must sign in again after the realm's *SSO Session Idle* / *SSO Session Max*.
 
 ## Building locally
 
