@@ -1,0 +1,33 @@
+<resources>
+    <string name="admin_title">Administrácia</string>
+    <string name="admin_subtitle">Používatelia a nespracované transakcie</string>
+    <string name="admin_tab_users">Používatelia</string>
+    <string name="admin_tab_pending">Nespracované transakcie</string>
+    <string name="admin_load_failed">Údaje sa nepodarilo načítať. Skúste to znova.</string>
+    <string name="admin_retry">Skúsiť znova</string>
+    <string name="admin_cancel">Zrušiť</string>
+    <string name="admin_users_empty">Žiadni používatelia.</string>
+    <string name="admin_charging_allowed">Nabíjanie povolené</string>
+    <string name="admin_charging_blocked">Nabíjanie nepovolené</string>
+    <string name="admin_action_top_up">Dobiť kredit</string>
+    <string name="admin_action_enable_charging">Povoliť nabíjanie</string>
+    <string name="admin_action_disable_charging">Zakázať nabíjanie</string>
+    <string name="admin_action_rfid">Priradiť RFID čip</string>
+    <string name="admin_action_copy_id">Kopírovať Keycloak ID</string>
+    <string name="admin_top_up_title">Dobiť kredit</string>
+    <string name="admin_top_up_label">Suma (€)</string>
+    <string name="admin_top_up_confirm">Dobiť</string>
+    <string name="admin_verified_enable_title">Povoliť nabíjanie?</string>
+    <string name="admin_verified_enable_message">%1$s bude môcť spustiť nabíjanie.</string>
+    <string name="admin_verified_disable_title">Zakázať nabíjanie?</string>
+    <string name="admin_verified_disable_message">%1$s už nebude môcť spustiť nabíjanie.</string>
+    <string name="admin_chip_title">RFID čip</string>
+    <string name="admin_chip_label">UID čipu</string>
+    <string name="admin_chip_none">Bez priradeného RFID čipu</string>
+    <string name="admin_chip_save">Uložiť</string>
+    <string name="admin_chip_remove">Odstrániť čip</string>
+    <string name="admin_pending_sync">Vynútiť synchronizáciu</string>
+    <string name="admin_pending_sync_hint">Stiahne dokončené nabíjania zo stanice a spracuje ich na transakcie.</string>
+    <string name="admin_pending_empty">Žiadne nespracované transakcie.</string>
+    <string name="admin_pending_meter">Elektromer %1$s</string>
+</resources>

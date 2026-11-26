@@ -1,0 +1,33 @@
+<resources>
+    <string name="ok">OK</string>
+    <string name="cancel">Zrušiť</string>
+    <string name="retry">Skúsiť znova</string>
+    <string name="error_no_connection">Žiadne internetové pripojenie. Skontrolujte pripojenie a skúste to znova.</string>
+    <string name="error_unauthorized">Vaše prihlásenie vypršalo. Prihláste sa znova.</string>
+    <string name="error_generic">Niečo sa pokazilo. Skúste to znova.</string>
+    <string name="charger_station_name">Kutlíkova</string>
+    <string name="charger_refresh">Obnoviť stav</string>
+    <string name="charger_state_unknown">Stav neznámy</string>
+    <string name="charger_state_offline">Offline (mimo prevádzky)</string>
+    <string name="charger_state_free">Voľná</string>
+    <string name="charger_state_connected">Auto pripojené</string>
+    <string name="charger_state_charging">Obsadená (%1$s)</string>
+    <string name="charger_state_complete">Dokončené (%1$s)</string>
+    <string name="charger_state_error">Chyba</string>
+    <string name="charger_description_unknown">Načítavam stav stanice…</string>
+    <string name="charger_description_offline">Ospravedlňujeme sa, ale stanica je zrejme mimo prevádzky (nedokážeme sa k nej pripojiť).</string>
+    <string name="charger_description_free">Stanica je pripravená. Na začatie nabíjania pripojte kábel a obnovte stav.</string>
+    <string name="charger_description_connected">Auto je pripojené, môžete začať nabíjať.</string>
+    <string name="charger_description_charging">Prebieha nabíjanie.</string>
+    <string name="charger_description_complete">Nabíjanie je dokončené. Môžete odpojiť kábel.</string>
+    <string name="charger_description_error">Ospravedlňujeme sa, ale stanica je zrejme mimo prevádzky (zatiaľ nepoznáme dôvod).</string>
+    <string name="charger_occupied_since">Nabíja sa od %1$s</string>
+    <string name="charger_current_label">Nabíjací prúd</string>
+    <string name="charger_current_value">%1$d A</string>
+    <string name="charger_start">Spustiť nabíjanie</string>
+    <string name="charger_stop">Zastaviť nabíjanie</string>
+    <string name="charger_sign_in_hint">Pre spustenie nabíjania sa prihláste.</string>
+    <string name="chart_other">Ostatní</string>
+    <string name="chart_empty">V tomto období neprebehlo žiadne nabíjanie.</string>
+    <string name="transaction_credit">Kredit</string>
+</resources>

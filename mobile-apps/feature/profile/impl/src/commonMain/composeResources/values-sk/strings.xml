@@ -1,0 +1,20 @@
+<resources>
+    <string name="profile_title">Profil</string>
+    <string name="profile_subtitle">Účet a nastavenia aplikácie</string>
+    <string name="profile_sign_out">Odhlásiť sa</string>
+    <string name="profile_role_user">Používateľ</string>
+    <string name="profile_role_admin">Administrátor</string>
+    <string name="profile_no_charging_role">Váš účet zatiaľ nemá prístup k nabíjačke. Kontaktujte administrátora.</string>
+    <string name="profile_username">Prihlasovacie meno: %1$s</string>
+    <string name="profile_version_dialog_title">Verzia aplikácie</string>
+    <string name="profile_version_app_label">Aplikácia</string>
+    <string name="profile_version_server_label">Server</string>
+    <string name="profile_version_loading">Načítava sa…</string>
+    <string name="profile_version_unavailable">Nedostupné</string>
+    <string name="profile_version_dismiss">OK</string>
+    <string name="profile_language_title">Jazyk</string>
+    <string name="profile_language_english">Angličtina</string>
+    <string name="profile_language_slovak">Slovenčina</string>
+    <string name="profile_language_restart_title">Vyžaduje sa reštart</string>
+    <string name="profile_language_restart_message">Zatvorte a znova otvorte aplikáciu, aby sa zmena jazyka prejavila.</string>
+</resources>

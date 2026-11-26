@@ -1,0 +1,33 @@
+<resources>
+    <string name="admin_title">Administration</string>
+    <string name="admin_subtitle">Users and pending transactions</string>
+    <string name="admin_tab_users">Users</string>
+    <string name="admin_tab_pending">Pending transactions</string>
+    <string name="admin_load_failed">Could not load data. Please try again.</string>
+    <string name="admin_retry">Retry</string>
+    <string name="admin_cancel">Cancel</string>
+    <string name="admin_users_empty">No users found.</string>
+    <string name="admin_charging_allowed">Charging allowed</string>
+    <string name="admin_charging_blocked">Charging not allowed</string>
+    <string name="admin_action_top_up">Top up credit</string>
+    <string name="admin_action_enable_charging">Allow charging</string>
+    <string name="admin_action_disable_charging">Block charging</string>
+    <string name="admin_action_rfid">Assign RFID chip</string>
+    <string name="admin_action_copy_id">Copy Keycloak ID</string>
+    <string name="admin_top_up_title">Top up credit</string>
+    <string name="admin_top_up_label">Amount (€)</string>
+    <string name="admin_top_up_confirm">Top up</string>
+    <string name="admin_verified_enable_title">Allow charging?</string>
+    <string name="admin_verified_enable_message">%1$s will be able to start charging.</string>
+    <string name="admin_verified_disable_title">Block charging?</string>
+    <string name="admin_verified_disable_message">%1$s will no longer be able to start charging.</string>
+    <string name="admin_chip_title">RFID chip</string>
+    <string name="admin_chip_label">Chip UID</string>
+    <string name="admin_chip_none">No RFID chip assigned</string>
+    <string name="admin_chip_save">Save</string>
+    <string name="admin_chip_remove">Remove chip</string>
+    <string name="admin_pending_sync">Enforce sync</string>
+    <string name="admin_pending_sync_hint">Downloads finished chargings from the station and turns them into transactions.</string>
+    <string name="admin_pending_empty">No pending transactions.</string>
+    <string name="admin_pending_meter">Meter %1$s</string>
+</resources>

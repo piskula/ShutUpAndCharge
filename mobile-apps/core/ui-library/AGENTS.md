@@ -1,0 +1,15 @@
+# core:ui-library
+
+All reusable Compose UI. Features never import material3 directly.
+
+* Theme: `SuacTheme { }`, `AppTheme.colors` (SUAC Azure primary `#005CBB`, positive/warning/error roles),
+  `AppTheme.typography`, `Shapes.CardShape`, `Modifier.card()`.
+* `SuacIcons` (ImageVectors) and `SuacIllustrations` (EV charger illustrations, `*_illustration` drawables).
+* Components: `Button`, `TextButton`, `IconButton`, `Chip`, `FilterChipRow`, `Switch`, `DashboardTopBar`,
+  `Toolbar`, `NavigationBar`, `BottomSheet`, `ConfirmationDialog`, `InfoDialog`, `InputDialog`,
+  `LoadingSpinner`, `SkeletonBox`, `ErrorState`, `ErrorSnackbarHost`, `PullToRefresh`, `SectionLabel`,
+  `TransactionListItem`, `StackedBarChart`.
+* Domain components: `charger/ChargerStatusCard` (status pill, description, current selector,
+  start/stop) and `transaction/TransactionRow` — this is why the module exposes `:core:charger` and
+  `:core:transaction` as `api`.
+* Every component has `@Preview`s in the same file. Strings in English and Slovak.

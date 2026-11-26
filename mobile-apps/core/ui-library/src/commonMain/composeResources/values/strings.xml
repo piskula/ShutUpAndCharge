@@ -1,0 +1,33 @@
+<resources>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="retry">Retry</string>
+    <string name="error_no_connection">No internet connection. Check your connection and try again.</string>
+    <string name="error_unauthorized">Your session has expired. Please sign in again.</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+    <string name="charger_station_name">Kutlíkova</string>
+    <string name="charger_refresh">Refresh status</string>
+    <string name="charger_state_unknown">Status unknown</string>
+    <string name="charger_state_offline">Offline (out of service)</string>
+    <string name="charger_state_free">Free</string>
+    <string name="charger_state_connected">Car connected</string>
+    <string name="charger_state_charging">Occupied (%1$s)</string>
+    <string name="charger_state_complete">Completed (%1$s)</string>
+    <string name="charger_state_error">Error</string>
+    <string name="charger_description_unknown">Loading the station status…</string>
+    <string name="charger_description_offline">We are sorry, but the station seems to be out of service (we are not able to connect to it).</string>
+    <string name="charger_description_free">The station is ready. To start charging, connect the cable and refresh the status.</string>
+    <string name="charger_description_connected">A car is connected, you can start charging.</string>
+    <string name="charger_description_charging">Charging is in progress.</string>
+    <string name="charger_description_complete">Charging is complete. You can unplug the cable.</string>
+    <string name="charger_description_error">We are sorry, but the station seems to be out of service (we do not know the reason yet).</string>
+    <string name="charger_occupied_since">Charging since %1$s</string>
+    <string name="charger_current_label">Charging current</string>
+    <string name="charger_current_value">%1$d A</string>
+    <string name="charger_start">Start charging</string>
+    <string name="charger_stop">Stop charging</string>
+    <string name="charger_sign_in_hint">Sign in to start charging.</string>
+    <string name="chart_other">Other</string>
+    <string name="chart_empty">No charging in this period.</string>
+    <string name="transaction_credit">Credit</string>
+</resources>
