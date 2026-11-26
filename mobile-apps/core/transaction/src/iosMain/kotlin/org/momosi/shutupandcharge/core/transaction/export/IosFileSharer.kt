@@ -15,6 +15,7 @@ import platform.Foundation.writeToURL
 import platform.UIKit.UIActivityViewController
 import platform.UIKit.UIApplication
 import platform.UIKit.UIViewController
+import platform.UIKit.popoverPresentationController
 
 internal class IosFileSharer(private val dispatcherProvider: DispatcherProvider) : FileSharer {
 
