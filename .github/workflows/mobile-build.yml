@@ -1,0 +1,366 @@
+name: Mobile - Build Debug Apps
+
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - 'mobile-apps/**'
+            - '.github/workflows/mobile-build.yml'
+            - '.github/actions/mobile-*/**'
+            - '!**/*.md'
+    pull_request:
+        paths:
+            - 'mobile-apps/**'
+            - '.github/workflows/mobile-build.yml'
+            - '.github/actions/mobile-*/**'
+            - '!**/*.md'
+    workflow_dispatch:
+
+concurrency:
+    group: mobile-build-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    verify:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+
+        steps:
+            -   name: Checkout Repository
+                uses: actions/checkout@v5
+
+            -   name: Set up Gradle build environment
+                uses: ./.github/actions/mobile-setup-gradle
+
+            -   name: Fetch Firebase Android config
+                run: |
+                    npx firebase-tools@latest apps:sdkconfig ANDROID "$SUAC_FIREBASE_ANDROID_APP_ID" \
+                        --project shutupandcharge \
+                        -o mobile-apps/app/android/google-services.json
+                env:
+                    FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+                    SUAC_FIREBASE_ANDROID_APP_ID: ${{ secrets.SUAC_FIREBASE_ANDROID_APP_ID }}
+
+            -   name: Spotless, detekt, unit tests and Android Lint
+                working-directory: mobile-apps
+                run: |
+                    ./gradlew spotlessCheck \
+                        detektCommonMainSourceSet detektAndroidMainSourceSet detektIosMainSourceSet :app:android:detekt \
+                        testAndroidHostTest \
+                        :app:android:lintDebug \
+                        --continue
+
+            -   name: Upload reports
+                if: failure()
+                uses: actions/upload-artifact@v5
+                with:
+                    name: mobile-verify-reports
+                    path: |
+                        mobile-apps/**/build/reports/**
+                        mobile-apps/**/build/test-results/**
+                    retention-days: 7
+
+    build-android:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout Repository
+                uses: actions/checkout@v5
+
+            -   name: Set up Gradle build environment
+                uses: ./.github/actions/mobile-setup-gradle
+
+            -   name: Fetch Firebase Android config
+                run: |
+                    npx firebase-tools@latest apps:sdkconfig ANDROID "$SUAC_FIREBASE_ANDROID_APP_ID" \
+                        --project shutupandcharge \
+                        -o mobile-apps/app/android/google-services.json
+                env:
+                    FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+                    SUAC_FIREBASE_ANDROID_APP_ID: ${{ secrets.SUAC_FIREBASE_ANDROID_APP_ID }}
+
+            -   name: Build debug APK
+                working-directory: mobile-apps
+                run: |
+                    ./gradlew :app:android:assembleDebug \
+                        -PappVersionName=dev.${{ github.run_number }} \
+                        -PappVersionCode=1
+
+            -   name: Collect APK
+                run: |
+                    mkdir -p dist
+                    mv mobile-apps/app/android/build/outputs/apk/debug/android-debug.apk dist/shut-up-and-charge.apk
+
+            -   name: Upload APK artifact
+                uses: actions/upload-artifact@v5
+                with:
+                    name: mobile-android-debug-apk
+                    path: dist/*.apk
+                    retention-days: 7
+
+    build-ios:
+        # Builds a signed ad-hoc .ipa once the iOS signing secrets are configured; until then it
+        # falls back to an unsigned iOS Simulator build so CI keeps passing.
+        runs-on: macos-15
+        outputs:
+            signed: ${{ steps.check-secrets.outputs.configured }}
+
+        steps:
+            -   name: Checkout Repository
+                uses: actions/checkout@v5
+
+            -   name: Set up Gradle build environment
+                uses: ./.github/actions/mobile-setup-gradle
+
+            -   name: Select latest Xcode
+                uses: maxim-lobanov/setup-xcode@v1
+                with:
+                    xcode-version: latest-stable
+
+            -   name: Cache CocoaPods
+                uses: actions/cache@v4
+                with:
+                    path: |
+                        mobile-apps/app/ios/Pods
+                        ~/Library/Caches/CocoaPods
+                    key: mobile-cocoapods-${{ hashFiles('mobile-apps/app/ios/Podfile') }}
+
+            -   name: Install CocoaPods dependencies
+                working-directory: mobile-apps/app/ios
+                run: pod install
+
+            -   name: Check iOS signing secrets are configured
+                id: check-secrets
+                run: |
+                    if [ -n "$IOS_TEAM_ID" ] && [ -n "$IOS_CERT_B64" ] && [ -n "$IOS_CERT_PASSWORD" ] && [ -n "$IOS_PROFILE_B64" ]; then
+                        echo "configured=true" >> "$GITHUB_OUTPUT"
+                    else
+                        echo "::warning::iOS signing secrets are not configured yet, building an unsigned Simulator app instead of a signed .ipa."
+                        echo "configured=false" >> "$GITHUB_OUTPUT"
+                    fi
+                env:
+                    IOS_TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+                    IOS_CERT_B64: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE_BASE64 }}
+                    IOS_CERT_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE_PASSWORD }}
+                    IOS_PROFILE_B64: ${{ secrets.IOS_ADHOC_PROFILE_BASE64 }}
+
+            -   name: Build iOS Simulator app (unsigned fallback)
+                if: steps.check-secrets.outputs.configured != 'true'
+                env:
+                    FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+                    SUAC_FIREBASE_IOS_APP_ID: ${{ secrets.SUAC_FIREBASE_IOS_APP_ID }}
+                run: |
+                    mkdir -p dist
+                    npx firebase-tools@latest apps:sdkconfig IOS "$SUAC_FIREBASE_IOS_APP_ID" \
+                        --project shutupandcharge \
+                        -o mobile-apps/app/ios/iosApp/GoogleService-Info.plist
+                    xcodebuild \
+                        -workspace mobile-apps/app/ios/iosApp.xcworkspace \
+                        -scheme iosApp \
+                        -sdk iphonesimulator \
+                        -configuration Debug \
+                        -destination 'generic/platform=iOS Simulator' \
+                        -derivedDataPath build-ios \
+                        CODE_SIGNING_ALLOWED=NO \
+                        build
+                    (cd build-ios/Build/Products/Debug-iphonesimulator && zip -qr "$GITHUB_WORKSPACE/dist/shut-up-and-charge-ios-simulator.zip" iosApp.app)
+
+            -   name: Upload Simulator app artifact
+                if: steps.check-secrets.outputs.configured != 'true'
+                uses: actions/upload-artifact@v5
+                with:
+                    name: mobile-ios-simulator-app
+                    path: dist/*-ios-simulator.zip
+                    retention-days: 7
+
+            -   name: Import signing certificate and provisioning profile
+                if: steps.check-secrets.outputs.configured == 'true'
+                env:
+                    IOS_CERT_B64: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE_BASE64 }}
+                    IOS_CERT_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE_PASSWORD }}
+                    IOS_PROFILE_B64: ${{ secrets.IOS_ADHOC_PROFILE_BASE64 }}
+                run: |
+                    KEYCHAIN_PATH="$RUNNER_TEMP/ios-signing.keychain-db"
+                    KEYCHAIN_PASSWORD=$(uuidgen)
+                    CERT_PATH="$RUNNER_TEMP/distribution.p12"
+
+                    echo "$IOS_CERT_B64" | base64 -D -o "$CERT_PATH"
+
+                    security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+                    security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+                    security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+                    security import "$CERT_PATH" -P "$IOS_CERT_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+                    security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH" > /dev/null
+                    security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | sed 's/"//g')
+                    echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
+
+                    PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+                    mkdir -p "$PROFILE_DIR"
+                    PROFILE_PATH="$RUNNER_TEMP/adhoc.mobileprovision"
+                    PROFILE_PLIST="$RUNNER_TEMP/adhoc-profile.plist"
+                    echo "$IOS_PROFILE_B64" | base64 -D -o "$PROFILE_PATH"
+                    security cms -D -i "$PROFILE_PATH" > "$PROFILE_PLIST"
+                    PROFILE_UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" "$PROFILE_PLIST")
+                    PROFILE_NAME=$(/usr/libexec/PlistBuddy -c "Print Name" "$PROFILE_PLIST")
+                    cp "$PROFILE_PATH" "$PROFILE_DIR/$PROFILE_UUID.mobileprovision"
+                    echo "PROFILE_NAME=$PROFILE_NAME" >> "$GITHUB_ENV"
+
+            -   name: Archive signed app
+                if: steps.check-secrets.outputs.configured == 'true'
+                uses: ./.github/actions/mobile-archive-ios-app
+                with:
+                    firebase-ios-app-id: ${{ secrets.SUAC_FIREBASE_IOS_APP_ID }}
+                    firebase-token: ${{ secrets.FIREBASE_TOKEN }}
+                    team-id: ${{ secrets.IOS_TEAM_ID }}
+                    profile-name: ${{ env.PROFILE_NAME }}
+                    build-number: ${{ github.run_number }}
+                    output-path: dist/shut-up-and-charge.ipa
+
+            -   name: Upload signed .ipa artifact
+                if: steps.check-secrets.outputs.configured == 'true'
+                uses: actions/upload-artifact@v5
+                with:
+                    name: mobile-ios-ipa
+                    path: dist/*.ipa
+                    retention-days: 7
+
+            -   name: Clean up signing keychain
+                if: always() && steps.check-secrets.outputs.configured == 'true'
+                run: security delete-keychain "$KEYCHAIN_PATH" || true
+
+    publish-latest:
+        needs: [ verify, build-android, build-ios ]
+        if: |
+            always() &&
+            github.event_name != 'pull_request' &&
+            github.ref == 'refs/heads/main' &&
+            needs.verify.result == 'success'
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+
+        steps:
+            -   name: Download Android artifact
+                uses: actions/download-artifact@v5
+                continue-on-error: true
+                with:
+                    name: mobile-android-debug-apk
+                    path: artifacts
+
+            -   name: Download iOS Simulator artifact
+                uses: actions/download-artifact@v5
+                continue-on-error: true
+                with:
+                    name: mobile-ios-simulator-app
+                    path: artifacts
+
+            -   name: Download iOS .ipa artifact
+                uses: actions/download-artifact@v5
+                continue-on-error: true
+                with:
+                    name: mobile-ios-ipa
+                    path: artifacts
+
+            -   name: Collect available assets
+                id: assets
+                run: |
+                    shopt -s nullglob
+                    FILES=(artifacts/*.apk artifacts/*.ipa artifacts/*-ios-simulator.zip)
+                    if [ ${#FILES[@]} -eq 0 ]; then
+                        echo "::error::Both Android and iOS builds failed (or produced no artifact), nothing to publish"
+                        exit 1
+                    fi
+                    echo "files=${FILES[*]}" >> "$GITHUB_OUTPUT"
+
+            -   name: Delete previous mobile-latest release
+                run: gh release delete mobile-latest --yes --cleanup-tag || true
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    GH_REPO: ${{ github.repository }}
+
+            -   name: Publish mobile-latest pre-release
+                run: |
+                    gh release create mobile-latest ${{ steps.assets.outputs.files }} \
+                        --target "${{ github.sha }}" \
+                        --title "Mobile - Latest Debug Build" \
+                        --prerelease \
+                        --latest=false \
+                        --notes "Automated mobile debug build from main (${{ github.sha }})"
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    GH_REPO: ${{ github.repository }}
+
+    distribute-android:
+        needs: [ verify, build-android ]
+        if: |
+            github.event_name != 'pull_request' &&
+            github.ref == 'refs/heads/main' &&
+            needs.verify.result == 'success'
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Download Android artifact
+                uses: actions/download-artifact@v5
+                with:
+                    name: mobile-android-debug-apk
+                    path: artifacts
+
+            -   name: Write Firebase release notes
+                env:
+                    COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+                run: |
+                    {
+                        echo "$COMMIT_MESSAGE"
+                        echo ""
+                        echo "Commit: ${{ github.sha }}"
+                        echo "Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    } > release-notes.txt
+
+            -   name: Distribute APK to Firebase App Distribution
+                run: |
+                    npx firebase-tools@latest appdistribution:distribute artifacts/shut-up-and-charge.apk \
+                        --app "$SUAC_FIREBASE_ANDROID_APP_ID" \
+                        --groups "internal-testers" \
+                        --release-notes-file release-notes.txt
+                env:
+                    FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+                    SUAC_FIREBASE_ANDROID_APP_ID: ${{ secrets.SUAC_FIREBASE_ANDROID_APP_ID }}
+
+    distribute-ios:
+        needs: [ verify, build-ios ]
+        if: |
+            github.event_name != 'pull_request' &&
+            github.ref == 'refs/heads/main' &&
+            needs.verify.result == 'success' &&
+            needs.build-ios.outputs.signed == 'true'
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Download iOS .ipa artifact
+                uses: actions/download-artifact@v5
+                with:
+                    name: mobile-ios-ipa
+                    path: artifacts
+
+            -   name: Write Firebase release notes
+                env:
+                    COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+                run: |
+                    {
+                        echo "$COMMIT_MESSAGE"
+                        echo ""
+                        echo "Commit: ${{ github.sha }}"
+                        echo "Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    } > release-notes.txt
+
+            -   name: Distribute .ipa to Firebase App Distribution
+                run: |
+                    npx firebase-tools@latest appdistribution:distribute artifacts/shut-up-and-charge.ipa \
+                        --app "$SUAC_FIREBASE_IOS_APP_ID" \
+                        --groups "internal-testers" \
+                        --release-notes-file release-notes.txt
+                env:
+                    FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+                    SUAC_FIREBASE_IOS_APP_ID: ${{ secrets.SUAC_FIREBASE_IOS_APP_ID }}

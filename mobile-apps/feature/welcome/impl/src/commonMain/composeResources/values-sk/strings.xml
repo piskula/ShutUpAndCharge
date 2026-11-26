@@ -1,0 +1,8 @@
+<resources>
+    <string name="welcome_app_name">Shut Up And Charge</string>
+    <string name="welcome_subtitle">Naša zdieľaná nabíjačka. Pozrite sa, či je voľná, a prihláste sa na spustenie nabíjania.</string>
+    <string name="welcome_sign_in">Prihlásiť sa</string>
+    <string name="welcome_error_no_internet">Žiadne internetové pripojenie. Skontrolujte pripojenie a skúste to znova.</string>
+    <string name="welcome_error_unable_to_start">Prihlásenie sa nepodarilo spustiť. Skúste to znova.</string>
+    <string name="welcome_error_failed">Prihlásenie zlyhalo. Skúste to znova.</string>
+</resources>

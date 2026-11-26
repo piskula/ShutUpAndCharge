@@ -1,0 +1,15 @@
+<resources>
+    <string name="transactions_title">Transakcie</string>
+    <string name="transactions_subtitle_user">Vaše nabíjania a dobitia</string>
+    <string name="transactions_subtitle_admin">Všetky nabíjania a dobitia</string>
+    <string name="transactions_only_mine">Iba moje</string>
+    <string name="transactions_type_all">Všetky</string>
+    <string name="transactions_type_top_ups">Dobitia</string>
+    <string name="transactions_type_charging">Nabíjania</string>
+    <string name="transactions_empty">Žiadne transakcie.</string>
+    <string name="transactions_load_failed">Transakcie sa nepodarilo načítať. Skúste to znova.</string>
+    <string name="transactions_load_more_failed">Ďalšie transakcie sa nepodarilo načítať.</string>
+    <string name="transactions_retry">Skúsiť znova</string>
+    <string name="transactions_chart_title">Nabité kWh za mesiac</string>
+    <string name="transactions_chart_failed">Graf sa nepodarilo načítať.</string>
+</resources>

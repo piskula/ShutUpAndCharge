@@ -1,0 +1,15 @@
+<resources>
+    <string name="transactions_title">Transactions</string>
+    <string name="transactions_subtitle_user">Your charging and top-ups</string>
+    <string name="transactions_subtitle_admin">All charging and top-ups</string>
+    <string name="transactions_only_mine">Only mine</string>
+    <string name="transactions_type_all">All</string>
+    <string name="transactions_type_top_ups">Top-ups</string>
+    <string name="transactions_type_charging">Charging</string>
+    <string name="transactions_empty">No transactions found.</string>
+    <string name="transactions_load_failed">Could not load transactions. Please try again.</string>
+    <string name="transactions_load_more_failed">Could not load more transactions.</string>
+    <string name="transactions_retry">Retry</string>
+    <string name="transactions_chart_title">Charged kWh per month</string>
+    <string name="transactions_chart_failed">Could not load the chart.</string>
+</resources>

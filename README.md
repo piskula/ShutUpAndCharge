@@ -8,6 +8,8 @@ https://charge.momosi.org/
 ## Composition
 This Application consists of:
 - Server (Kotlin + Springframework)
+- Web client (Angular SPA, served by the server)
+- Mobile clients for Android and iOS (Kotlin Multiplatform)
 - Keycloak (auth provider)
 - Data storage - currently Postgres
 
@@ -20,6 +22,10 @@ This code is structured in 3 main modules:
 - [module-ui](module-ui)
   - contains Angular SPA (FrontEnd code)
   - is re-using module-api endpoints and DTOs (automatically injected during build)
+
+Next to them, [mobile-apps](mobile-apps) contains the Android and iOS apps. It is a standalone Gradle build
+(not part of `./gradlew clean build`) that talks to the server only through its REST API. See
+[mobile-apps/README.md](mobile-apps/README.md) for building, Keycloak/Firebase setup, CI and releasing.
 
 ## How to build
 1. trigger the complete build by running:

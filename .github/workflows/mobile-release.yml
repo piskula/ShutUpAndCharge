@@ -1,0 +1,372 @@
+name: Mobile - Release
+
+on:
+    push:
+        tags:
+            - 'mobile-v*.*.*'
+
+jobs:
+    prepare:
+        runs-on: ubuntu-latest
+        outputs:
+            version-name: ${{ steps.version.outputs.name }}
+            version-code: ${{ steps.version.outputs.code }}
+
+        steps:
+            -   name: Checkout Repository
+                uses: actions/checkout@v5
+                with:
+                    fetch-depth: 0
+
+            -   name: Parse version from tag
+                id: version
+                run: |
+                    TAG="${GITHUB_REF_NAME}"
+                    if [[ ! "$TAG" =~ ^mobile-v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+                        echo "Tag '$TAG' does not match required mobile-vMAJOR.MINOR.PATCH format" >&2
+                        exit 1
+                    fi
+
+                    MAJOR="${BASH_REMATCH[1]}"
+                    MINOR="${BASH_REMATCH[2]}"
+                    PATCH="${BASH_REMATCH[3]}"
+
+                    if [ "$MINOR" -ge 100 ] || [ "$PATCH" -ge 100 ]; then
+                        echo "MINOR and PATCH must be less than 100 to avoid versionCode collisions" >&2
+                        exit 1
+                    fi
+
+                    echo "name=${MAJOR}.${MINOR}.${PATCH}" >> "$GITHUB_OUTPUT"
+                    echo "code=$((MAJOR * 10000 + MINOR * 100 + PATCH))" >> "$GITHUB_OUTPUT"
+
+            -   name: Generate changelog since previous mobile release
+                run: |
+                    PREVIOUS_TAG=$(git tag --list 'mobile-v*' | grep -E '^mobile-v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | grep -B1 -x "${GITHUB_REF_NAME}" | head -1)
+                    if [ "$PREVIOUS_TAG" = "${GITHUB_REF_NAME}" ]; then
+                        PREVIOUS_TAG=""
+                    fi
+
+                    {
+                        if [ -n "$PREVIOUS_TAG" ]; then
+                            echo "Changes since $PREVIOUS_TAG:"
+                            git log --pretty=format:"- %s" "${PREVIOUS_TAG}..${GITHUB_REF_NAME}" -- mobile-apps
+                        else
+                            echo "Initial mobile release."
+                            git log --pretty=format:"- %s" "${GITHUB_REF_NAME}" -- mobile-apps
+                        fi
+                        echo ""
+                        echo ""
+                        echo "Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                    } > release-notes.txt
+
+            -   name: Upload release notes
+                uses: actions/upload-artifact@v5
+                with:
+                    name: mobile-release-notes
+                    path: release-notes.txt
+                    retention-days: 7
+
+    build-android:
+        needs: [ prepare ]
+        runs-on: ubuntu-latest
+        env:
+            VERSION_NAME: ${{ needs.prepare.outputs.version-name }}
+            VERSION_CODE: ${{ needs.prepare.outputs.version-code }}
+
+        steps:
+            -   name: Checkout Repository
+                uses: actions/checkout@v5
+
+            -   name: Set up Gradle build environment
+                uses: ./.github/actions/mobile-setup-gradle
+
+            -   name: Fetch Firebase Android config
+                run: |
+                    npx firebase-tools@latest apps:sdkconfig ANDROID "$SUAC_FIREBASE_ANDROID_APP_ID" \
+                        --project shutupandcharge \
+                        -o mobile-apps/app/android/google-services.json
+                env:
+                    FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+                    SUAC_FIREBASE_ANDROID_APP_ID: ${{ secrets.SUAC_FIREBASE_ANDROID_APP_ID }}
+
+            -   name: Decode release keystore
+                run: |
+                    KEYSTORE_PATH="$RUNNER_TEMP/release.keystore"
+                    echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$KEYSTORE_PATH"
+                    echo "KEYSTORE_PATH=$KEYSTORE_PATH" >> "$GITHUB_ENV"
+                env:
+                    ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+
+            -   name: Build release APK and AAB
+                working-directory: mobile-apps
+                run: |
+                    ./gradlew :app:android:assembleRelease :app:android:bundleRelease \
+                        -PappVersionName="$VERSION_NAME" \
+                        -PappVersionCode="$VERSION_CODE" \
+                        -PandroidKeystoreFile="$KEYSTORE_PATH" \
+                        -PandroidKeystorePassword="$ANDROID_KEYSTORE_PASSWORD" \
+                        -PandroidKeyAlias="$ANDROID_KEY_ALIAS" \
+                        -PandroidKeyPassword="$ANDROID_KEY_PASSWORD"
+                env:
+                    ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+                    ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+                    ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+            -   name: Remove decoded keystore
+                if: always()
+                run: rm -f "$KEYSTORE_PATH"
+
+            -   name: Collect APK and AAB
+                run: |
+                    mkdir -p dist
+                    mv mobile-apps/app/android/build/outputs/apk/release/android-release.apk "dist/shut-up-and-charge-$VERSION_NAME.apk"
+                    mv mobile-apps/app/android/build/outputs/bundle/release/android-release.aab "dist/shut-up-and-charge-$VERSION_NAME.aab"
+
+            -   name: Upload Android release artifacts
+                uses: actions/upload-artifact@v5
+                with:
+                    name: mobile-android-release
+                    path: dist/*
+                    retention-days: 30
+
+            -   name: Upload R8 mapping file
+                uses: actions/upload-artifact@v5
+                with:
+                    name: mobile-android-mapping
+                    path: mobile-apps/app/android/build/outputs/mapping/release/mapping.txt
+                    retention-days: 90
+
+    build-ios:
+        needs: [ prepare ]
+        runs-on: macos-15
+        outputs:
+            signed: ${{ steps.check-secrets.outputs.configured }}
+        env:
+            VERSION_NAME: ${{ needs.prepare.outputs.version-name }}
+            VERSION_CODE: ${{ needs.prepare.outputs.version-code }}
+
+        steps:
+            -   name: Checkout Repository
+                uses: actions/checkout@v5
+
+            -   name: Check iOS signing secrets are configured
+                id: check-secrets
+                run: |
+                    if [ -n "$IOS_TEAM_ID" ] && [ -n "$IOS_CERT_B64" ] && [ -n "$IOS_CERT_PASSWORD" ] && [ -n "$IOS_PROFILE_B64" ]; then
+                        echo "configured=true" >> "$GITHUB_OUTPUT"
+                    else
+                        echo "::warning::iOS signing secrets are not configured, skipping the iOS release build."
+                        echo "configured=false" >> "$GITHUB_OUTPUT"
+                    fi
+                env:
+                    IOS_TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+                    IOS_CERT_B64: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE_BASE64 }}
+                    IOS_CERT_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE_PASSWORD }}
+                    IOS_PROFILE_B64: ${{ secrets.IOS_ADHOC_PROFILE_BASE64 }}
+
+            -   name: Set up Gradle build environment
+                if: steps.check-secrets.outputs.configured == 'true'
+                uses: ./.github/actions/mobile-setup-gradle
+
+            -   name: Select latest Xcode
+                if: steps.check-secrets.outputs.configured == 'true'
+                uses: maxim-lobanov/setup-xcode@v1
+                with:
+                    xcode-version: latest-stable
+
+            -   name: Cache CocoaPods
+                if: steps.check-secrets.outputs.configured == 'true'
+                uses: actions/cache@v4
+                with:
+                    path: |
+                        mobile-apps/app/ios/Pods
+                        ~/Library/Caches/CocoaPods
+                    key: mobile-cocoapods-${{ hashFiles('mobile-apps/app/ios/Podfile') }}
+
+            -   name: Install CocoaPods dependencies
+                if: steps.check-secrets.outputs.configured == 'true'
+                working-directory: mobile-apps/app/ios
+                run: pod install
+
+            -   name: Import signing certificate and provisioning profile
+                if: steps.check-secrets.outputs.configured == 'true'
+                env:
+                    IOS_CERT_B64: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE_BASE64 }}
+                    IOS_CERT_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE_PASSWORD }}
+                    IOS_PROFILE_B64: ${{ secrets.IOS_ADHOC_PROFILE_BASE64 }}
+                run: |
+                    KEYCHAIN_PATH="$RUNNER_TEMP/ios-signing.keychain-db"
+                    KEYCHAIN_PASSWORD=$(uuidgen)
+                    CERT_PATH="$RUNNER_TEMP/distribution.p12"
+
+                    echo "$IOS_CERT_B64" | base64 -D -o "$CERT_PATH"
+
+                    security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+                    security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+                    security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+                    security import "$CERT_PATH" -P "$IOS_CERT_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+                    security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH" > /dev/null
+                    security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | sed 's/"//g')
+                    echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
+
+                    PROFILE_DIR="$HOME/Library/MobileDevice/Provisioning Profiles"
+                    mkdir -p "$PROFILE_DIR"
+                    PROFILE_PATH="$RUNNER_TEMP/adhoc.mobileprovision"
+                    PROFILE_PLIST="$RUNNER_TEMP/adhoc-profile.plist"
+                    echo "$IOS_PROFILE_B64" | base64 -D -o "$PROFILE_PATH"
+                    security cms -D -i "$PROFILE_PATH" > "$PROFILE_PLIST"
+                    PROFILE_UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" "$PROFILE_PLIST")
+                    PROFILE_NAME=$(/usr/libexec/PlistBuddy -c "Print Name" "$PROFILE_PLIST")
+                    cp "$PROFILE_PATH" "$PROFILE_DIR/$PROFILE_UUID.mobileprovision"
+                    echo "PROFILE_NAME=$PROFILE_NAME" >> "$GITHUB_ENV"
+
+            -   name: Archive signed release
+                if: steps.check-secrets.outputs.configured == 'true'
+                uses: ./.github/actions/mobile-archive-ios-app
+                with:
+                    firebase-ios-app-id: ${{ secrets.SUAC_FIREBASE_IOS_APP_ID }}
+                    firebase-token: ${{ secrets.FIREBASE_TOKEN }}
+                    team-id: ${{ secrets.IOS_TEAM_ID }}
+                    profile-name: ${{ env.PROFILE_NAME }}
+                    configuration: Release
+                    marketing-version: ${{ env.VERSION_NAME }}
+                    build-number: ${{ env.VERSION_CODE }}
+                    output-path: dist/shut-up-and-charge-${{ env.VERSION_NAME }}.ipa
+
+            -   name: Upload iOS release artifact
+                if: steps.check-secrets.outputs.configured == 'true'
+                uses: actions/upload-artifact@v5
+                with:
+                    name: mobile-ios-release
+                    path: dist/*.ipa
+                    retention-days: 30
+
+            -   name: Clean up signing keychain
+                if: always() && steps.check-secrets.outputs.configured == 'true'
+                run: security delete-keychain "$KEYCHAIN_PATH" || true
+
+    publish-release:
+        needs: [ prepare, build-android, build-ios ]
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+
+        steps:
+            -   name: Download release notes
+                uses: actions/download-artifact@v5
+                with:
+                    name: mobile-release-notes
+
+            -   name: Download Android release artifacts
+                uses: actions/download-artifact@v5
+                with:
+                    name: mobile-android-release
+                    path: artifacts
+
+            -   name: Download iOS release artifact
+                if: needs.build-ios.outputs.signed == 'true'
+                uses: actions/download-artifact@v5
+                with:
+                    name: mobile-ios-release
+                    path: artifacts
+
+            -   name: Publish GitHub Release
+                run: |
+                    gh release create "$GITHUB_REF_NAME" artifacts/* \
+                        --title "Mobile ${{ needs.prepare.outputs.version-name }}" \
+                        --notes-file release-notes.txt \
+                        --latest=false
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    GH_REPO: ${{ github.repository }}
+
+    distribute-firebase:
+        needs: [ prepare, build-android, build-ios ]
+        runs-on: ubuntu-latest
+        env:
+            VERSION_NAME: ${{ needs.prepare.outputs.version-name }}
+
+        steps:
+            -   name: Download release notes
+                uses: actions/download-artifact@v5
+                with:
+                    name: mobile-release-notes
+
+            -   name: Download Android release artifacts
+                uses: actions/download-artifact@v5
+                with:
+                    name: mobile-android-release
+                    path: artifacts
+
+            -   name: Distribute APK to Firebase App Distribution
+                run: |
+                    npx firebase-tools@latest appdistribution:distribute "artifacts/shut-up-and-charge-$VERSION_NAME.apk" \
+                        --app "$SUAC_FIREBASE_ANDROID_APP_ID" \
+                        --groups "internal-testers" \
+                        --release-notes-file release-notes.txt
+                env:
+                    FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+                    SUAC_FIREBASE_ANDROID_APP_ID: ${{ secrets.SUAC_FIREBASE_ANDROID_APP_ID }}
+
+            -   name: Download iOS release artifact
+                if: needs.build-ios.outputs.signed == 'true'
+                uses: actions/download-artifact@v5
+                with:
+                    name: mobile-ios-release
+                    path: artifacts
+
+            -   name: Distribute .ipa to Firebase App Distribution
+                if: needs.build-ios.outputs.signed == 'true'
+                run: |
+                    npx firebase-tools@latest appdistribution:distribute "artifacts/shut-up-and-charge-$VERSION_NAME.ipa" \
+                        --app "$SUAC_FIREBASE_IOS_APP_ID" \
+                        --groups "internal-testers" \
+                        --release-notes-file release-notes.txt
+                env:
+                    FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+                    SUAC_FIREBASE_IOS_APP_ID: ${{ secrets.SUAC_FIREBASE_IOS_APP_ID }}
+
+    upload-google-play:
+        needs: [ prepare, build-android ]
+        runs-on: ubuntu-latest
+        env:
+            VERSION_NAME: ${{ needs.prepare.outputs.version-name }}
+
+        steps:
+            -   name: Check Google Play secrets are configured
+                id: check-secrets
+                run: |
+                    if [ -n "$PLAY_SERVICE_ACCOUNT_JSON" ]; then
+                        echo "configured=true" >> "$GITHUB_OUTPUT"
+                    else
+                        echo "::warning::PLAY_SERVICE_ACCOUNT_JSON is not configured, skipping the Google Play upload."
+                        echo "configured=false" >> "$GITHUB_OUTPUT"
+                    fi
+                env:
+                    PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+
+            -   name: Download Android release artifacts
+                if: steps.check-secrets.outputs.configured == 'true'
+                uses: actions/download-artifact@v5
+                with:
+                    name: mobile-android-release
+                    path: artifacts
+
+            -   name: Download R8 mapping file
+                if: steps.check-secrets.outputs.configured == 'true'
+                uses: actions/download-artifact@v5
+                with:
+                    name: mobile-android-mapping
+                    path: mapping
+
+            -   name: Upload AAB to Google Play internal track
+                if: steps.check-secrets.outputs.configured == 'true'
+                uses: r0adkll/upload-google-play@v1.1.5
+                with:
+                    serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+                    packageName: org.momosi.shutupandcharge
+                    releaseFiles: artifacts/shut-up-and-charge-${{ env.VERSION_NAME }}.aab
+                    track: internal
+                    status: completed
+                    releaseName: ${{ env.VERSION_NAME }}
+                    mappingFile: mapping/mapping.txt

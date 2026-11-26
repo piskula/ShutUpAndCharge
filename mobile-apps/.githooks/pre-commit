@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# suac-mobile-pre-commit: installed by mobile-apps/build-logic (suac.git-hooks). Runs Spotless on staged mobile Kotlin files.
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+app_dir="$repo_root/mobile-apps"
+
+mapfile -t staged_files < <(git diff --cached --name-only --diff-filter=ACMR)
+
+if [ ${#staged_files[@]} -eq 0 ]; then
+    exit 0
+fi
+
+module_path_for() {
+    local dir
+    dir="$repo_root/$(dirname "$1")"
+
+    while [ "$dir" != "$app_dir" ] && [ "$dir" != "$repo_root" ] && [ "$dir" != "/" ]; do
+        if [ -f "$dir/build.gradle.kts" ] || [ -f "$dir/build.gradle" ]; then
+            local rel="${dir#"$app_dir"/}"
+            echo ":${rel//\//:}"
+            return 0
+        fi
+        dir="$(dirname "$dir")"
+    done
+
+    return 1
+}
+
+declare -A affected_modules=()
+kotlin_files=()
+
+for f in "${staged_files[@]}"; do
+    case "$f" in
+        *.kt) ;;
+        *) continue ;;
+    esac
+    case "$f" in
+        mobile-apps/build-logic/*) continue ;;
+        mobile-apps/*) ;;
+        *) continue ;;
+    esac
+
+    if module=$(module_path_for "$f"); then
+        affected_modules["$module"]=1
+        kotlin_files+=("$f")
+    fi
+done
+
+if [ ${#affected_modules[@]} -eq 0 ]; then
+    exit 0
+fi
+
+tasks=()
+for module in "${!affected_modules[@]}"; do
+    tasks+=("${module}:spotlessApply")
+done
+
+echo "Running Spotless on: ${tasks[*]}"
+(cd "$app_dir" && ./gradlew "${tasks[@]}" --console=plain -q)
+
+(cd "$repo_root" && printf '%s\0' "${kotlin_files[@]}" | git add --pathspec-from-file=- --pathspec-file-nul)
+
+exit 0

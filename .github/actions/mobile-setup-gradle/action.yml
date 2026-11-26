@@ -1,0 +1,29 @@
+name: Setup mobile Gradle build environment
+description: Sets up JDK and Gradle for the mobile-apps build and makes its gradlew executable.
+inputs:
+    java-version:
+        description: JDK version to install
+        default: '25'
+    java-distribution:
+        description: JDK distribution to install
+        default: 'jetbrains'
+runs:
+    using: composite
+    steps:
+        -   name: Set up JDK ${{ inputs.java-version }}
+            uses: actions/setup-java@v5
+            with:
+                java-version: ${{ inputs.java-version }}
+                distribution: ${{ inputs.java-distribution }}
+            env:
+                GITHUB_TOKEN: ${{ github.token }}
+
+        -   name: Setup Gradle
+            uses: gradle/actions/setup-gradle@v6
+            with:
+                build-root-directory: mobile-apps
+
+        -   name: Grant execute permission for gradlew
+            shell: bash
+            working-directory: mobile-apps
+            run: chmod +x gradlew

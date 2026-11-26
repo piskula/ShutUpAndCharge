@@ -1,0 +1,15 @@
+<resources>
+    <string name="dashboard_greeting">Ahoj, %1$s</string>
+    <string name="dashboard_subtitle">Shut Up And Charge</string>
+    <string name="dashboard_balance_label">Váš zostatok</string>
+    <string name="dashboard_last_chargings">Vaše posledné nabíjania</string>
+    <string name="dashboard_last_chargings_empty">Zatiaľ ste nenabíjali.</string>
+    <string name="dashboard_show_all">Zobraziť všetky transakcie</string>
+    <string name="dashboard_monthly_summary">Mesačný prehľad</string>
+    <string name="dashboard_monthly_empty">Zatiaľ žiadne transakcie.</string>
+    <string name="dashboard_monthly_chargings">Nabíjania: %1$d · %2$s</string>
+    <string name="dashboard_monthly_top_ups">Dobitia: %1$d · %2$s</string>
+    <string name="dashboard_load_failed">Údaje sa nepodarilo načítať.</string>
+    <string name="dashboard_no_connection">Žiadne internetové pripojenie.</string>
+    <string name="dashboard_retry">Skúsiť znova</string>
+</resources>

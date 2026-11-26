@@ -34,6 +34,8 @@ The Gradle build auto-generates TypeScript Angular API client from `module-api/a
 
 **`module-ui`** — Angular 21 SPA. See `module-ui/CLAUDE.md` for details.
 
+**`mobile-apps`** — Kotlin Multiplatform Android + iOS clients (Compose Multiplatform). A **standalone Gradle build** (own `gradlew`, version catalog and `build-logic`), not part of the root build — run its commands from `mobile-apps/`. It consumes the backend only through the REST API; DTOs are hand-written copies in `mobile-apps/core/dto`, so endpoint/DTO changes in `module-api` must be mirrored there. See `mobile-apps/AGENTS.md` and `mobile-apps/README.md`. Mobile CI lives in `.github/workflows/mobile-*.yml`; `gradle.yml` ignores `mobile-apps/**`.
+
 ## Key Configuration
 
 **OAuth2/Keycloak:** Issuer URI is `https://sso.momosi.org/realms/momosi`. The backend is a resource server only — it validates JWTs but does not redirect for login.

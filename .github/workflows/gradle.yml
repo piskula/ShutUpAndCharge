@@ -10,8 +10,16 @@ name: Java CI with Gradle
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - 'mobile-apps/**'
+      - '.github/workflows/mobile-*.yml'
+      - '.github/actions/mobile-*/**'
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - 'mobile-apps/**'
+      - '.github/workflows/mobile-*.yml'
+      - '.github/actions/mobile-*/**'
 
 jobs:
   build:

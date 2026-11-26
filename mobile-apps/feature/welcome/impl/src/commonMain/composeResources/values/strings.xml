@@ -1,0 +1,8 @@
+<resources>
+    <string name="welcome_app_name">Shut Up And Charge</string>
+    <string name="welcome_subtitle">Our shared EV charger. Check whether it is free and sign in to start charging.</string>
+    <string name="welcome_sign_in">Sign in</string>
+    <string name="welcome_error_no_internet">No internet connection. Check your connection and try again.</string>
+    <string name="welcome_error_unable_to_start">Sign-in could not be started. Please try again.</string>
+    <string name="welcome_error_failed">Sign-in failed. Please try again.</string>
+</resources>
