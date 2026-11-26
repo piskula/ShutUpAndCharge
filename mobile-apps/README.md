@@ -29,7 +29,7 @@ The app has a single (production) environment:
 | Application ID / bundle ID | `org.momosi.shutupandcharge` |
 | API | `https://charge.momosi.org/` |
 | Keycloak realm | `https://sso.momosi.org/realms/momosi/` |
-| OAuth client | `suac-mobile` |
+| OAuth client | `mobile-client` |
 | Redirect URIs | `org.momosi.shutupandcharge://auth/callback`, `org.momosi.shutupandcharge://auth/logout` |
 
 Android reads these from `buildConfigField`s in `app/android/build.gradle.kts`, iOS from
@@ -39,7 +39,7 @@ Android reads these from `buildConfigField`s in `app/android/build.gradle.kts`, 
 
 Create a client in the `momosi` realm (the backend only validates the issuer, no backend change needed):
 
-* Client ID `suac-mobile`, **public** client (client authentication off), standard flow on, PKCE `S256`.
+* Client ID `mobile-client`, **public** client (client authentication off), standard flow on, PKCE `S256`.
 * Valid redirect URIs: `org.momosi.shutupandcharge://auth/callback`.
 * Valid post logout redirect URIs: `org.momosi.shutupandcharge://auth/logout`.
 * Realm roles (`MOMO_USER`, `MOMO_ADMIN`) must be included in the access token (`realm_access.roles`,

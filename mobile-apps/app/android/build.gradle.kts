@@ -29,7 +29,7 @@ android {
 
         buildConfigField("String", "API_BASE_URL", "\"https://charge.momosi.org/\"")
         buildConfigField("String", "REALM_URL", "\"https://sso.momosi.org/realms/momosi/\"")
-        buildConfigField("String", "OAUTH_CLIENT_ID", "\"suac-mobile\"")
+        buildConfigField("String", "OAUTH_CLIENT_ID", "\"mobile-client\"")
         buildConfigField("String", "APP_SCHEME", "\"$appScheme\"")
         manifestPlaceholders["oidcRedirectScheme"] = appScheme
     }

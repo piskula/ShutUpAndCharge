@@ -4,7 +4,7 @@ SUAC_BUNDLE_IDENTIFIER_prod = org.momosi.shutupandcharge
 SUAC_DISPLAY_NAME_prod = Shut Up And Charge
 SUAC_API_BASE_URL_prod = https:/$()/charge.momosi.org/
 SUAC_REALM_URL_prod = https:/$()/sso.momosi.org/realms/momosi/
-SUAC_OAUTH_CLIENT_ID_prod = suac-mobile
+SUAC_OAUTH_CLIENT_ID_prod = mobile-client
 SUAC_APP_SCHEME_prod = org.momosi.shutupandcharge
 SUAC_APP_ICON_NAME_prod = AppIcon
 

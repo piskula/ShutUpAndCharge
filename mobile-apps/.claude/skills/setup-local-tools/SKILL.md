@@ -166,7 +166,7 @@ need one of:
 
 There is a single environment (prod): one Android app and one iOS app, both
 `org.momosi.shutupandcharge`, talking to `https://charge.momosi.org/` and Keycloak
-`https://sso.momosi.org/realms/momosi/` (client `suac-mobile`). There are no build flavors, no
+`https://sso.momosi.org/realms/momosi/` (client `mobile-client`). There are no build flavors, no
 per-flavor config files and no staging Firebase apps.
 
 This is a one-time step per machine — the files don't change unless the Firebase project
