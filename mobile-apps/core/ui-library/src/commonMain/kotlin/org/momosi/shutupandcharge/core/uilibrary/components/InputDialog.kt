@@ -78,7 +78,7 @@ fun InputDialog(
         dismissButton = {
             TextButton(text = dismissText, onClick = onDismiss, modifier = Modifier.testTag("input_dialog_dismiss_button"))
         },
-        containerColor = AppTheme.colors.surfaceContainerLowest,
+        containerColor = AppTheme.colors.surfaceContainerHigh,
         modifier = modifier,
     )
 }

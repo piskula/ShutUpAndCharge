@@ -9,6 +9,7 @@ import org.momosi.shutupandcharge.feature.admin.api.AdminNavKey
 import org.momosi.shutupandcharge.feature.dashboard.api.DashboardNavKey
 import org.momosi.shutupandcharge.feature.profile.api.ProfileNavKey
 import org.momosi.shutupandcharge.feature.transactions.api.TransactionsNavKey
+import org.momosi.shutupandcharge.feature.transactions.impl.navigation.transactionsNavKeySubclasses
 import org.momosi.shutupandcharge.feature.welcome.api.WelcomeNavKey
 
 val appSavedStateConfiguration = SavedStateConfiguration {
@@ -19,6 +20,7 @@ val appSavedStateConfiguration = SavedStateConfiguration {
             subclass(TransactionsNavKey::class, TransactionsNavKey.serializer())
             subclass(AdminNavKey::class, AdminNavKey.serializer())
             subclass(ProfileNavKey::class, ProfileNavKey.serializer())
+            transactionsNavKeySubclasses()
         }
     }
 }

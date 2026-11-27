@@ -4,7 +4,7 @@
     <string name="dashboard_balance_label">Váš zostatok</string>
     <string name="dashboard_last_chargings">Vaše posledné nabíjania</string>
     <string name="dashboard_last_chargings_empty">Zatiaľ ste nenabíjali.</string>
-    <string name="dashboard_show_all">Zobraziť všetky transakcie</string>
+    <string name="dashboard_show_all">Zobraziť všetko</string>
     <string name="dashboard_monthly_summary">Mesačný prehľad</string>
     <string name="dashboard_monthly_empty">Zatiaľ žiadne transakcie.</string>
     <string name="dashboard_monthly_chargings">Nabíjania: %1$d · %2$s</string>

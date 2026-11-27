@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,6 +51,8 @@ import org.momosi.shutupandcharge.core.uilibrary.components.TextButton
 import org.momosi.shutupandcharge.core.uilibrary.components.amountToneOf
 import org.momosi.shutupandcharge.core.uilibrary.components.color
 import org.momosi.shutupandcharge.core.uilibrary.icons.SuacIcons
+import org.momosi.shutupandcharge.core.uilibrary.lazylist.itemsPositioned
+import org.momosi.shutupandcharge.core.uilibrary.modifier.card
 import org.momosi.shutupandcharge.core.uilibrary.theme.AppTheme
 import org.momosi.shutupandcharge.core.uilibrary.theme.SuacTheme
 import org.momosi.shutupandcharge.feature.admin.impl.resources.Res
@@ -121,7 +122,7 @@ private fun AdminContent(
             selectedItem = state.tab,
             labelSelector = { tabLabels.getValue(it) },
             onSelect = { onAction(AdminAction.SelectTab(it)) },
-            modifier = Modifier.background(AppTheme.colors.surfaceDim).padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier = Modifier.background(AppTheme.colors.surfaceContainer).padding(horizontal = 16.dp, vertical = 8.dp),
         )
         PullToRefresh(
             isRefreshing = state.isRefreshing,
@@ -158,12 +159,12 @@ private fun UsersTab(users: UsersContent, onAction: (AdminAction) -> Unit) {
                     .filter { users.canLoadMore && it >= listState.layoutInfo.totalItemsCount - LOAD_MORE_THRESHOLD }
                     .collect { onAction(AdminAction.LoadMoreUsers) }
             }
-            LazyColumn(state = listState, modifier = Modifier.fillMaxSize().testTag("admin_users_list"), contentPadding = PaddingValues(vertical = 8.dp)) {
+            LazyColumn(state = listState, modifier = Modifier.fillMaxSize().testTag("admin_users_list"), contentPadding = PaddingValues(16.dp)) {
                 if (users.items.isEmpty()) {
                     item { EmptyText(stringResource(Res.string.admin_users_empty)) }
                 }
-                items(users.items, key = { it.id }) { user ->
-                    UserRow(user = user, onClick = { onAction(AdminAction.OpenUser(user.id)) })
+                itemsPositioned(users.items, key = { _, user -> user.id }) { _, position, user ->
+                    UserRow(user = user, onClick = { onAction(AdminAction.OpenUser(user.id)) }, modifier = Modifier.card(position))
                 }
                 if (users.isLoadingMore) {
                     item { LoadingSpinner(modifier = Modifier.fillMaxWidth().padding(16.dp), size = 32.dp) }
@@ -174,13 +175,16 @@ private fun UsersTab(users: UsersContent, onAction: (AdminAction) -> Unit) {
 }
 
 @Composable
-private fun UserRow(user: AccountItem, onClick: () -> Unit) {
+private fun UserRow(
+    user: AccountItem,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .background(AppTheme.colors.surfaceContainerLowest)
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 12.dp)
             .testTag("admin_user_${user.id}"),
@@ -218,9 +222,9 @@ private fun PendingTab(
     isSyncing: Boolean,
     onAction: (AdminAction) -> Unit,
 ) {
-    LazyColumn(modifier = Modifier.fillMaxSize().testTag("admin_pending_list"), contentPadding = PaddingValues(vertical = 8.dp)) {
+    LazyColumn(modifier = Modifier.fillMaxSize().testTag("admin_pending_list"), contentPadding = PaddingValues(16.dp)) {
         item(key = "sync") {
-            Column(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
                     text = stringResource(Res.string.admin_pending_sync_hint),
                     style = AppTheme.typography.bodySmall,
@@ -239,7 +243,7 @@ private fun PendingTab(
             PendingContent.Loading -> item { LoadingSpinner(modifier = Modifier.fillMaxWidth().padding(24.dp)) }
 
             is PendingContent.Failed -> item {
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = 16.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = stringResource(Res.string.admin_load_failed),
                         style = AppTheme.typography.bodyMedium,
@@ -252,20 +256,19 @@ private fun PendingTab(
 
             is PendingContent.Loaded -> {
                 if (pending.items.isEmpty()) item { EmptyText(stringResource(Res.string.admin_pending_empty)) }
-                items(pending.items, key = { it.id }) { PendingRow(it) }
+                itemsPositioned(pending.items, key = { _, item -> item.id }) { _, position, item -> PendingRow(item, modifier = Modifier.card(position)) }
             }
         }
     }
 }
 
 @Composable
-private fun PendingRow(item: PendingItem) {
+private fun PendingRow(item: PendingItem, modifier: Modifier = Modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .background(AppTheme.colors.surfaceContainerLowest)
             .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
         Icon(imageVector = SuacIcons.Pending, tint = AppTheme.colors.warning, modifier = Modifier.size(24.dp))

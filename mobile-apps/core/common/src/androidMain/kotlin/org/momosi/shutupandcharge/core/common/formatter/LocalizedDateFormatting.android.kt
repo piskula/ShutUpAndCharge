@@ -17,6 +17,8 @@ private class AndroidPlatformDateFormatter : PlatformDateFormatter {
     override fun formatFullDateTime(instant: Instant): String = localizedFormatter("yMMMd j:mm").format(instant.toJavaDate())
 
     override fun formatMonthYear(instant: Instant): String = localizedFormatter("LLLL yyyy").format(instant.toJavaDate())
+
+    override fun formatShortMonth(instant: Instant): String = localizedFormatter("LLL").format(instant.toJavaDate())
 }
 
 private fun localizedFormatter(skeleton: String): SimpleDateFormat {

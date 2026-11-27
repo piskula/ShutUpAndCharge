@@ -24,6 +24,7 @@ import org.momosi.shutupandcharge.core.charger.model.ChargerState
 import org.momosi.shutupandcharge.core.charger.model.ChargerStatus
 import org.momosi.shutupandcharge.core.uilibrary.components.Button
 import org.momosi.shutupandcharge.core.uilibrary.components.ButtonRole
+import org.momosi.shutupandcharge.core.uilibrary.components.ButtonStyle
 import org.momosi.shutupandcharge.core.uilibrary.components.Chip
 import org.momosi.shutupandcharge.core.uilibrary.components.Icon
 import org.momosi.shutupandcharge.core.uilibrary.components.IconButton
@@ -32,6 +33,7 @@ import org.momosi.shutupandcharge.core.uilibrary.components.Text
 import org.momosi.shutupandcharge.core.uilibrary.icons.SuacIcons
 import org.momosi.shutupandcharge.core.uilibrary.modifier.card
 import org.momosi.shutupandcharge.core.uilibrary.resources.Res
+import org.momosi.shutupandcharge.core.uilibrary.resources.charger_check_connection
 import org.momosi.shutupandcharge.core.uilibrary.resources.charger_current_label
 import org.momosi.shutupandcharge.core.uilibrary.resources.charger_current_value
 import org.momosi.shutupandcharge.core.uilibrary.resources.charger_description_charging
@@ -42,6 +44,7 @@ import org.momosi.shutupandcharge.core.uilibrary.resources.charger_description_f
 import org.momosi.shutupandcharge.core.uilibrary.resources.charger_description_offline
 import org.momosi.shutupandcharge.core.uilibrary.resources.charger_description_unknown
 import org.momosi.shutupandcharge.core.uilibrary.resources.charger_occupied_since
+import org.momosi.shutupandcharge.core.uilibrary.resources.charger_refresh
 import org.momosi.shutupandcharge.core.uilibrary.resources.charger_sign_in_hint
 import org.momosi.shutupandcharge.core.uilibrary.resources.charger_start
 import org.momosi.shutupandcharge.core.uilibrary.resources.charger_state_charging
@@ -93,6 +96,7 @@ fun ChargerStatusCard(
                     imageVector = SuacIcons.Refresh,
                     onClick = onRefresh,
                     style = IconButtonStyle.StandardMuted,
+                    contentDescription = stringResource(Res.string.charger_refresh),
                     modifier = Modifier.testTag("charger_refresh_button"),
                 )
             }
@@ -123,14 +127,24 @@ fun ChargerStatusCard(
                 )
             }
             if (status.showStart) {
-                Button(
-                    text = stringResource(Res.string.charger_start),
-                    onClick = onStart,
-                    enabled = status.canStart,
-                    loading = isActionInProgress,
-                    icon = SuacIcons.StartCharging,
-                    modifier = Modifier.fillMaxWidth().testTag("charger_start_button"),
-                )
+                if (status.canStart) {
+                    Button(
+                        text = stringResource(Res.string.charger_start),
+                        onClick = onStart,
+                        loading = isActionInProgress,
+                        icon = SuacIcons.StartCharging,
+                        modifier = Modifier.fillMaxWidth().testTag("charger_start_button"),
+                    )
+                } else {
+                    Button(
+                        text = stringResource(if (status.state == ChargerState.Free) Res.string.charger_check_connection else Res.string.charger_refresh),
+                        onClick = onRefresh,
+                        loading = isRefreshing,
+                        icon = SuacIcons.Refresh,
+                        style = if (status.state == ChargerState.Free) ButtonStyle.Filled else ButtonStyle.Tonal,
+                        modifier = Modifier.fillMaxWidth().testTag("charger_check_connection_button"),
+                    )
+                }
             }
             if (status.showStop) {
                 Button(
@@ -277,6 +291,26 @@ private fun ChargerStatusCardConnectedPreview() {
     SuacTheme {
         ChargerStatusCard(
             status = PreviewCharging.copy(state = ChargerState.CarConnected),
+            chargedKwhText = "0.00 kWh",
+            occupiedSinceText = null,
+            isSignedIn = true,
+            isRefreshing = false,
+            isActionInProgress = false,
+            isCurrentChangeInProgress = false,
+            onRefresh = {},
+            onStart = {},
+            onStop = {},
+            onSelectCurrent = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ChargerStatusCardFreePreview() {
+    SuacTheme(isDarkTheme = true) {
+        ChargerStatusCard(
+            status = PreviewCharging.copy(state = ChargerState.Free),
             chargedKwhText = "0.00 kWh",
             occupiedSinceText = null,
             isSignedIn = true,

@@ -1,14 +1,19 @@
 package org.momosi.shutupandcharge.feature.profile.impl
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,7 +28,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.momosi.shutupandcharge.core.common.language.AppLanguage
 import org.momosi.shutupandcharge.core.uilibrary.components.Button
-import org.momosi.shutupandcharge.core.uilibrary.components.ButtonRole
 import org.momosi.shutupandcharge.core.uilibrary.components.ButtonStyle
 import org.momosi.shutupandcharge.core.uilibrary.components.Chip
 import org.momosi.shutupandcharge.core.uilibrary.components.ChipVariant
@@ -101,9 +105,9 @@ private fun ProfileContent(
                 onClick = { onAction(ProfileAction.SignOut) },
                 loading = state.isSigningOut,
                 icon = SuacIcons.Logout,
-                role = ButtonRole.Warning,
-                style = ButtonStyle.Tonal,
-                modifier = Modifier.fillMaxWidth().testTag("profile_sign_out_button"),
+                style = ButtonStyle.Outlined,
+                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp).testTag("profile_sign_out_button"),
             )
         }
     }
@@ -128,15 +132,24 @@ private fun ProfileContent(
 @Composable
 private fun UserCard(user: User) {
     Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.fillMaxWidth().card().padding(16.dp).testTag("profile_user_card"),
     ) {
-        Icon(imageVector = SuacIcons.AccountCircle, tint = AppTheme.colors.primary, modifier = Modifier.size(56.dp))
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.size(44.dp).background(AppTheme.colors.primaryContainer, CircleShape),
+        ) {
+            Icon(imageVector = SuacIcons.Person, tint = AppTheme.colors.onPrimaryContainer, modifier = Modifier.size(24.dp))
+        }
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(text = user.name, style = AppTheme.typography.titleLarge, color = AppTheme.colors.onSurface)
+            Text(text = user.name, style = AppTheme.typography.titleMedium, color = AppTheme.colors.onSurface)
             if (user.email.isNotBlank()) {
                 Text(text = user.email, style = AppTheme.typography.bodyMedium, color = AppTheme.colors.onSurfaceVariant)
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(vertical = 4.dp)) {
+                if (UserRole.User in user.roles) Chip(label = stringResource(Res.string.profile_role_user), variant = ChipVariant.Tonal)
+                if (UserRole.Admin in user.roles) Chip(label = stringResource(Res.string.profile_role_admin), variant = ChipVariant.Warning)
             }
             if (user.username.isNotBlank()) {
                 Text(
@@ -144,10 +157,6 @@ private fun UserCard(user: User) {
                     style = AppTheme.typography.bodySmall,
                     color = AppTheme.colors.onSurfaceVariant,
                 )
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                if (UserRole.User in user.roles) Chip(label = stringResource(Res.string.profile_role_user), variant = ChipVariant.Tonal)
-                if (UserRole.Admin in user.roles) Chip(label = stringResource(Res.string.profile_role_admin), variant = ChipVariant.Warning)
             }
             if (UserRole.User !in user.roles) {
                 Text(
@@ -170,16 +179,18 @@ private fun SettingRow(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 14.dp)
+            .heightIn(min = 56.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
             .testTag(tag),
     ) {
-        Icon(imageVector = icon, tint = AppTheme.colors.onSurfaceVariant)
+        Icon(imageVector = icon, tint = AppTheme.colors.onSurfaceVariant, modifier = Modifier.size(20.dp))
         Text(text = title, style = AppTheme.typography.bodyLarge, color = AppTheme.colors.onSurface, modifier = Modifier.weight(1f))
         Text(text = value, style = AppTheme.typography.bodyMedium, color = AppTheme.colors.onSurfaceVariant)
+        Icon(imageVector = SuacIcons.ChevronRight, tint = AppTheme.colors.onSurfaceVariant, modifier = Modifier.size(20.dp))
     }
 }
 

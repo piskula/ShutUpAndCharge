@@ -1,6 +1,7 @@
 package org.momosi.shutupandcharge.feature.transactions.impl
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,10 +9,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,26 +32,29 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.momosi.shutupandcharge.core.common.network.FailureReason
 import org.momosi.shutupandcharge.core.transaction.display.TransactionDisplay
 import org.momosi.shutupandcharge.core.transaction.model.TransactionType
-import org.momosi.shutupandcharge.core.uilibrary.components.ChartSeries
 import org.momosi.shutupandcharge.core.uilibrary.components.DashboardTopBar
 import org.momosi.shutupandcharge.core.uilibrary.components.ErrorState
 import org.momosi.shutupandcharge.core.uilibrary.components.FilterChipRow
+import org.momosi.shutupandcharge.core.uilibrary.components.Icon
 import org.momosi.shutupandcharge.core.uilibrary.components.LoadingSpinner
 import org.momosi.shutupandcharge.core.uilibrary.components.PullToRefresh
-import org.momosi.shutupandcharge.core.uilibrary.components.StackedBarChart
+import org.momosi.shutupandcharge.core.uilibrary.components.SectionLabel
 import org.momosi.shutupandcharge.core.uilibrary.components.Switch
 import org.momosi.shutupandcharge.core.uilibrary.components.Text
 import org.momosi.shutupandcharge.core.uilibrary.components.TextButton
 import org.momosi.shutupandcharge.core.uilibrary.components.TopBarIconButton
 import org.momosi.shutupandcharge.core.uilibrary.icons.SuacIcons
+import org.momosi.shutupandcharge.core.uilibrary.lazylist.itemsPositioned
 import org.momosi.shutupandcharge.core.uilibrary.modifier.card
 import org.momosi.shutupandcharge.core.uilibrary.theme.AppTheme
 import org.momosi.shutupandcharge.core.uilibrary.theme.SuacTheme
 import org.momosi.shutupandcharge.core.uilibrary.transaction.TransactionRow
 import org.momosi.shutupandcharge.feature.transactions.impl.resources.Res
-import org.momosi.shutupandcharge.feature.transactions.impl.resources.transactions_chart_failed
+import org.momosi.shutupandcharge.feature.transactions.impl.resources.monthly_usage_title
 import org.momosi.shutupandcharge.feature.transactions.impl.resources.transactions_chart_title
 import org.momosi.shutupandcharge.feature.transactions.impl.resources.transactions_empty
+import org.momosi.shutupandcharge.feature.transactions.impl.resources.transactions_export
+import org.momosi.shutupandcharge.feature.transactions.impl.resources.transactions_history
 import org.momosi.shutupandcharge.feature.transactions.impl.resources.transactions_load_failed
 import org.momosi.shutupandcharge.feature.transactions.impl.resources.transactions_load_more_failed
 import org.momosi.shutupandcharge.feature.transactions.impl.resources.transactions_only_mine
@@ -66,16 +70,17 @@ private const val LOAD_MORE_THRESHOLD = 5
 private val TransactionTypes = persistentListOf(TransactionType.All, TransactionType.TopUps, TransactionType.Charging)
 
 @Composable
-internal fun TransactionsScreen(viewModel: TransactionsViewModel = koinViewModel()) {
+internal fun TransactionsScreen(onOpenMonthlyUsage: (onlyMine: Boolean) -> Unit, viewModel: TransactionsViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    TransactionsContent(state = state, onAction = viewModel::onAction)
+    TransactionsContent(state = state, onAction = viewModel::onAction, onOpenMonthlyUsage = { onOpenMonthlyUsage(state.filter.onlyMine) })
 }
 
 @Composable
 private fun TransactionsContent(
     state: TransactionsState,
     onAction: (TransactionsAction) -> Unit,
+    onOpenMonthlyUsage: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -89,6 +94,7 @@ private fun TransactionsContent(
                     TopBarIconButton(
                         icon = SuacIcons.Share,
                         onClick = { onAction(TransactionsAction.Export) },
+                        contentDescription = stringResource(Res.string.transactions_export),
                         modifier = Modifier.testTag("transactions_export_button"),
                     )
                 }
@@ -111,7 +117,12 @@ private fun TransactionsContent(
                 onRefresh = { onAction(TransactionsAction.Refresh) },
                 modifier = Modifier.fillMaxSize(),
             ) {
-                TransactionList(list = list, chart = state.chart, showAccount = state.isAdmin, onAction = onAction)
+                TransactionList(
+                    list = list,
+                    isAdmin = state.isAdmin,
+                    onAction = onAction,
+                    onOpenMonthlyUsage = onOpenMonthlyUsage,
+                )
             }
         }
     }
@@ -127,14 +138,22 @@ private fun Filters(filter: FilterState, onAction: (TransactionsAction) -> Unit)
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(AppTheme.colors.surfaceDim)
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+            .background(AppTheme.colors.surfaceContainer)
+            .padding(bottom = 4.dp),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        FilterChipRow(
+            items = TransactionTypes,
+            selectedItem = filter.type,
+            labelSelector = { labels.getValue(it) },
+            onSelect = { onAction(TransactionsAction.SelectType(it)) },
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 16.dp),
+        ) {
             Text(
                 text = stringResource(Res.string.transactions_only_mine),
-                style = AppTheme.typography.bodyLarge,
+                style = AppTheme.typography.bodyMedium,
                 color = AppTheme.colors.onSurface,
                 modifier = Modifier.weight(1f),
             )
@@ -144,21 +163,15 @@ private fun Filters(filter: FilterState, onAction: (TransactionsAction) -> Unit)
                 modifier = Modifier.testTag("transactions_only_mine_switch"),
             )
         }
-        FilterChipRow(
-            items = TransactionTypes,
-            selectedItem = filter.type,
-            labelSelector = { labels.getValue(it) },
-            onSelect = { onAction(TransactionsAction.SelectType(it)) },
-        )
     }
 }
 
 @Composable
 private fun TransactionList(
     list: ListContent.Loaded,
-    chart: ChartContent,
-    showAccount: Boolean,
+    isAdmin: Boolean,
     onAction: (TransactionsAction) -> Unit,
+    onOpenMonthlyUsage: () -> Unit,
 ) {
     val listState = rememberLazyListState()
 
@@ -172,10 +185,13 @@ private fun TransactionList(
     LazyColumn(
         state = listState,
         modifier = Modifier.fillMaxSize().testTag("transactions_list"),
-        contentPadding = PaddingValues(vertical = 12.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
     ) {
-        if (chart !is ChartContent.Hidden) {
-            item(key = "chart") { ChartCard(chart = chart, onRetry = { onAction(TransactionsAction.RetryChart) }) }
+        if (isAdmin) {
+            item(key = "monthly_usage") { MonthlyUsageEntry(onClick = onOpenMonthlyUsage) }
+            item(key = "history_label") {
+                SectionLabel(text = stringResource(Res.string.transactions_history), modifier = Modifier.padding(top = 12.dp, bottom = 4.dp))
+            }
         }
         if (list.items.isEmpty()) {
             item(key = "empty") {
@@ -183,25 +199,22 @@ private fun TransactionList(
                     text = stringResource(Res.string.transactions_empty),
                     style = AppTheme.typography.bodyMedium,
                     color = AppTheme.colors.onSurfaceVariant,
-                    modifier = Modifier.padding(24.dp),
+                    modifier = Modifier.fillMaxWidth().card().padding(16.dp),
                 )
             }
         }
-        items(list.items, key = { it.id }) { transaction ->
+        itemsPositioned(list.items, key = { _, item -> item.id }) { _, position, transaction ->
             TransactionRow(
                 transaction = transaction,
-                showAccount = showAccount,
-                modifier = Modifier.background(AppTheme.colors.surfaceContainerLowest),
+                showAccount = isAdmin,
+                modifier = Modifier.card(position),
             )
         }
         item(key = "footer") {
             when (list.loadMore) {
                 LoadMoreStatus.Loading -> LoadingSpinner(modifier = Modifier.fillMaxWidth().padding(16.dp), size = 32.dp)
 
-                LoadMoreStatus.Failed -> Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                ) {
+                LoadMoreStatus.Failed -> Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
                     Text(
                         text = stringResource(Res.string.transactions_load_more_failed),
                         style = AppTheme.typography.bodyMedium,
@@ -218,35 +231,28 @@ private fun TransactionList(
 }
 
 @Composable
-private fun ChartCard(chart: ChartContent, onRetry: () -> Unit) {
-    Column(
+private fun MonthlyUsageEntry(onClick: () -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .padding(bottom = 12.dp)
             .card()
-            .padding(16.dp)
-            .testTag("transactions_chart"),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+            .clickable(onClick = onClick)
+            .heightIn(min = 56.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .testTag("transactions_monthly_usage"),
     ) {
-        Text(text = stringResource(Res.string.transactions_chart_title), style = AppTheme.typography.titleMedium, color = AppTheme.colors.onSurface)
-        when (chart) {
-            ChartContent.Hidden -> Unit
-
-            ChartContent.Loading -> LoadingSpinner(modifier = Modifier.fillMaxWidth().padding(24.dp), size = 32.dp)
-
-            ChartContent.Failed -> Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = stringResource(Res.string.transactions_chart_failed),
-                    style = AppTheme.typography.bodyMedium,
-                    color = AppTheme.colors.error,
-                    modifier = Modifier.weight(1f),
-                )
-                TextButton(text = stringResource(Res.string.transactions_retry), onClick = onRetry)
-            }
-
-            is ChartContent.Loaded -> StackedBarChart(labels = chart.labels, series = chart.series, maxValueText = chart.maxValueText)
+        Icon(imageVector = SuacIcons.Chart, tint = AppTheme.colors.primary, modifier = Modifier.size(24.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(text = stringResource(Res.string.monthly_usage_title), style = AppTheme.typography.titleSmall, color = AppTheme.colors.onSurface)
+            Text(
+                text = stringResource(Res.string.transactions_chart_title),
+                style = AppTheme.typography.bodySmall,
+                color = AppTheme.colors.onSurfaceVariant,
+            )
         }
+        Icon(imageVector = SuacIcons.ChevronRight, tint = AppTheme.colors.onSurfaceVariant)
     }
 }
 
@@ -265,6 +271,18 @@ private val PreviewItems = persistentListOf(
     ),
     TransactionDisplay(
         id = "2",
+        dateText = "Nov 20, 2026, 21:10",
+        stationId = "Kutlíkova",
+        accountName = "Jana Kováčová",
+        priceText = "-10,94 €",
+        price = -10.94,
+        kwhText = "36,47 kWh",
+        isTopUp = false,
+        triggeredByChip = false,
+        link = null,
+    ),
+    TransactionDisplay(
+        id = "3",
         dateText = "Nov 20, 2026, 09:10",
         stationId = null,
         accountName = "Martin Styk",
@@ -280,21 +298,14 @@ private val PreviewItems = persistentListOf(
 @Preview(heightDp = 900)
 @Composable
 private fun TransactionsAdminPreview() {
-    SuacTheme {
+    SuacTheme(isDarkTheme = true) {
         TransactionsContent(
             state = TransactionsState(
                 isAdmin = true,
                 list = ListContent.Loaded(PreviewItems, canLoadMore = true, loadMore = LoadMoreStatus.Loading),
-                chart = ChartContent.Loaded(
-                    labels = persistentListOf("9/26", "10/26", "11/26"),
-                    series = persistentListOf(
-                        ChartSeries("Martin", false, persistentListOf(40.0, 55.0, 21.0)),
-                        ChartSeries("Other", true, persistentListOf(10.0, 12.0, 8.0)),
-                    ),
-                    maxValueText = "67,00 kWh",
-                ),
             ),
             onAction = {},
+            onOpenMonthlyUsage = {},
         )
     }
 }
@@ -302,10 +313,11 @@ private fun TransactionsAdminPreview() {
 @Preview(heightDp = 640)
 @Composable
 private fun TransactionsUserPreview() {
-    SuacTheme(isDarkTheme = true) {
+    SuacTheme {
         TransactionsContent(
             state = TransactionsState(list = ListContent.Loaded(PreviewItems, canLoadMore = false, loadMore = LoadMoreStatus.Idle)),
             onAction = {},
+            onOpenMonthlyUsage = {},
         )
     }
 }
@@ -314,6 +326,6 @@ private fun TransactionsUserPreview() {
 @Composable
 private fun TransactionsErrorPreview() {
     SuacTheme {
-        TransactionsContent(state = TransactionsState(list = ListContent.Failed(FailureReason.NoConnection)), onAction = {})
+        TransactionsContent(state = TransactionsState(list = ListContent.Failed(FailureReason.NoConnection)), onAction = {}, onOpenMonthlyUsage = {})
     }
 }

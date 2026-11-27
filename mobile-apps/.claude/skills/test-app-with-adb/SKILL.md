@@ -92,20 +92,27 @@ screen.
 | `nav_bar_item_<NavKeySimpleName>` | `NavigationBar` | Bottom navigation, visible on the main tabs only: `nav_bar_item_DashboardNavKey`, `_TransactionsNavKey`, `_AdminNavKey` (admins only), `_ProfileNavKey` |
 | `charger_refresh_button`, `charger_status_pill` | `ChargerStatusCard` | Welcome and Dashboard |
 | `charger_start_button` / `charger_stop_button`, `charger_current_<amps>` | `ChargerStatusCard` | Signed-in only; start/stop shown depending on charger state, current chips only while charging. **Real charger — see warning above** |
+| `charger_check_connection_button` | `ChargerStatusCard` | Signed-in, while charging can't start yet (Free, Offline, Error, Unknown); only refreshes the status, safe to tap |
+| `transaction_stats_<transactionId>` | `TransactionRow` | Only on charging sessions with a stats link; opens the session chart in the browser |
+| `chart_month_<index>` | `StackedBarChart` | Selects that month (0 = oldest) |
 | `filter_chip_<value>` | `FilterChipRow` | `<value>` is the item's `toString()`, e.g. `filter_chip_Charging` |
 | `confirmation_dialog_confirm_button` / `confirmation_dialog_dismiss_button` | `ConfirmationDialog` | Only one can be on screen at a time |
 | `info_dialog_dismiss_button` | `InfoDialog` | Profile's version, language and restart-notice dialogs |
 | `input_dialog_field`, `input_dialog_confirm_button` / `input_dialog_dismiss_button` | `InputDialog` | Admin top-up and RFID chip dialogs |
-| `toolbar_back_button` | `Toolbar` | Component exists but no current screen uses it (all screens are root tabs or Welcome) |
+| `toolbar_back_button` | `Toolbar` | Monthly usage |
 
 **Welcome** (signed out): `sign_in_button`, plus the charger card's `charger_refresh_button` /
 `charger_status_pill` (no start/stop while signed out)
 
-**Dashboard:** `dashboard_list`, `dashboard_balance`, plus the charger card tags
+**Dashboard:** `dashboard_list`, `dashboard_balance`, `dashboard_show_all_button` (opens Transactions), plus
+the charger card tags
 
-**Transactions:** `transactions_export_button` (Excel export → system share sheet),
-`transactions_chart`, `transactions_list`; admins additionally get the filters
-`transactions_only_mine_switch` and `filter_chip_All` / `_TopUps` / `_Charging`
+**Transactions:** `transactions_export_button` (Excel export → system share sheet), `transactions_list`;
+admins additionally get the filters `transactions_only_mine_switch` and `filter_chip_All` / `_TopUps` /
+`_Charging`, and `transactions_monthly_usage` (opens Monthly usage)
+
+**Monthly usage** (admins, from Transactions): `monthly_usage_content`, `monthly_usage_chart`,
+`filter_chip_Total` / `_BySeries`, `chart_month_<index>`, `monthly_usage_breakdown`, `toolbar_back_button`
 
 **Admin** (admins only): `filter_chip_Users` / `_Pending`, `admin_users_list`,
 `admin_user_<accountId>` (opens the user bottom sheet), `admin_action_top_up`,

@@ -2,6 +2,7 @@ package org.momosi.shutupandcharge.core.uilibrary.icons
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.rounded.Logout
 import androidx.compose.material.icons.automirrored.rounded.ReceiptLong
 import androidx.compose.material.icons.outlined.AccountCircle
@@ -44,6 +45,7 @@ import androidx.compose.material.icons.rounded.WifiOff
 
 data object SuacIcons {
     val Back = Icons.AutoMirrored.Rounded.ArrowBack
+    val ChevronRight = Icons.AutoMirrored.Rounded.KeyboardArrowRight
     val ArrowDropDown = Icons.Rounded.ArrowDropDown
     val Clear = Icons.Rounded.Clear
     val Close = Icons.Rounded.Close

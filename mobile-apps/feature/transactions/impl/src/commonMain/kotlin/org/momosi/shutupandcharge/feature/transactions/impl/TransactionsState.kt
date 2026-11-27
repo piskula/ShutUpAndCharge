@@ -5,17 +5,9 @@ import kotlinx.collections.immutable.ImmutableList
 import org.momosi.shutupandcharge.core.common.network.FailureReason
 import org.momosi.shutupandcharge.core.transaction.display.TransactionDisplay
 import org.momosi.shutupandcharge.core.transaction.model.TransactionType
-import org.momosi.shutupandcharge.core.uilibrary.components.ChartSeries
 
 @Immutable
-data class TransactionsState(
-    val isAdmin: Boolean = false,
-    val filter: FilterState = FilterState(),
-    val list: ListContent = ListContent.Loading,
-    val isRefreshing: Boolean = false,
-    val isExporting: Boolean = false,
-    val chart: ChartContent = ChartContent.Hidden,
-)
+data class TransactionsState(val isAdmin: Boolean = false, val filter: FilterState = FilterState(), val list: ListContent = ListContent.Loading, val isRefreshing: Boolean = false, val isExporting: Boolean = false)
 
 @Immutable
 data class FilterState(val onlyMine: Boolean = false, val type: TransactionType = TransactionType.All)
@@ -28,11 +20,3 @@ sealed interface ListContent {
 }
 
 enum class LoadMoreStatus { Idle, Loading, Failed }
-
-@Immutable
-sealed interface ChartContent {
-    data object Hidden : ChartContent
-    data object Loading : ChartContent
-    data object Failed : ChartContent
-    data class Loaded(val labels: ImmutableList<String>, val series: ImmutableList<ChartSeries>, val maxValueText: String) : ChartContent
-}

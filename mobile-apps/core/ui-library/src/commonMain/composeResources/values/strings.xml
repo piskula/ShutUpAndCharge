@@ -25,9 +25,13 @@
     <string name="charger_current_label">Charging current</string>
     <string name="charger_current_value">%1$d A</string>
     <string name="charger_start">Start charging</string>
+    <string name="charger_check_connection">Check connection</string>
     <string name="charger_stop">Stop charging</string>
     <string name="charger_sign_in_hint">Sign in to start charging.</string>
-    <string name="chart_other">Other</string>
     <string name="chart_empty">No charging in this period.</string>
+    <string name="chart_selected_month">%1$s, %2$s</string>
     <string name="transaction_credit">Credit</string>
+    <string name="transaction_started_by_rfid">Started with an RFID chip</string>
+    <string name="transaction_open_session_chart">Open the charging session chart</string>
+    <string name="navigate_back">Back</string>
 </resources>

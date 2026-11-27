@@ -17,6 +17,7 @@ import org.momosi.shutupandcharge.core.uilibrary.theme.SuacTheme
 enum class IconButtonStyle {
     Standard,
     StandardMuted,
+    Accent,
     Filled,
     Outlined,
     Highlighted,
@@ -28,11 +29,12 @@ fun IconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     style: IconButtonStyle = IconButtonStyle.Standard,
+    contentDescription: String? = null,
 ) {
     when (style) {
         IconButtonStyle.Standard -> {
             IconButton(onClick = onClick, modifier = modifier) {
-                Icon(imageVector = imageVector, contentDescription = null)
+                Icon(imageVector = imageVector, contentDescription = contentDescription)
             }
         }
 
@@ -44,7 +46,19 @@ fun IconButton(
                     contentColor = AppTheme.colors.onSurfaceVariant,
                 ),
             ) {
-                Icon(imageVector = imageVector, contentDescription = null)
+                Icon(imageVector = imageVector, contentDescription = contentDescription)
+            }
+        }
+
+        IconButtonStyle.Accent -> {
+            IconButton(
+                onClick = onClick,
+                modifier = modifier,
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = AppTheme.colors.primary,
+                ),
+            ) {
+                Icon(imageVector = imageVector, contentDescription = contentDescription)
             }
         }
 
@@ -57,13 +71,13 @@ fun IconButton(
                     contentColor = AppTheme.colors.onSurface,
                 ),
             ) {
-                Icon(imageVector = imageVector, contentDescription = null)
+                Icon(imageVector = imageVector, contentDescription = contentDescription)
             }
         }
 
         IconButtonStyle.Outlined -> {
             OutlinedIconButton(onClick = onClick, modifier = modifier) {
-                Icon(imageVector = imageVector, contentDescription = null)
+                Icon(imageVector = imageVector, contentDescription = contentDescription)
             }
         }
 
@@ -76,7 +90,7 @@ fun IconButton(
                     contentColor = AppTheme.colors.onPrimaryContainer,
                 ),
             ) {
-                Icon(imageVector = imageVector, contentDescription = null)
+                Icon(imageVector = imageVector, contentDescription = contentDescription)
             }
         }
     }
@@ -95,6 +109,14 @@ private fun IconButtonStandardPreview() {
 private fun IconButtonStandardMutedPreview() {
     SuacTheme {
         IconButton(imageVector = Icons.Filled.Star, onClick = {}, style = IconButtonStyle.StandardMuted)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun IconButtonAccentPreview() {
+    SuacTheme {
+        IconButton(imageVector = Icons.Filled.Star, onClick = {}, style = IconButtonStyle.Accent)
     }
 }
 

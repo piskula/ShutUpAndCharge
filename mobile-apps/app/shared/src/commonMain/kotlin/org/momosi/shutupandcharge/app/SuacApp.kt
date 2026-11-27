@@ -94,7 +94,7 @@ fun SuacApp(modifier: Modifier = Modifier, viewModel: SuacViewModel = koinViewMo
                         entryProvider {
                             welcomeEntries()
                             dashboardEntries(navigator)
-                            transactionsEntries()
+                            transactionsEntries(navigator)
                             adminEntries()
                             profileEntries()
                         },

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -91,9 +92,6 @@ private fun DashboardContent(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                item(key = "balance") {
-                    BalanceCard(balance = state.balance, onRetry = { onAction(DashboardAction.RetryBalance) })
-                }
                 item(key = "charger") {
                     ChargerStatusCard(
                         status = state.charger.status,
@@ -109,19 +107,28 @@ private fun DashboardContent(
                         onSelectCurrent = { onAction(DashboardAction.SelectCurrent(it)) },
                     )
                 }
-                item(key = "last_label") { SectionLabel(text = stringResource(Res.string.dashboard_last_chargings)) }
+                item(key = "balance") {
+                    BalanceCard(balance = state.balance, onRetry = { onAction(DashboardAction.RetryBalance) })
+                }
+                item(key = "last_label") {
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().padding(top = 4.dp)) {
+                        SectionLabel(text = stringResource(Res.string.dashboard_last_chargings), modifier = Modifier.weight(1f))
+                        TextButton(
+                            text = stringResource(Res.string.dashboard_show_all),
+                            onClick = onShowAllTransactions,
+                            modifier = Modifier.testTag("dashboard_show_all_button"),
+                        )
+                    }
+                }
                 section(
                     key = "last",
                     content = state.lastChargings,
                     emptyText = { stringResource(Res.string.dashboard_last_chargings_empty) },
                     onRetry = { onAction(DashboardAction.RetryLastChargings) },
                 ) { item -> TransactionRow(transaction = item, showAccount = false) }
-                item(key = "show_all") {
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-                        TextButton(text = stringResource(Res.string.dashboard_show_all), onClick = onShowAllTransactions)
-                    }
+                item(key = "monthly_label") {
+                    SectionLabel(text = stringResource(Res.string.dashboard_monthly_summary), modifier = Modifier.padding(top = 4.dp))
                 }
-                item(key = "monthly_label") { SectionLabel(text = stringResource(Res.string.dashboard_monthly_summary)) }
                 section(
                     key = "monthly",
                     content = state.monthlySummary,
@@ -168,33 +175,33 @@ private fun <T> LazyListScope.section(
 private fun BalanceCard(balance: BalanceContent, onRetry: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth().card().padding(16.dp).testTag("dashboard_balance"),
+        modifier = Modifier.fillMaxWidth().card().heightIn(min = 64.dp).padding(horizontal = 16.dp, vertical = 12.dp).testTag("dashboard_balance"),
     ) {
-        Icon(imageVector = SuacIcons.Wallet, tint = AppTheme.colors.primary, modifier = Modifier.size(32.dp))
-        Column(modifier = Modifier.weight(1f).padding(start = 12.dp)) {
+        Icon(imageVector = SuacIcons.Wallet, tint = AppTheme.colors.primary, modifier = Modifier.size(24.dp))
+        Column(modifier = Modifier.weight(1f).padding(start = 12.dp, end = 8.dp)) {
             Text(
                 text = stringResource(Res.string.dashboard_balance_label),
-                style = AppTheme.typography.labelLarge,
+                style = AppTheme.typography.bodyMedium,
                 color = AppTheme.colors.onSurfaceVariant,
             )
-            when (balance) {
-                BalanceContent.Loading -> SkeletonBox(modifier = Modifier.padding(top = 4.dp).size(width = 120.dp, height = 28.dp))
-
-                is BalanceContent.Loaded -> Text(
-                    text = balance.text,
-                    style = AppTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
-                    color = amountToneOf(balance.amount).color(),
-                )
-
-                is BalanceContent.Failed -> Text(
+            if (balance is BalanceContent.Failed) {
+                Text(
                     text = stringResource(Res.string.dashboard_load_failed),
-                    style = AppTheme.typography.bodyMedium,
+                    style = AppTheme.typography.bodySmall,
                     color = AppTheme.colors.error,
                 )
             }
         }
-        if (balance is BalanceContent.Failed) {
-            TextButton(text = stringResource(Res.string.dashboard_retry), onClick = onRetry)
+        when (balance) {
+            BalanceContent.Loading -> SkeletonBox(modifier = Modifier.size(width = 96.dp, height = 24.dp))
+
+            is BalanceContent.Loaded -> Text(
+                text = balance.text,
+                style = AppTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                color = amountToneOf(balance.amount).color(),
+            )
+
+            is BalanceContent.Failed -> TextButton(text = stringResource(Res.string.dashboard_retry), onClick = onRetry)
         }
     }
 }

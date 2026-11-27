@@ -17,6 +17,8 @@ private class IosPlatformDateFormatter : PlatformDateFormatter {
 
     override fun formatMonthYear(instant: Instant): String = format(instant, "LLLL yyyy")
 
+    override fun formatShortMonth(instant: Instant): String = format(instant, "LLL")
+
     private fun format(instant: Instant, template: String): String {
         val formatter = NSDateFormatter()
         formatter.setLocalizedDateFormatFromTemplate(template)
