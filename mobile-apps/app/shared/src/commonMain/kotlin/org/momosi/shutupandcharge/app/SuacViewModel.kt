@@ -7,11 +7,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import org.momosi.shutupandcharge.core.common.config.AppConfig
 import org.momosi.shutupandcharge.core.common.error.ErrorReporter
 import org.momosi.shutupandcharge.user.AuthManager
 import org.momosi.shutupandcharge.user.UserRepository
 
-class SuacViewModel(authManager: AuthManager, userRepository: UserRepository, errorReporter: ErrorReporter) : ViewModel() {
+class SuacViewModel(authManager: AuthManager, userRepository: UserRepository, errorReporter: ErrorReporter, appConfig: AppConfig) : ViewModel() {
+
+    internal val isDemoMode: Boolean = appConfig.useMockData
 
     internal val access: StateFlow<AppAccess> = authManager.authenticationState
         .map(::appAccessOf)

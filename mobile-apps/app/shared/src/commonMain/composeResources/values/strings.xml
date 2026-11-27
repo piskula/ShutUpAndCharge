@@ -3,4 +3,5 @@
     <string name="tab_transactions">Transactions</string>
     <string name="tab_admin">Admin</string>
     <string name="tab_profile">Profile</string>
+    <string name="demo_mode_badge">Demo data</string>
 </resources>

@@ -77,6 +77,29 @@ pod install
 open iosApp.xcworkspace   # build & run the iosApp scheme; the Kotlin framework is built by a build phase
 ```
 
+### Demo mode (mock data)
+
+Runs the whole app on in-memory fake data — no Keycloak, no backend — e.g. while the `suac-mobile`
+Keycloak client does not exist yet. A yellow **Demo data** badge is shown on every screen.
+
+```bash
+cd mobile-apps
+./gradlew :app:android:installMock          # or assembleMock -> app/android/build/outputs/apk/mock/
+```
+
+iOS: set `APP_ENVIRONMENT = demo` in `app/ios/Environment.xcconfig` (do not commit it).
+
+* **Sign in** on Welcome signs in "Demo User" with user + admin roles, so every tab including Admin is
+  reachable. Sign out returns to Welcome; restarting the app also signs out (nothing is persisted).
+* Charger: refresh the charger (pull to refresh or the card's refresh button) to "plug in" the car, then
+  **Start** — kWh grow every second (1 s = 1 charging minute at the chosen 6/10/16 A). **Stop** books the
+  charging (0.30 €/kWh) to the demo balance and history; refresh again to unplug.
+* 48 transactions (paged by 20), monthly summary and kWh chart, 8 accounts for Admin (top up, allow/block,
+  RFID chip all change the in-memory state) and 3 pending transactions that **Sync** turns into chargings.
+  Excel export shares a small CSV instead.
+* The `mock` build type uses the production applicationId (Firebase only knows that one), so installing
+  it replaces an installed debug/release build.
+
 ## CI/CD
 
 Workflows live in the repository root `.github/` and only run for mobile changes

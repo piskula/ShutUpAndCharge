@@ -38,6 +38,7 @@ kotlin {
             implementation(projects.core.charger)
             implementation(projects.core.transaction)
             implementation(projects.core.account)
+            implementation(projects.core.mock)
 
             implementation(projects.feature.welcome.api)
             implementation(projects.feature.welcome.impl)

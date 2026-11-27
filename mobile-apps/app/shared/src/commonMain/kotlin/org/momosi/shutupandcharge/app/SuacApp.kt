@@ -1,5 +1,6 @@
 package org.momosi.shutupandcharge.app
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
@@ -9,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.entryProvider
@@ -85,19 +87,22 @@ fun SuacApp(modifier: Modifier = Modifier, viewModel: SuacViewModel = koinViewMo
                 )
             },
         ) { innerPadding ->
-            NavDisplay(
-                modifier = Modifier.fillMaxSize().padding(bottom = innerPadding.calculateBottomPadding()),
-                entries = navigationState.toEntries(
-                    entryProvider {
-                        welcomeEntries()
-                        dashboardEntries(navigator)
-                        transactionsEntries()
-                        adminEntries()
-                        profileEntries()
-                    },
-                ),
-                onBack = navigator::goBack,
-            )
+            Box(modifier = Modifier.fillMaxSize().padding(bottom = innerPadding.calculateBottomPadding())) {
+                NavDisplay(
+                    modifier = Modifier.fillMaxSize(),
+                    entries = navigationState.toEntries(
+                        entryProvider {
+                            welcomeEntries()
+                            dashboardEntries(navigator)
+                            transactionsEntries()
+                            adminEntries()
+                            profileEntries()
+                        },
+                    ),
+                    onBack = navigator::goBack,
+                )
+                if (viewModel.isDemoMode) DemoModeBadge(modifier = Modifier.align(Alignment.TopCenter))
+            }
         }
     }
 }

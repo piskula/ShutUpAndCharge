@@ -14,7 +14,8 @@ struct iOSApp: App {
             apiBaseUrl: Self.infoValue("SuacApiBaseUrl"),
             realmUrl: Self.infoValue("SuacRealmUrl"),
             oauthClientId: Self.infoValue("SuacOAuthClientId"),
-            appScheme: Self.infoValue("SuacAppScheme")
+            appScheme: Self.infoValue("SuacAppScheme"),
+            useMockData: Self.infoValue("SuacUseMockData") == "YES"
         )
     }
 
