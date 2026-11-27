@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
@@ -19,6 +20,8 @@ import org.momosi.shutupandcharge.core.uilibrary.theme.AppTheme
 import org.momosi.shutupandcharge.core.uilibrary.theme.SuacTheme
 import androidx.compose.material3.IconButton as MaterialIconButton
 
+private val TopBarContentHeight = 52.dp
+
 @Composable
 fun DashboardTopBar(
     title: String,
@@ -32,7 +35,9 @@ fun DashboardTopBar(
             .fillMaxWidth()
             .background(AppTheme.colors.surfaceDim)
             .statusBarsPadding()
-            .padding(start = 16.dp, end = 4.dp, top = 14.dp, bottom = 14.dp),
+            .padding(start = 16.dp, end = 4.dp, top = 12.dp, bottom = 12.dp)
+            // Same height with or without action buttons, so titles line up across tabs.
+            .height(TopBarContentHeight),
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
