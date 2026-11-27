@@ -12,6 +12,8 @@ All reusable Compose UI. Features never import material3 directly.
   from `AppTheme.colors.chartSeries` / `chartOther`). `Modifier.card(position)` draws one row of a card that
   spans several lazy list items.
 * Give icon-only buttons a `contentDescription` (`IconButton`, `TopBarIconButton`).
+* Selected filter chips and navigation indicators use `secondaryContainer` / `onSecondaryContainer`
+  in both themes. Primary tonal badges and domain status colors remain separate from selection colors.
 * Surface roles: page `surfaceContainer` (scheme `background`); top bar, header filters and navigation bar
   `surfaceDim`; cards (`Modifier.card`) `surfaceBright`. Material 3 keeps `surfaceDim` dimmest and
   `surfaceBright` brightest in both themes, so cards always sit lighter than the page and bars always frame

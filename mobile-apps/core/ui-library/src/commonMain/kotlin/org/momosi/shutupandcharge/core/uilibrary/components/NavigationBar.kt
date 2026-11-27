@@ -60,9 +60,9 @@ fun NavigationBar(
                         Text(item.title)
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = AppTheme.colors.onPrimaryContainer,
+                        selectedIconColor = AppTheme.colors.onSecondaryContainer,
                         selectedTextColor = AppTheme.colors.onSurface,
-                        indicatorColor = AppTheme.colors.primaryContainer,
+                        indicatorColor = AppTheme.colors.secondaryContainer,
                         unselectedIconColor = AppTheme.colors.onSurfaceVariant,
                         unselectedTextColor = AppTheme.colors.onSurfaceVariant,
                     ),
