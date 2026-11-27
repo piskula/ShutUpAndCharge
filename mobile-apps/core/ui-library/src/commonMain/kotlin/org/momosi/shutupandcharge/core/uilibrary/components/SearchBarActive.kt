@@ -62,7 +62,7 @@ fun SearchBarActive(
             .fillMaxWidth()
             .heightIn(min = 48.dp)
             .background(
-                color = AppTheme.colors.surfaceContainerLowest,
+                color = AppTheme.colors.surfaceContainerHigh,
                 shape = RoundedCornerShape(24.dp),
             )
             .padding(vertical = 8.dp),

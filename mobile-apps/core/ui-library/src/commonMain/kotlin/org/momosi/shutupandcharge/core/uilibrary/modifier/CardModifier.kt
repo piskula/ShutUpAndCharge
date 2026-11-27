@@ -12,10 +12,11 @@ import org.momosi.shutupandcharge.core.uilibrary.lazylist.ListItemPosition
 import org.momosi.shutupandcharge.core.uilibrary.theme.AppTheme
 import org.momosi.shutupandcharge.core.uilibrary.theme.Shapes as AppShape
 
+/** Material 3 filled card: `surfaceContainerHighest`, a step above the `surface` page in both themes. */
 @Composable
 fun Modifier.card(shape: Shape = AppShape.CardShape): Modifier = this
     .clip(shape)
-    .background(AppTheme.colors.surfaceContainerLowest, shape)
+    .background(AppTheme.colors.surfaceContainerHighest, shape)
 
 /** Card background for one row of a card that spans several lazy list items. */
 @Composable

@@ -34,7 +34,7 @@ fun InfoDialog(
                 onClick = onDismiss,
             )
         },
-        containerColor = AppTheme.colors.surfaceContainerLowest,
+        containerColor = AppTheme.colors.surfaceContainerHigh,
         modifier = modifier,
     )
 }

@@ -9,17 +9,22 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.NavKey
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import org.momosi.shutupandcharge.core.uilibrary.icons.SuacIcons
+import org.momosi.shutupandcharge.core.uilibrary.theme.AppTheme
+import org.momosi.shutupandcharge.core.uilibrary.theme.SuacTheme
 
 @Stable
 data class NavigationBarItem(val navKey: NavKey, val selectedIcon: ImageVector, val unselectedIcon: ImageVector, val title: String)
@@ -36,9 +41,9 @@ fun NavigationBar(
         isVisible = isVisible,
         modifier = modifier
             .fillMaxWidth()
-            .background(BottomAppBarDefaults.containerColor),
+            .background(AppTheme.colors.surfaceContainer),
     ) {
-        BottomAppBar {
+        BottomAppBar(containerColor = AppTheme.colors.surfaceContainer) {
             items.forEach { item ->
                 val isSelected = item.navKey == selectedKey
                 NavigationBarItem(
@@ -54,6 +59,13 @@ fun NavigationBar(
                     label = {
                         Text(item.title)
                     },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = AppTheme.colors.onPrimaryContainer,
+                        selectedTextColor = AppTheme.colors.onSurface,
+                        indicatorColor = AppTheme.colors.primaryContainer,
+                        unselectedIconColor = AppTheme.colors.onSurfaceVariant,
+                        unselectedTextColor = AppTheme.colors.onSurfaceVariant,
+                    ),
                 )
             }
         }
@@ -93,5 +105,33 @@ private fun BottomAppVarVisibility(
         ),
     ) {
         content()
+    }
+}
+
+private data object PreviewDashboardKey : NavKey
+
+private data object PreviewTransactionsKey : NavKey
+
+private data object PreviewProfileKey : NavKey
+
+private val PreviewItems = persistentListOf(
+    NavigationBarItem(PreviewDashboardKey, SuacIcons.Dashboard, SuacIcons.DashboardOutlined, "Dashboard"),
+    NavigationBarItem(PreviewTransactionsKey, SuacIcons.Transactions, SuacIcons.Transactions, "Transactions"),
+    NavigationBarItem(PreviewProfileKey, SuacIcons.AccountCircle, SuacIcons.AccountCircleOutlined, "Profile"),
+)
+
+@Preview
+@Composable
+private fun NavigationBarPreview() {
+    SuacTheme {
+        NavigationBar(items = PreviewItems, selectedKey = PreviewDashboardKey, isVisible = true, onSelectKey = {})
+    }
+}
+
+@Preview
+@Composable
+private fun NavigationBarDarkPreview() {
+    SuacTheme(isDarkTheme = true) {
+        NavigationBar(items = PreviewItems, selectedKey = PreviewTransactionsKey, isVisible = true, onSelectKey = {})
     }
 }

@@ -28,7 +28,7 @@ fun <T> FilterChipRow(
     labelSelector: @Composable (T) -> String,
     onSelect: (T) -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = AppTheme.colors.surfaceDim,
+    containerColor: Color = AppTheme.colors.surfaceContainer,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 0.dp),
 ) {
     LazyRow(
