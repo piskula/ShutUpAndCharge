@@ -30,7 +30,7 @@ fun Toolbar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .background(AppTheme.colors.surfaceContainer)
+            .background(AppTheme.colors.surfaceDim)
             .statusBarsPadding()
             .padding(start = 4.dp, end = 4.dp, top = 12.dp, bottom = 12.dp),
     ) {

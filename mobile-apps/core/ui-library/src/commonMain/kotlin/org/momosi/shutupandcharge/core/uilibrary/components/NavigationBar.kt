@@ -41,9 +41,9 @@ fun NavigationBar(
         isVisible = isVisible,
         modifier = modifier
             .fillMaxWidth()
-            .background(AppTheme.colors.surfaceContainer),
+            .background(AppTheme.colors.surfaceDim),
     ) {
-        BottomAppBar(containerColor = AppTheme.colors.surfaceContainer) {
+        BottomAppBar(containerColor = AppTheme.colors.surfaceDim) {
             items.forEach { item ->
                 val isSelected = item.navKey == selectedKey
                 NavigationBarItem(

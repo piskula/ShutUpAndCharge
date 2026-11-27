@@ -30,7 +30,7 @@ fun DashboardTopBar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .background(AppTheme.colors.surfaceContainer)
+            .background(AppTheme.colors.surfaceDim)
             .statusBarsPadding()
             .padding(start = 16.dp, end = 4.dp, top = 14.dp, bottom = 14.dp),
     ) {
