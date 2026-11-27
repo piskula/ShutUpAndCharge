@@ -90,7 +90,7 @@ fun Chip(
     val (containerColor, contentColor) = when (variant) {
         ChipVariant.Default -> AppTheme.colors.surfaceVariant to AppTheme.colors.onSurfaceVariant
         ChipVariant.Tonal -> AppTheme.colors.primaryContainer to AppTheme.colors.onPrimaryContainer
-        ChipVariant.Warning -> AppTheme.colors.warningContainer to AppTheme.colors.warning
+        ChipVariant.Warning -> AppTheme.colors.warningContainer to AppTheme.colors.onWarningContainer
     }
     Row(
         verticalAlignment = Alignment.CenterVertically,

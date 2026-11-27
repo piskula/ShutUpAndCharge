@@ -12,6 +12,8 @@ import org.momosi.shutupandcharge.core.uilibrary.icons.SuacIcons
 import org.momosi.shutupandcharge.core.uilibrary.resources.Res
 import org.momosi.shutupandcharge.core.uilibrary.resources.charger_station_name
 import org.momosi.shutupandcharge.core.uilibrary.resources.transaction_credit
+import org.momosi.shutupandcharge.core.uilibrary.resources.transaction_open_session_chart
+import org.momosi.shutupandcharge.core.uilibrary.resources.transaction_started_by_rfid
 import org.momosi.shutupandcharge.core.uilibrary.theme.SuacTheme
 
 @Composable
@@ -34,7 +36,10 @@ fun TransactionRow(
         detail = transaction.kwhText,
         leadingIcon = if (transaction.isTopUp) SuacIcons.TopUp else SuacIcons.Power,
         badgeIcon = SuacIcons.Rfid.takeIf { transaction.triggeredByChip },
+        badgeDescription = stringResource(Res.string.transaction_started_by_rfid),
         onOpenStats = transaction.link?.let { link -> { uriHandler.openUri(link) } },
+        statsDescription = stringResource(Res.string.transaction_open_session_chart),
+        statsTestTag = "transaction_stats_${transaction.id}",
         modifier = modifier,
     )
 }

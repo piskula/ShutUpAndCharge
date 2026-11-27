@@ -18,6 +18,8 @@ class DateFormatter {
 
     fun formatMonthYear(instant: Instant): String = platformDateFormatter.formatMonthYear(instant)
 
+    fun formatShortMonth(instant: Instant): String = platformDateFormatter.formatShortMonth(instant)
+
     fun timeAgoComponents(instant: Instant): TimeAgo {
         val now = Clock.System.now()
         val diff = now - instant
@@ -40,6 +42,8 @@ internal interface PlatformDateFormatter {
     fun formatFullDateTime(instant: Instant): String
 
     fun formatMonthYear(instant: Instant): String
+
+    fun formatShortMonth(instant: Instant): String
 }
 
 internal expect fun createPlatformDateFormatter(): PlatformDateFormatter

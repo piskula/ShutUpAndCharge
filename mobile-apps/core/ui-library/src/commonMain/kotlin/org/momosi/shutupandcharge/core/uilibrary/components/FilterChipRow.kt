@@ -28,12 +28,14 @@ fun <T> FilterChipRow(
     labelSelector: @Composable (T) -> String,
     onSelect: (T) -> Unit,
     modifier: Modifier = Modifier,
+    containerColor: Color = AppTheme.colors.surfaceDim,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 0.dp),
 ) {
     LazyRow(
         modifier = modifier
             .fillMaxWidth()
-            .background(AppTheme.colors.surfaceDim),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp),
+            .background(containerColor),
+        contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(items) { item ->

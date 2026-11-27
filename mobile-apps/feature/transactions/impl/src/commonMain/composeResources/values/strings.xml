@@ -11,5 +11,19 @@
     <string name="transactions_load_more_failed">Could not load more transactions.</string>
     <string name="transactions_retry">Retry</string>
     <string name="transactions_chart_title">Charged kWh per month</string>
-    <string name="transactions_chart_failed">Could not load the chart.</string>
+    <string name="transactions_history">History</string>
+    <string name="transactions_export">Export transactions to Excel</string>
+    <string name="monthly_usage_title">Monthly usage</string>
+    <string name="monthly_usage_scope_all">All accounts</string>
+    <string name="monthly_usage_scope_mine">Only your charging</string>
+    <string name="monthly_usage_range">%1$s – %2$s</string>
+    <string name="monthly_usage_energy">Energy charged</string>
+    <string name="monthly_usage_mode_total">Total</string>
+    <string name="monthly_usage_mode_by_user">By user</string>
+    <string name="monthly_usage_period_total">Total for the period</string>
+    <string name="monthly_usage_breakdown">%1$s by user</string>
+    <string name="monthly_usage_share">%1$d%</string>
+    <string name="monthly_usage_other">Other</string>
+    <string name="monthly_usage_hint">Tap a month to see how much each user charged.</string>
+    <string name="monthly_usage_load_failed">Could not load the monthly usage. Please try again.</string>
 </resources>

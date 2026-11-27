@@ -5,6 +5,8 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Immutable
 data class SuacColorPalette(
@@ -50,6 +52,9 @@ data class SuacColorPalette(
     val onWarningContainer: Color,
 
     val shadow: Color,
+
+    val chartSeries: ImmutableList<Color>,
+    val chartOther: Color,
 )
 
 private val LightPrimary = Color(0xFF005CBB)
@@ -101,6 +106,14 @@ internal val LightSuacColors = SuacColorPalette(
     warningContainer = Color(0xFFFFDCC3),
     onWarningContainer = Color(0xFF753403),
     shadow = Color(0x40000000),
+    chartSeries = persistentListOf(
+        Color(0xFF005CBB),
+        Color(0xFFE8710A),
+        Color(0xFF1E8E3E),
+        Color(0xFFD93025),
+        Color(0xFF9334E6),
+    ),
+    chartOther = Color(0xFF9E9E9E),
 )
 
 internal val DarkSuacColors = SuacColorPalette(
@@ -139,8 +152,16 @@ internal val DarkSuacColors = SuacColorPalette(
     warning = Color(0xFFFFBE8A),
     onWarning = Color(0xFF5A2500),
     warningContainer = Color(0xFFFFB683),
-    onWarningContainer = Color(0xFF753403),
+    onWarningContainer = Color(0xFF5A2500),
     shadow = Color(0x00000000),
+    chartSeries = persistentListOf(
+        Color(0xFFAAC7FF),
+        Color(0xFFF4B77A),
+        Color(0xFF7DD99A),
+        Color(0xFFFFB4AB),
+        Color(0xFFD0BCFF),
+    ),
+    chartOther = Color(0xFF8F9BAD),
 )
 
 internal fun lightColorScheme(colors: SuacColorPalette) = lightColorScheme(

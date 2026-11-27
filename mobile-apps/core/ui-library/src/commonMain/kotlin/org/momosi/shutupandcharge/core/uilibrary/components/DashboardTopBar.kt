@@ -58,6 +58,7 @@ fun TopBarIconButton(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    contentDescription: String? = null,
 ) {
     MaterialIconButton(
         onClick = onClick,
@@ -66,7 +67,7 @@ fun TopBarIconButton(
             contentColor = AppTheme.colors.onSurface,
         ),
     ) {
-        Icon(imageVector = icon, contentDescription = null)
+        Icon(imageVector = icon, contentDescription = contentDescription)
     }
 }
 

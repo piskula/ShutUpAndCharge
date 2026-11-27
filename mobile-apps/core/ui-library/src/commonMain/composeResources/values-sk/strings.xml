@@ -25,9 +25,13 @@
     <string name="charger_current_label">Nabíjací prúd</string>
     <string name="charger_current_value">%1$d A</string>
     <string name="charger_start">Spustiť nabíjanie</string>
+    <string name="charger_check_connection">Skontrolovať pripojenie</string>
     <string name="charger_stop">Zastaviť nabíjanie</string>
     <string name="charger_sign_in_hint">Pre spustenie nabíjania sa prihláste.</string>
-    <string name="chart_other">Ostatní</string>
     <string name="chart_empty">V tomto období neprebehlo žiadne nabíjanie.</string>
+    <string name="chart_selected_month">%1$s, %2$s</string>
     <string name="transaction_credit">Kredit</string>
+    <string name="transaction_started_by_rfid">Spustené RFID čipom</string>
+    <string name="transaction_open_session_chart">Otvoriť graf nabíjania</string>
+    <string name="navigate_back">Späť</string>
 </resources>

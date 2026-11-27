@@ -7,7 +7,6 @@ sealed interface TransactionsAction {
     data object Retry : TransactionsAction
     data object LoadMore : TransactionsAction
     data object Export : TransactionsAction
-    data object RetryChart : TransactionsAction
     data class SetOnlyMine(val onlyMine: Boolean) : TransactionsAction
     data class SelectType(val type: TransactionType) : TransactionsAction
 }

@@ -8,7 +8,10 @@ All reusable Compose UI. Features never import material3 directly.
 * Components: `Button`, `TextButton`, `IconButton`, `Chip`, `FilterChipRow`, `Switch`, `DashboardTopBar`,
   `Toolbar`, `NavigationBar`, `BottomSheet`, `ConfirmationDialog`, `InfoDialog`, `InputDialog`,
   `LoadingSpinner`, `SkeletonBox`, `ErrorState`, `ErrorSnackbarHost`, `PullToRefresh`, `SectionLabel`,
-  `TransactionListItem`, `StackedBarChart`.
+  `TransactionListItem`, `StackedBarChart` (value axis, selectable months, Total or by-series stacks; colours
+  from `AppTheme.colors.chartSeries` / `chartOther`). `Modifier.card(position)` draws one row of a card that
+  spans several lazy list items.
+* Give icon-only buttons a `contentDescription` (`IconButton`, `TopBarIconButton`).
 * Domain components: `charger/ChargerStatusCard` (status pill, description, current selector,
   start/stop) and `transaction/TransactionRow` — this is why the module exposes `:core:charger` and
   `:core:transaction` as `api`.

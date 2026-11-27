@@ -7,10 +7,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.momosi.shutupandcharge.core.common.coroutines.combine
 import org.momosi.shutupandcharge.core.common.error.ErrorReporter
 import org.momosi.shutupandcharge.core.common.formatter.DateFormatter
 import org.momosi.shutupandcharge.core.common.formatter.NumberFormatter
@@ -19,10 +19,8 @@ import org.momosi.shutupandcharge.core.common.network.toFailureReason
 import org.momosi.shutupandcharge.core.transaction.TransactionRepository
 import org.momosi.shutupandcharge.core.transaction.display.toDisplay
 import org.momosi.shutupandcharge.core.transaction.export.TransactionExportManager
-import org.momosi.shutupandcharge.core.transaction.model.MonthlyKwhChart
 import org.momosi.shutupandcharge.core.transaction.model.TransactionFilter
 import org.momosi.shutupandcharge.core.transaction.model.TransactionType
-import org.momosi.shutupandcharge.core.uilibrary.components.ChartSeries
 import org.momosi.shutupandcharge.user.UserRepository
 
 private const val PAGE_SIZE = 20
@@ -40,11 +38,9 @@ class TransactionsViewModel(
     private val list = MutableStateFlow<ListContent>(ListContent.Loading)
     private val isRefreshing = MutableStateFlow(false)
     private val isExporting = MutableStateFlow(false)
-    private val chart = MutableStateFlow<ChartContent>(ChartContent.Hidden)
 
     private var nextPage = 0
     private var listJob: Job? = null
-    private var chartJob: Job? = null
 
     private val isAdmin: Boolean get() = userRepository.user.value?.isAdmin == true
 
@@ -54,15 +50,13 @@ class TransactionsViewModel(
         list,
         isRefreshing,
         isExporting,
-        chart,
-    ) { admin, filterState, listContent, refreshing, exporting, chartContent ->
+    ) { admin, filterState, listContent, refreshing, exporting ->
         TransactionsState(
             isAdmin = admin,
             filter = filterState,
             list = listContent,
             isRefreshing = refreshing,
             isExporting = exporting,
-            chart = chartContent,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -81,7 +75,6 @@ class TransactionsViewModel(
             TransactionsAction.Retry -> reload()
             TransactionsAction.LoadMore -> loadMore()
             TransactionsAction.Export -> export()
-            TransactionsAction.RetryChart -> loadChart()
             is TransactionsAction.SetOnlyMine -> updateFilter(filter.value.copy(onlyMine = action.onlyMine))
             is TransactionsAction.SelectType -> updateFilter(filter.value.copy(type = action.type))
         }
@@ -96,14 +89,12 @@ class TransactionsViewModel(
     private fun reload() {
         list.value = ListContent.Loading
         loadFirstPage()
-        loadChart()
     }
 
     private fun refresh() {
         if (isRefreshing.value) return
         isRefreshing.value = true
         loadFirstPage { isRefreshing.value = false }
-        loadChart()
     }
 
     private fun loadFirstPage(onFinished: () -> Unit = {}) {
@@ -143,21 +134,6 @@ class TransactionsViewModel(
         }
     }
 
-    private fun loadChart() {
-        chartJob?.cancel()
-        if (!isAdmin) {
-            chart.value = ChartContent.Hidden
-            return
-        }
-        chart.value = ChartContent.Loading
-        chartJob = viewModelScope.launch {
-            chart.value = transactionRepository.getMonthlyKwh(currentFilter()).fold(
-                onSuccess = { it.toChartContent() },
-                onFailure = { ChartContent.Failed },
-            )
-        }
-    }
-
     private fun export() {
         if (isExporting.value) return
         viewModelScope.launch {
@@ -175,20 +151,4 @@ class TransactionsViewModel(
             type = if (admin) filterState.type else TransactionType.All,
         )
     }
-
-    private fun MonthlyKwhChart.toChartContent(): ChartContent {
-        val maxTotal = months.indices.maxOfOrNull { index -> series.sumOf { it.kwh.getOrElse(index) { 0.0 } } } ?: 0.0
-        return ChartContent.Loaded(
-            labels = months.map { it.toMonthLabel() }.toImmutableList(),
-            series = series.map { ChartSeries(name = it.name, isOther = it.isOther, values = it.kwh.toImmutableList()) }.toImmutableList(),
-            maxValueText = numberFormatter.formatKwh(maxTotal),
-        )
-    }
-}
-
-internal fun String.toMonthLabel(): String {
-    val parts = split("-")
-    if (parts.size < 2) return this
-    val month = parts[1].toIntOrNull() ?: return this
-    return "$month/${parts[0].takeLast(2)}"
 }

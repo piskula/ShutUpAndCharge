@@ -4,7 +4,7 @@
     <string name="dashboard_balance_label">Your balance</string>
     <string name="dashboard_last_chargings">Your last charging</string>
     <string name="dashboard_last_chargings_empty">You have not charged yet.</string>
-    <string name="dashboard_show_all">Show all transactions</string>
+    <string name="dashboard_show_all">See all</string>
     <string name="dashboard_monthly_summary">Monthly overview</string>
     <string name="dashboard_monthly_empty">No transactions yet.</string>
     <string name="dashboard_monthly_chargings">Chargings: %1$d · %2$s</string>

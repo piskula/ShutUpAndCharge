@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.suac.feature.impl)
+    alias(libs.plugins.suac.test)
 }
 
 compose.resources {

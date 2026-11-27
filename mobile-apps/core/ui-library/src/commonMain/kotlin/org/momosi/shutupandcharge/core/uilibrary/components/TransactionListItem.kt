@@ -1,12 +1,11 @@
 package org.momosi.shutupandcharge.core.uilibrary.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -14,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,24 +34,27 @@ fun TransactionListItem(
     modifier: Modifier = Modifier,
     detail: String? = null,
     badgeIcon: ImageVector? = null,
+    badgeDescription: String? = null,
     onOpenStats: (() -> Unit)? = null,
+    statsDescription: String? = null,
+    statsTestTag: String = "transaction_stats_button",
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .heightIn(min = 64.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .size(40.dp)
+                .size(36.dp)
                 .background(AppTheme.colors.primaryContainer, CircleShape),
         ) {
-            Icon(imageVector = leadingIcon, tint = AppTheme.colors.onPrimaryContainer, modifier = Modifier.size(20.dp))
+            Icon(imageVector = leadingIcon, tint = AppTheme.colors.onPrimaryContainer, modifier = Modifier.size(18.dp))
         }
-        Column(modifier = Modifier.weight(1f)) {
+        Column(modifier = Modifier.weight(1f).padding(start = 12.dp, end = 8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = title,
@@ -64,12 +67,28 @@ fun TransactionListItem(
                 if (badgeIcon != null) {
                     Icon(
                         imageVector = badgeIcon,
+                        contentDescription = badgeDescription,
                         tint = AppTheme.colors.onSurfaceVariant,
-                        modifier = Modifier.padding(start = 4.dp).size(16.dp),
+                        modifier = Modifier.padding(start = 4.dp).size(14.dp),
                     )
                 }
             }
-            Text(text = subtitle, style = AppTheme.typography.bodySmall, color = AppTheme.colors.onSurfaceVariant, maxLines = 1)
+            Text(
+                text = subtitle,
+                style = AppTheme.typography.bodySmall,
+                color = AppTheme.colors.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+        if (onOpenStats != null) {
+            IconButton(
+                imageVector = SuacIcons.Stats,
+                onClick = onOpenStats,
+                contentDescription = statsDescription,
+                style = IconButtonStyle.Accent,
+                modifier = Modifier.testTag(statsTestTag),
+            )
         }
         Column(horizontalAlignment = Alignment.End) {
             Text(
@@ -79,16 +98,6 @@ fun TransactionListItem(
             )
             if (detail != null) {
                 Text(text = detail, style = AppTheme.typography.bodySmall, color = AppTheme.colors.onSurfaceVariant)
-            }
-        }
-        if (onOpenStats != null) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(32.dp)
-                    .clickable(onClick = onOpenStats),
-            ) {
-                Icon(imageVector = SuacIcons.Stats, tint = AppTheme.colors.primary, modifier = Modifier.size(20.dp))
             }
         }
     }

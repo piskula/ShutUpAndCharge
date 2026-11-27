@@ -12,7 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
 import org.momosi.shutupandcharge.core.uilibrary.icons.SuacIcons
+import org.momosi.shutupandcharge.core.uilibrary.resources.Res
+import org.momosi.shutupandcharge.core.uilibrary.resources.navigate_back
 import org.momosi.shutupandcharge.core.uilibrary.theme.AppTheme
 import org.momosi.shutupandcharge.core.uilibrary.theme.SuacTheme
 
@@ -34,6 +37,7 @@ fun Toolbar(
         TopBarIconButton(
             icon = SuacIcons.Back,
             onClick = onBack,
+            contentDescription = stringResource(Res.string.navigate_back),
             modifier = Modifier.testTag("toolbar_back_button"),
         )
         Text(
