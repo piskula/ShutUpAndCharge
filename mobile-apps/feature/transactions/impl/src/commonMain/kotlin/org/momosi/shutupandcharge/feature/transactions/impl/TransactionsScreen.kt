@@ -138,7 +138,7 @@ private fun Filters(filter: FilterState, onAction: (TransactionsAction) -> Unit)
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(AppTheme.colors.surfaceContainer)
+            .background(AppTheme.colors.surfaceDim)
             .padding(bottom = 4.dp),
     ) {
         FilterChipRow(

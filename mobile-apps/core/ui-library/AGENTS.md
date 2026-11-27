@@ -12,10 +12,11 @@ All reusable Compose UI. Features never import material3 directly.
   from `AppTheme.colors.chartSeries` / `chartOther`). `Modifier.card(position)` draws one row of a card that
   spans several lazy list items.
 * Give icon-only buttons a `contentDescription` (`IconButton`, `TopBarIconButton`).
-* Surface roles follow Material 3 component tokens: page `surface`, top bar / navigation bar / header
-  filters `surfaceContainer`, cards (`Modifier.card`) `surfaceContainerHighest` (filled card), dialogs and
-  pull-to-refresh `surfaceContainerHigh`, bottom sheet `surfaceContainerLow`. Never use
-  `surfaceContainerLowest` for raised content — in dark theme it sits below the page.
+* Surface roles: page `surfaceContainer` (scheme `background`); top bar, header filters and navigation bar
+  `surfaceDim`; cards (`Modifier.card`) `surfaceBright`. Material 3 keeps `surfaceDim` dimmest and
+  `surfaceBright` brightest in both themes, so cards always sit lighter than the page and bars always frame
+  it. Dialogs and pull-to-refresh `surfaceContainerHigh`, bottom sheet `surfaceContainerLow` (component
+  tokens). Don't use `surfaceContainerLowest`/`Highest` for cards — their brightness flips between themes.
 * Domain components: `charger/ChargerStatusCard` (status pill, description, current selector,
   start/stop) and `transaction/TransactionRow` — this is why the module exposes `:core:charger` and
   `:core:transaction` as `api`.

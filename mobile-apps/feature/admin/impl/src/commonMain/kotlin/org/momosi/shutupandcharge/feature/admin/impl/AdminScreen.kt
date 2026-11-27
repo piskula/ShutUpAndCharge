@@ -122,7 +122,7 @@ private fun AdminContent(
             selectedItem = state.tab,
             labelSelector = { tabLabels.getValue(it) },
             onSelect = { onAction(AdminAction.SelectTab(it)) },
-            modifier = Modifier.background(AppTheme.colors.surfaceContainer).padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier = Modifier.background(AppTheme.colors.surfaceDim).padding(horizontal = 16.dp, vertical = 8.dp),
         )
         PullToRefresh(
             isRefreshing = state.isRefreshing,
